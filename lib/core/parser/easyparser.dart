@@ -1,4 +1,4 @@
-part of hetimacore;
+part of hetimaparsr;
 
 class EasyParser {
   int index = 0;

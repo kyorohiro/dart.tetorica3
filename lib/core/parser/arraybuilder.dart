@@ -1,4 +1,4 @@
-part of hetimacore;
+part of hetimaparsr;
 
 class ArrayBuilder extends TetReader {
   int _max = 1024;

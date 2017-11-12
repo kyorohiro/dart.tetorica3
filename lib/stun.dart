@@ -5,6 +5,8 @@ import 'dart:convert' as conv;
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'data.dart' as core;
+import 'parser.dart' as core;
 import 'core.dart' as core;
 import 'net.dart' as net;
 

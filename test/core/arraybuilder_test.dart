@@ -1,6 +1,7 @@
 import 'package:test/test.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/data.dart' as hetima;
+import 'package:tetorica/parser.dart' as hetima;
 
 import 'dart:async';
 

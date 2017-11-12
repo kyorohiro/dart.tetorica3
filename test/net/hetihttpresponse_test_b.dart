@@ -1,4 +1,6 @@
 //import 'package:unittest/unittest.dart' as unit;
+import 'package:tetorica/data.dart' as hetima;
+import 'package:tetorica/parser.dart' as hetima;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/net.dart' as hetima;
 import 'package:tetorica/http.dart' as hetima;

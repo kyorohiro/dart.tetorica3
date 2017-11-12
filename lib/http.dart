@@ -3,6 +3,7 @@ library hetimanet_http;
 import 'dart:convert' as convert;
 import 'dart:async';
 import 'data.dart';
+import 'parser.dart';
 import 'core.dart';
 import 'net.dart';
 import 'dart:typed_data' as data;

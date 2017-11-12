@@ -1,4 +1,6 @@
 import 'package:test/test.dart' as unit;
+import 'package:tetorica/data.dart';
+import 'package:tetorica/parser.dart';
 import 'package:tetorica/core.dart';
 
 void main() {
