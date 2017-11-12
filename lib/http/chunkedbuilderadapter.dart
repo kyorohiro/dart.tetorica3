@@ -43,7 +43,7 @@ class ChunkedBuilderAdapter extends TetReader {
     return _buffer.getLength();
   }
 
-  Completer<bool> get rawcompleterFin => _buffer.rawcompleterFin;
+  Completer<bool> get loadCompletedCompleter => _buffer.loadCompletedCompleter;
 
   Future<List<int>> getBytes(int index, int length, {List<int> out: null}) {
     return _buffer.getBytes(index, length, out: out);

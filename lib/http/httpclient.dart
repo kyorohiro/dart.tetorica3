@@ -100,23 +100,23 @@ class HttpClient {
     HttpClientResponse result = new HttpClientResponse();
     result.info = message;
     if(isLoadBody == false) {
-      result.body = new TetReaderAdapter(socket.buffer, message.index);
-      result.body.immutable = true;
+      result.body = new TetReaderWithIndex(socket.buffer, message.index);
+      result.body.loadCompleted = true;
       return result;
     }
 
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
 
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
-      result.body = new TetReaderAdapter(socket.buffer, message.index);
+      result.body = new TetReaderWithIndex(socket.buffer, message.index);
       if (result.info.contentLength > 0) {
         await result.body.getBytes(0, result.info.contentLength);
-        result.body.immutable = true;
+        result.body.loadCompleted = true;
       } else {
-        result.body.immutable = true;
+        result.body.loadCompleted = true;
       }
     } else {
-      result.body = new ChunkedBuilderAdapter(new TetReaderAdapter(socket.buffer, message.index)).start();
+      result.body = new ChunkedBuilderAdapter(new TetReaderWithIndex(socket.buffer, message.index)).start();
     }
     return result;
   }

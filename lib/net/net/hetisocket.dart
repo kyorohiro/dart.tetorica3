@@ -31,7 +31,7 @@ abstract class TetSocket {
   Stream<TetCloseInfo> onClose;
   bool isClosed = false;
   void close() {
-    _buffer.immutable = true;
+    _buffer.loadCompleted = true;
     isClosed = true;
   }
 //
@@ -40,7 +40,7 @@ abstract class TetSocket {
 //  }
 //
   Future clearBuffer() async {
-    _buffer.clearInnerBuffer(_buffer.currentSize,reuse:false);
+    _buffer.unusedBuffer(_buffer.currentSize,reuse:false);
     _buffer.clear();
   }
 }

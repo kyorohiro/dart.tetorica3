@@ -16,7 +16,7 @@ class EasyParser {
   }
 
   EasyParser toClone() {
-    EasyParser parser = new EasyParser(new TetReaderAdapter(_buffer, 0), cacheSize: _cache.bufferSize);
+    EasyParser parser = new EasyParser(new TetReaderWithIndex(_buffer, 0), cacheSize: _cache.bufferSize);
     parser.index = index;
     parser.stack = new List.from(stack);
     return parser;
@@ -224,7 +224,7 @@ class EasyParser {
           ret.add(va[0]);
           index++;
           return p();
-        } else if (_buffer.immutable) {
+        } else if (_buffer.loadCompleted) {
           completer.complete(ret);
         } else {
           completer.complete(ret);

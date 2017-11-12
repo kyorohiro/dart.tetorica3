@@ -26,7 +26,7 @@ class ArrayBuilder extends TetReader {
   }
 
   bool _updateGetInfo(GetByteFutureInfo info) {
-    if (this.immutable == true || info.index + info.completerResultLength - 1 < _length) {
+    if (this.loadCompleted == true || info.index + info.completerResultLength - 1 < _length) {
       info.completer.complete(info.index);
       return true;
     } else {
@@ -92,7 +92,7 @@ class ArrayBuilder extends TetReader {
     _length = 0;
   }
 
-  void clearInnerBuffer(int len, {reuse: true}) {
+  void unusedBuffer(int len, {reuse: true}) {
     _buffer8.clearBuffer(len, reuse: reuse);
   }
 
@@ -101,7 +101,7 @@ class ArrayBuilder extends TetReader {
   Future<int> getLength() async => _length;
 
   void fin() {
-    immutable = true;
+    loadCompleted = true;
     _updateGetInfos();
     mGetByteFutreList.clear();
   }
@@ -117,7 +117,7 @@ class ArrayBuilder extends TetReader {
   }
 
   void appendByte(int v) {
-    if (immutable) {
+    if (loadCompleted) {
       return;
     }
     update(1);
@@ -128,7 +128,7 @@ class ArrayBuilder extends TetReader {
   }
 
   void appendIntList(List<int> buffer, [int index = 0, int length = -1]) {
-    if (immutable) {
+    if (loadCompleted) {
       return;
     }
     if (length < 0) {

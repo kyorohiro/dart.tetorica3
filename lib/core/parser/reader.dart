@@ -1,64 +1,62 @@
 part of hetimacore;
 
 abstract class TetReader {
-  bool _immutable = false;
-  Completer<bool> _completerFin = new Completer();
 
+  //
+  // need override
   Future<int> getIndex(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
   int get currentSize;
   int operator [](int index);
 
-  Completer<bool> get rawcompleterFin => _completerFin;
-  Future<bool> getStockedSignal() {
-    return _completerFin.future;
-  }
+  //
+  //
+  bool _loadCompleted = false;
+  Completer<bool> _loadCompletedCompleter = new Completer();
+  Completer<bool> get loadCompletedCompleter => _loadCompletedCompleter;
 
   Future<List<int>> getAllBytes({bool allowMalformed: true}) async {
-    await getStockedSignal();
+    if(_loadCompleted == false) {
+      await loadCompletedCompleter.future;
+    }
     int length = await getLength();
     return await getBytes(0, length);
   }
 
-  Future<String> getString({bool allowMalformed: true}) async {
+  Future<String> getAllString({bool allowMalformed: true}) async {
     return convert.UTF8.decode(await getAllBytes(), allowMalformed: allowMalformed);
   }
 
-  void fin() {
-    immutable = true;
-  }
-
-  bool get immutable => _immutable;
-  void set immutable(bool v) {
-    bool prev = _immutable;
-    _immutable = v;
-    if (prev == false && v == true) {
-      _completerFin.complete(v);
+  bool get loadCompleted => _loadCompleted;
+  void set loadCompleted(bool v) {
+    if (_loadCompleted == false && v == true) {
+      _loadCompletedCompleter.complete(true);
+      _loadCompleted = true;
+    } else {
+      // not define
     }
   }
 
-  void clearInnerBuffer(int len) {
-    ;
-  }
+  void unusedBuffer(int len) {}
 }
 
-class TetReaderAdapter extends TetReader {
+class TetReaderWithIndex extends TetReader {
   TetReader _base = null;
-  int _startIndex = 0;
+  int _start = 0;
   int operator [](int index) {
-    return _base[index + _startIndex];
+    return _base[index + _start];
   }
 
-  TetReaderAdapter(TetReader builder, int startIndex) {
-    _base = builder;
-    _startIndex = startIndex;
+  TetReaderWithIndex(TetReader base, int start) {
+    _base = base;
+    _start = start;
   }
 
   Future<int> getLength() {
     Completer<int> completer = new Completer();
     _base.getLength().then((int v) {
-      completer.complete(v - _startIndex);
+      completer.complete(v - _start);
     }).catchError((e) {
       completer.completeError(e);
     });
@@ -69,25 +67,19 @@ class TetReaderAdapter extends TetReader {
     return _base.currentSize;
   }
 
-  Completer<bool> get rawcompleterFin => _base.rawcompleterFin;
-  //
-  Future<bool> getStockedSignal() => _base.getStockedSignal();
+  Completer<bool> get loadCompletedCompleter => _base.loadCompletedCompleter;
 
   Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
-    return await _base.getBytes(index + _startIndex, length);
+    return await _base.getBytes(index + _start, length);
   }
 
   Future<int> getIndex(int index, int length) async {
-    return await _base.getIndex(index + _startIndex, length);
+    return await _base.getIndex(index + _start, length);
   }
 
-  void fin() {
-    _base.fin();
-  }
+  bool get loadCompleted => _base.loadCompleted;
 
-  bool get immutable => _base.immutable;
-
-  void set immutable(bool v) {
-    _base.immutable = v;
+  void set loadCompleted(bool v) {
+    _base.loadCompleted = v;
   }
 }
