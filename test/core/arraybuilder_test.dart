@@ -67,7 +67,7 @@ void main() {
     buffer[3] = 4;
     buffer[4] = 5;
 
-    buffer.clearBuffer(3);
+    buffer.unusedBuffer(3);
 
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
@@ -77,7 +77,7 @@ void main() {
     unit.expect(5, buffer.length);
 
     buffer.expandBuffer(10);
-    buffer.clearBuffer(4);
+    buffer.unusedBuffer(4);
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
     unit.expect(0, buffer[2]);

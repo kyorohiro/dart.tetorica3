@@ -94,7 +94,7 @@ class ArrayBuilder extends TetReader {
   }
 
   void unusedBuffer(int len, {reuse: true}) {
-    _buffer8.clearBuffer(len, reuse: reuse);
+    _buffer8.unusedBuffer(len, reuse: reuse);
   }
 
   int get currentSize => _length;

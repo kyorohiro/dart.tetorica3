@@ -53,7 +53,7 @@ class TetMemoryBuffer implements TetBuffer {
   }
 
   @override
-  void clearBuffer(int len, {bool reuse: true}) {
+  void unusedBuffer(int len, {bool reuse: true}) {
     if (_bufferIndex >= len) {
       return;
     } else if (length < len) {

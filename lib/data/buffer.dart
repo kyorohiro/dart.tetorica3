@@ -6,7 +6,8 @@ abstract class TetBuffer {
   int get length;
   int operator [](int index);
   void operator []=(int index, int value);
-  List<int> sublist(int start, int end);
-  void clearBuffer(int len, {bool reuse: true});
+  void unusedBuffer(int len, {bool reuse: true});
   void expandBuffer(int nextMax);
+  //
+  List<int> sublist(int start, int end);
 }
