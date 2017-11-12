@@ -15,7 +15,7 @@ class HttpClient {
 
   bool _verbose = false;
 
-  HttpClient(TetSocketBuilder socketBuilder, {TetDataBuilder dataBuilder: null, bool verbose: false}) {
+  HttpClient(TetSocketBuilder socketBuilder, {DataBuilder dataBuilder: null, bool verbose: false}) {
     _socketBuilder = socketBuilder;
     _verbose = verbose;
   }

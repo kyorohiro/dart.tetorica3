@@ -7,12 +7,12 @@ class EasyParser {
   TetReader get buffer => _buffer;
   bool logon = false;
   Exception myException = new Exception();
-  TetMemoryBuffer _cache;
+  MemoryBuffer _cache;
   convert.Utf8Decoder _utfDecoder = new convert.Utf8Decoder(allowMalformed: true);
 
   EasyParser(TetReader builder, {this.logon: false, int cacheSize: 256}) {
     _buffer = builder;
-    _cache = new TetMemoryBuffer(cacheSize);
+    _cache = new MemoryBuffer(cacheSize);
   }
 
   EasyParser toClone() {

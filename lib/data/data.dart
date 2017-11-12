@@ -1,10 +1,10 @@
 part of hetimadata;
 
-abstract class TetDataBuilder {
-  Future<TetData> createHetimaData(String path);
+abstract class DataBuilder {
+  Future<Data> createHetimaData(String path);
 }
 
-abstract class TetData implements TetDataReader, TetDataWriter {
+abstract class Data implements DataReader, DataWriter {
   bool get writable => false;
   bool get readable => false;
   Future<int> getLength();
@@ -13,12 +13,12 @@ abstract class TetData implements TetDataReader, TetDataWriter {
   void beToReadOnly();
 }
 
-abstract class TetDataWriter {
+abstract class DataWriter {
   Future<int> getLength();
   Future<WriteResult> write(Object o, int start,[int length=null]);
 }
 
-abstract class TetDataReader {
+abstract class DataReader {
   Future<int> getLength();
   Future<ReadResult> read(int offset, int length);
 }

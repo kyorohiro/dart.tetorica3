@@ -1,12 +1,12 @@
 part of hetimadata;
 
 
-class TetMemoryData extends TetData {
+class MemoryData extends Data {
   bool get writable => true;
   bool get readable => true;
 
   List<int> _dataBuffer = null;
-  TetMemoryData([List<int> buffer=null]) {
+  MemoryData([List<int> buffer=null]) {
     if(buffer != null) {
       _dataBuffer = new List.from(buffer);
     } else {

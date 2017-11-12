@@ -2,10 +2,10 @@ part of hetimaparsr;
 
 class ArrayBuilder extends TetReader {
   int _max = 1024;
-  TetMemoryBuffer _buffer8;
+  MemoryBuffer _buffer8;
   int _length = 0;
 
-  TetMemoryBuffer get rawbuffer8 => _buffer8;
+  MemoryBuffer get rawbuffer8 => _buffer8;
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
   int get clearedBuffer => _buffer8.bufferIndex;
@@ -14,11 +14,11 @@ class ArrayBuilder extends TetReader {
   ArrayBuilder({bufferSize: 1024}) {
     this.logon = logon;
     _max = bufferSize;
-    _buffer8 = new TetMemoryBuffer(_max); //new data.Uint8List(_max);
+    _buffer8 = new MemoryBuffer(_max); //new data.Uint8List(_max);
   }
 
   ArrayBuilder.fromList(List<int> buffer, [isFin = false]) {
-    _buffer8 = new TetMemoryBuffer.fromList(buffer);
+    _buffer8 = new MemoryBuffer.fromList(buffer);
     _length = buffer.length;
     if (isFin == true) {
       loadCompleted = true;

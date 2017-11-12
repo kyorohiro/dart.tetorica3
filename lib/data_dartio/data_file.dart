@@ -1,6 +1,6 @@
 part of hetimacore_dartio;
 
-class HetimaDataDartIO extends TetData {
+class HetimaDataDartIO extends Data {
   RandomAccessFile _randomFile = null;
   bool _readOnly = false;
   HetimaDataDartIO(String path,{erace: false}) {
@@ -72,8 +72,8 @@ class HetimaDataDartIO extends TetData {
   }
 }
 
-class HetimaDataDartIOBuilder extends TetDataBuilder {
-  Future<TetData> createHetimaData(String path) async {
+class HetimaDataDartIOBuilder extends DataBuilder {
+  Future<Data> createHetimaData(String path) async {
     return new HetimaDataDartIO(path);
   }
 }

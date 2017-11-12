@@ -1,6 +1,6 @@
 part of hetimadata;
 
-abstract class TetBuffer {
+abstract class Buffer {
   int get bufferSize;
   int get bufferIndex;
   int get length;
