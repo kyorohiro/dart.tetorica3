@@ -8,7 +8,7 @@ class ArrayBuilder extends TetReader {
   TetBufferPlus get rawbuffer8 => _buffer8;
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
-  int get clearedBuffer => _buffer8.clearedBuffer;
+  int get clearedBuffer => _buffer8.bufferIndex;
 
   bool logon = false;
   ArrayBuilder({bufferSize: 1024}) {
@@ -110,7 +110,7 @@ class ArrayBuilder extends TetReader {
     if (_length + plusLength < _max) {
       return;
     } else {
-      int nextMax = _length + plusLength + (_max - _buffer8.clearedBuffer);
+      int nextMax = _length + plusLength + (_max - _buffer8.bufferIndex);
       _buffer8.expandBuffer(nextMax);
       _max = nextMax;
     }

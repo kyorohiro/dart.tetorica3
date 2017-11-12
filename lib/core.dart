@@ -6,12 +6,12 @@ import 'dart:convert' as convert;
 import 'dart:typed_data' as data;
 
 part 'core/data/data.dart';
-part 'core/parser/hetimareader.dart';
+part 'core/parser/reader.dart';
 
-part 'core/parser/byteorder.dart';
+part 'package:tetorica/core/data/byteorder.dart';
 part 'core/parser/easyparser.dart';
 part 'core/parser/arraybuilder.dart';
-part 'core/parser/buffer.dart';
+part 'package:tetorica/core/data/buffer.dart';
 part 'core/util/percentencode.dart';
 part 'core/data/memory.dart';
 part 'core/util/bencode.dart';

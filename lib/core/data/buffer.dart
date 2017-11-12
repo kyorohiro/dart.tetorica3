@@ -1,8 +1,8 @@
 part of hetimacore;
 
 abstract class TetBuffer {
-  int get cacheSize;
-  int get clearedBuffer;
+  int get bufferSize;
+  int get bufferIndex;
   int get length;
   int operator [](int index);
   void operator []=(int index, int value);
@@ -16,7 +16,7 @@ class TetBufferPlus implements TetBuffer {
   bool logon = false;
 
   //
-  int _clearedBuffer = 0;
+  int _bufferIndex = 0;
   int _length = 0;
   List<int> _buffer8 = null;
 
@@ -24,13 +24,13 @@ class TetBufferPlus implements TetBuffer {
   List<int> get rawbuffer8 => _buffer8;
 
   @override
-  int get cacheSize => _buffer8.length;
+  int get bufferSize => _buffer8.length;
 
   @override
-  int get clearedBuffer => _clearedBuffer;
+  int get bufferIndex => _bufferIndex;
 
   @override
-  int get length => _length + _clearedBuffer;
+  int get length => _length + _bufferIndex;
 
   TetBufferPlus(int max) {
     _length = max;
@@ -44,13 +44,13 @@ class TetBufferPlus implements TetBuffer {
 
   @override
   int operator [](int index) {
-    return ((index - _clearedBuffer >= 0) ? _buffer8[index - _clearedBuffer] : 0);
+    return ((index - _bufferIndex >= 0) ? _buffer8[index - _bufferIndex] : 0);
   }
 
   @override
   void operator []=(int index, int value) {
-    if (index >= _clearedBuffer) {
-      _buffer8[index - _clearedBuffer] = value;
+    if (index >= _bufferIndex) {
+      _buffer8[index - _bufferIndex] = value;
     }
   }
 
@@ -65,12 +65,12 @@ class TetBufferPlus implements TetBuffer {
 
   @override
   void clearBuffer(int len, {bool reuse: true}) {
-    if (_clearedBuffer >= len) {
+    if (_bufferIndex >= len) {
       return;
     } else if (length < len) {
       len = length;
     }
-    int erace = len - _clearedBuffer;
+    int erace = len - _bufferIndex;
 
     if (reuse == false) {
       _buffer8 = _buffer8.sublist(erace);
@@ -81,12 +81,12 @@ class TetBufferPlus implements TetBuffer {
       }
       _length = _length - erace;
     }
-    _clearedBuffer = len;
+    _bufferIndex = len;
   }
 
   @override
   void expandBuffer(int nextMax) {
-    nextMax = nextMax - _clearedBuffer;
+    nextMax = nextMax - _bufferIndex;
     if (_buffer8.length >= nextMax) {
       _length = nextMax;
       return;
