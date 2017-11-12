@@ -62,7 +62,7 @@ class HetiHttpServerPlus {
   }
 
 
-  void response(HetiHttpServerRequest req, HetimaData file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
+  void response(HetiHttpServerRequest req, TetData file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
     if(headerList == null) {headerList = {};}
     headerList["Content-Type"] = contentType;
     HttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
@@ -79,7 +79,7 @@ class HetiHttpServerPlus {
   }
 
 
-  void _startResponseRangeFile(TetSocket socket, HetimaData file, Map<String,String> header, int start, int end) {
+  void _startResponseRangeFile(TetSocket socket, TetData file, Map<String,String> header, int start, int end) {
     ArrayBuilder response = new ArrayBuilder();
     file.getLength().then((int length) {
       if (end == -1 || end > length - 1) {
@@ -103,7 +103,7 @@ class HetiHttpServerPlus {
     });
   }
 
-  void _startResponseFile(TetSocket socket, int statuCode, Map<String,String> header, HetimaData file) {
+  void _startResponseFile(TetSocket socket, int statuCode, Map<String,String> header, TetData file) {
     ArrayBuilder response = new ArrayBuilder();
     if(statuCode == null) {
       statuCode = 200;
@@ -124,7 +124,7 @@ class HetiHttpServerPlus {
     });
   }
 
-  void _startResponseBuffer(TetSocket socket, HetimaData file, int index, int length) {
+  void _startResponseBuffer(TetSocket socket, TetData file, int index, int length) {
     int start = index;
     responseTask() {
       int end = start + 256 * 1024;

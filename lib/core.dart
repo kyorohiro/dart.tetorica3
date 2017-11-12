@@ -5,7 +5,7 @@ import 'dart:core';
 import 'dart:convert' as convert;
 import 'dart:typed_data' as data;
 
-part 'core/data/hetimadata.dart';
+part 'core/data/data.dart';
 part 'core/parser/hetimareader.dart';
 
 part 'core/parser/byteorder.dart';
@@ -13,7 +13,7 @@ part 'core/parser/easyparser.dart';
 part 'core/parser/arraybuilder.dart';
 part 'core/parser/buffer.dart';
 part 'core/util/percentencode.dart';
-part 'core/data/hetimadata_mem.dart';
+part 'core/data/memory.dart';
 part 'core/util/bencode.dart';
 part 'core/util/bencode_async.dart';
 part 'core/util/uuid.dart';

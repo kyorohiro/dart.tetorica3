@@ -1,12 +1,12 @@
 part of hetimacore;
 
 
-class HetimaDataMemory extends HetimaData {
+class TetMemory extends TetData {
   bool get writable => true;
   bool get readable => true;
 
   List<int> _dataBuffer = null;
-  HetimaDataMemory([List<int> buffer=null]) {
+  TetMemory([List<int> buffer=null]) {
     if(buffer != null) {
       _dataBuffer = new List.from(buffer);
     } else {
