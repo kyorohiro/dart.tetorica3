@@ -1,6 +1,6 @@
 part of hetimacore;
 
-class TetBufferPlus implements TetBuffer {
+class TetMemoryBuffer implements TetBuffer {
   //
   bool logon = false;
 
@@ -21,12 +21,12 @@ class TetBufferPlus implements TetBuffer {
   @override
   int get length => _length + _bufferIndex;
 
-  TetBufferPlus(int max) {
+  TetMemoryBuffer(int max) {
     _length = max;
     _buffer8 = new data.Uint8List(max);
   }
 
-  TetBufferPlus.fromList(List<int> buffer) {
+  TetMemoryBuffer.fromList(List<int> buffer) {
     _length = buffer.length;
     _buffer8 = new data.Uint8List.fromList(buffer);
   }

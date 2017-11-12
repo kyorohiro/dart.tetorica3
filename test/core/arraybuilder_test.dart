@@ -55,7 +55,7 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: ", () {
-    hetima.TetBufferPlus buffer = new hetima.TetBufferPlus(5);
+    hetima.TetMemoryBuffer buffer = new hetima.TetMemoryBuffer(5);
     unit.expect(5, buffer.length);
 
     buffer[0] = 1;
@@ -102,7 +102,7 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: ", () {
-    hetima.TetBufferPlus buffer = new hetima.TetBufferPlus(3);
+    hetima.TetMemoryBuffer buffer = new hetima.TetMemoryBuffer(3);
     unit.expect(3, buffer.length);
 
     buffer[0] = 1;
