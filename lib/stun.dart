@@ -7,7 +7,7 @@ import 'dart:typed_data';
 
 import 'data.dart' as core;
 import 'parser.dart' as core;
-import 'core.dart' as core;
+import 'util.dart' as core;
 import 'net.dart' as net;
 
 part 'stun/attribute.dart';

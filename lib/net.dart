@@ -2,7 +2,7 @@ library hetimanet;
 
 import 'dart:async';
 import 'dart:convert' as convert;
-import 'core.dart' as heti;
+import 'util.dart' as heti;
 import 'parser.dart' as heti;
 
 //part 'net/http/hetihttp.dart';

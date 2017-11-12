@@ -2,7 +2,7 @@ library pieceinfo.test;
 
 import 'package:test/test.dart' as unit;
 import 'package:tetorica/data.dart';
-import 'package:tetorica/core.dart';
+import 'package:tetorica/util.dart';
 
 void main() {
   unit.group('A group of tests', () {

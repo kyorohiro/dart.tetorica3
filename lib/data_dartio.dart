@@ -5,6 +5,6 @@ import 'dart:typed_data' as data;
 import 'dart:io';
 import 'data.dart';
 import 'parser.dart';
-import 'core.dart';
+import 'util.dart';
 
-part  'core_dartio/data_file.dart';
+part  'data_dartio/data_file.dart';

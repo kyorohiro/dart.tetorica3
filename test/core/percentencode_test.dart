@@ -1,5 +1,5 @@
 import 'package:test/test.dart' as unit;
-import 'package:tetorica/core.dart';
+import 'package:tetorica/util.dart';
 import 'dart:convert' as convert;
 
 void main() {

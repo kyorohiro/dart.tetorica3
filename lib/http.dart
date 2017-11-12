@@ -4,7 +4,7 @@ import 'dart:convert' as convert;
 import 'dart:async';
 import 'data.dart';
 import 'parser.dart';
-import 'core.dart';
+import 'util.dart';
 import 'net.dart';
 import 'dart:typed_data' as data;
 import 'net/tmp/rfctable.dart';

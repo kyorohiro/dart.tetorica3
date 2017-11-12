@@ -1,5 +1,5 @@
 import 'package:test/test.dart' as unit;
-//import 'package:tetorica/core.dart' as hetima;
+//import 'package:tetorica/util.dart' as hetima;
 import 'package:tetorica/stun.dart' as turn;
 //import 'dart:async';
 
