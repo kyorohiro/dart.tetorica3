@@ -7,8 +7,11 @@ abstract class TetReader {
   Future<int> getIndex(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
+
+  // buffer
   int get currentSize;
   int operator [](int index);
+  void unusedBuffer(int len) {}
 
   //
   //
@@ -39,7 +42,7 @@ abstract class TetReader {
 
 
 
-  void unusedBuffer(int len) {}
+
   bool _loadCompleted = false;
   Completer<bool> _loadCompletedCompleter = new Completer();
 
