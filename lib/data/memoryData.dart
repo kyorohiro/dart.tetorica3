@@ -5,7 +5,6 @@ class MemoryData extends Data {
   bool get writable => true;
   bool get readable => true;
 
-  List<int> _dataBuffer = null;
   MemoryData([List<int> buffer=null]) {
     if(buffer != null) {
       _dataBuffer = new List.from(buffer);
@@ -74,4 +73,6 @@ class MemoryData extends Data {
   void beToReadOnly() {
     //
   }
+
+  List<int> _dataBuffer = null;
 }
