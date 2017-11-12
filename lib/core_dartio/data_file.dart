@@ -27,7 +27,7 @@ class HetimaDataDartIO extends TetData {
     }
     await _randomFile.setPosition(offset);
     int l = await _randomFile.readInto(tmp, 0, length);
-    return new ReadResult(tmp, l);
+    return new ReadResult(tmp, index:0, length: l);
   }
 
   @override

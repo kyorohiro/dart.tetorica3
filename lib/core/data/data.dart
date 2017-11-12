@@ -27,9 +27,11 @@ class WriteResult {}
 
 class ReadResult {
   List<int> buffer;
+  int index = 0;
   int length = 0;
-  ReadResult(List<int> _buffer, [int length = -1]) {
+  ReadResult(List<int> _buffer, {int index = 0, int length = -1}) {
     buffer = _buffer;
+    this.index = index;
     if (length < 0) {
       this.length = _buffer.length;
     } else {
