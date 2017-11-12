@@ -1,5 +1,6 @@
 import 'package:test/test.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
+import 'package:tetorica/data.dart' as hetima;
 
 void main() {
 //  hetima.HetiTest test = new hetima.HetiTest("tt");

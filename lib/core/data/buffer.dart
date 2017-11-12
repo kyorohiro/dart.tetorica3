@@ -1,4 +1,4 @@
-part of hetimacore;
+part of hetimadata;
 
 abstract class TetBuffer {
   int get bufferSize;

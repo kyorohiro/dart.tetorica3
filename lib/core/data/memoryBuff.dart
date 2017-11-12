@@ -1,4 +1,4 @@
-part of hetimacore;
+part of hetimadata;
 
 class TetMemoryBuffer implements TetBuffer {
   //
