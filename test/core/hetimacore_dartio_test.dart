@@ -1,7 +1,7 @@
 import 'package:test/test.dart' as unit;
 import 'package:tetorica/data.dart';
 import 'package:tetorica/core.dart';
-import 'package:tetorica/core_dartio.dart';
+import 'package:tetorica/data_dartio.dart';
 import 'dart:convert';
 
 void main() {

@@ -9,3 +9,4 @@ part 'data/data.dart';
 part 'data/buffer.dart';
 part 'data/memoryData.dart';
 part 'data/memoryBuff.dart';
+part 'data/pieceinfo.dart';
