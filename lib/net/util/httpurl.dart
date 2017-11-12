@@ -26,12 +26,12 @@ class HttpUrlDecoder {
   static final String SUB_DELIMS_AS_STRING = """!\$&'()*+,;=""";
   static final String RFC3986_RESERVED_AS_STRING = GEM_DELIMS_AS_STRING+SUB_DELIMS_AS_STRING+"%";
 
-  static List<int> RFC3986_UNRESERVED = convert.UTF8.encode(RFC3986_UNRESERVED_AS_STRING);
-  static List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
-  static List<int> SCHEME_HTTP = convert.UTF8.encode("http://");
-  static List<int> SCHEME_HTTPS = convert.UTF8.encode("https://");
-  static List<int> PATH = convert.UTF8.encode(RFC3986_PCHAR_AS_STRING + "/");
-  static List<int> QUERY = convert.UTF8.encode(RFC3986_RESERVED_AS_STRING + RFC3986_UNRESERVED_AS_STRING);
+  static final List<int> RFC3986_UNRESERVED = convert.UTF8.encode(RFC3986_UNRESERVED_AS_STRING);
+  static final List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
+  static final List<int> SCHEME_HTTP = convert.UTF8.encode("http://");
+  static final List<int> SCHEME_HTTPS = convert.UTF8.encode("https://");
+  static final List<int> PATH = convert.UTF8.encode(RFC3986_PCHAR_AS_STRING + "/");
+  static final List<int> QUERY = convert.UTF8.encode(RFC3986_RESERVED_AS_STRING + RFC3986_UNRESERVED_AS_STRING);
 
   static HttpUrlDecoder _sDecoder = new HttpUrlDecoder();
 
