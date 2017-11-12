@@ -69,7 +69,8 @@ class HetiHttpServerPlus {
     if (fieldRangeHeader != null && statusCode == null) {
       data.Uint8List buff = new data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
       ArrayBuilder builder = new ArrayBuilder.fromList(buff);
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
       HetiHttpResponse.decodeRequestRangeValue(new EasyParser(builder)).then((HetiHttpRequestRange range) {
         _startResponseRangeFile(req.socket, file, headerList, range.start, range.end);
       });

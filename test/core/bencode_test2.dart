@@ -30,7 +30,8 @@ void main() {
         unit.expect(true, true);
       });
       builder.appendString("i00");
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
       return e;
     });
   });
@@ -57,7 +58,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("000");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
   });
 
   unit.test("string", (){
@@ -85,7 +87,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("3:ab");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     return e;
   });
 
@@ -100,7 +103,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("3abc");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;;
     return e;
   });
 
@@ -115,7 +119,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString(":abc");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     return e;
   });
   unit.test("list", (){
@@ -147,7 +152,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("l4:testi1024e");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
   });
 
   unit.test("list e2", (){
@@ -160,7 +166,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("l4:test;1024ee");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
   });
 
   unit.test("list e3", (){
@@ -173,7 +180,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("f4:testi1024ee");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
   });
 
   unit.test("dictionary", (){
@@ -205,7 +213,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("d4:test4:test5:valuei1024e");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     return e;
   });
 
@@ -219,7 +228,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("d4:test4:test5:value1024ee");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     return e;
   });
 
@@ -233,7 +243,8 @@ void main() {
       unit.expect(true, true);
     });
     builder.appendString("gg4:test4:test5:value1024ee");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     return e;
   });
 }

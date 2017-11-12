@@ -24,7 +24,8 @@ void main() {
       builder.appendString("aaa: bb\r\n");
       builder.appendString("ccc: ddd\r\n");
       builder.appendString("\r\n");
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
       unit.expect("GET", (await ret).line.method);
       unit.expect("HTTP/1.1", (await ret).line.httpVersion);
       unit.expect("/xxx/yy/zz", (await ret).line.requestTarget);

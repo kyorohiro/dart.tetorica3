@@ -29,6 +29,7 @@ abstract class TetReader {
   }
 
   bool get loadCompleted => _loadCompleted;
+
   void set loadCompleted(bool v) {
     if (_loadCompleted == false && v == true) {
       _loadCompletedCompleter.complete(true);

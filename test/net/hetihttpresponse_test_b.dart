@@ -33,7 +33,8 @@ void main() {
     Future<String> ret = hetima.HetiHttpResponse.decodeReasonPhrase(parser);
     builder.appendString("aaa bbb");
     builder.appendString(" ccc");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect("aaa bbb ccc", await ret);
   });
 
@@ -42,7 +43,8 @@ void main() {
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     Future<String> ret = hetima.HetiHttpResponse.decodeCrlf(parser);
     builder.appendString("\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect("\n", await ret);
   });
 
@@ -51,7 +53,8 @@ void main() {
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     Future<String> ret = hetima.HetiHttpResponse.decodeCrlf(parser);
     builder.appendString(" ");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     try {
       unit.fail("${await ret}");
     } catch (e) {
@@ -64,7 +67,8 @@ void main() {
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     Future<hetima.HetiHttpResponseStatusLine> ret = hetima.HetiHttpResponse.decodeStatusline(parser);
     builder.appendString("HTTP/1.1 200 tes test test\r\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect((await ret).statusCode, 200);
     unit.expect((await ret).version, "HTTP/1.1");
     unit.expect((await ret).statusPhrase, "tes test test");
@@ -75,7 +79,8 @@ void main() {
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     Future<hetima.HttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
     builder.appendString("test:   aaa\r\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect((await ret).fieldName, "test");
     unit.expect((await ret).fieldValue, "aaa");
   });
@@ -86,7 +91,8 @@ void main() {
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
       builder.appendString("test   aaa\r\n");
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
       unit.fail("${await ret}");
     } catch (e) {
       // expected
@@ -99,7 +105,8 @@ void main() {
     Future<List<hetima.HttpResponseHeaderField>> ret = hetima.HetiHttpResponse.decodeHeaderFields(parser);
     builder.appendString("test1:   aaa\r\n");
     builder.appendString("test2:   bbb\r\n\r\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect((await ret)[0].fieldName, "test1");
     unit.expect((await ret)[0].fieldValue, "aaa");
     unit.expect((await ret)[1].fieldName, "test2");
@@ -113,7 +120,8 @@ void main() {
     builder.appendString("HTTP/1.1 200 tes test test\r\n");
     builder.appendString("test1:   aaa\r\n");
     builder.appendString("test2:   bbb\r\n\r\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     unit.expect((await ret).headerField[0].fieldName, "test1");
     unit.expect((await ret).headerField[0].fieldValue, "aaa");
     unit.expect((await ret).headerField[1].fieldName, "test2");
@@ -126,7 +134,8 @@ void main() {
     builder.appendString("HTTP/1.1 200 tes test test\r\n");
     builder.appendString("test1:   aaa\r\n");
     builder.appendString("test2   bbb\r\n\r\n");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     try {
       await ret;
       unit.fail("");

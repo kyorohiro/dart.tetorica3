@@ -11,7 +11,8 @@ void main() {
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-100");
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
       unit.expect(0, (await f).start);
       unit.expect(100, (await f).end);
   });
@@ -21,7 +22,8 @@ void main() {
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-");
-      builder.fin();
+      //builder.fin();
+      builder.loadCompleted = true;
 
       unit.expect(0, (await f).start);
       unit.expect(-1, (await f).end);

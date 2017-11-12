@@ -21,7 +21,8 @@ class ArrayBuilder extends TetReader {
     _buffer8 = new TetBufferPlus.fromList(buffer);
     _length = buffer.length;
     if (isFin == true) {
-      fin();
+      loadCompleted = true;
+//      fin();
     }
   }
 
@@ -100,11 +101,18 @@ class ArrayBuilder extends TetReader {
 
   Future<int> getLength() async => _length;
 
-  void fin() {
-    loadCompleted = true;
+  @override
+  void set loadCompleted(bool v) {
+    super.loadCompleted = true;
     _updateGetInfos();
     mGetByteFutreList.clear();
   }
+
+//  void fin() {
+//    loadCompleted = true;
+//    _updateGetInfos();
+ //   mGetByteFutreList.clear();
+//  }
 
   void update(int plusLength) {
     if (_length + plusLength < _max) {

@@ -23,7 +23,8 @@ void main() {
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n1234567890");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     String s = conv.UTF8.decode(await r);
     unit.expect("abc1234567890", s);
   });
@@ -33,7 +34,8 @@ void main() {
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n12345678");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     try {
       await r;
       unit.fail("--");
@@ -45,7 +47,8 @@ void main() {
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc10\r\n12345678");
-    builder.fin();
+    //builder.fin();
+    builder.loadCompleted = true;
     try {
       await r;
       unit.fail("--");
