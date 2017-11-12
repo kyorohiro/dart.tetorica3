@@ -1,0 +1,11 @@
+name: tetorica
+version: 0.3.1
+description: p2p lib
+autohr: kyorohiro
+environment:
+  sdk: '>=2.0.0-dev.7.0'
+  xml: any
+dependencies:
+
+dev_dependencies:
+  test: any
