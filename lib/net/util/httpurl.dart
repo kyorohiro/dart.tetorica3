@@ -13,13 +13,25 @@ class HttpUrl {
 
 }
 
+
 class HttpUrlDecoder {
   int index = 0;
   List<int> url = null;
+  static final String ALPHA_AS_STRING = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static final String DIGIT_AS_STRING = "0123456789";
+  static final String RFC3986_SUB_DELIMS_AS_STRING = "!\$&'()*+,;=";
+  static final String RFC3986_UNRESERVED_AS_STRING = ALPHA_AS_STRING+DIGIT_AS_STRING+"-._~";
+  static final String RFC3986_PCHAR_AS_STRING = RFC3986_UNRESERVED_AS_STRING+":@"+RFC3986_SUB_DELIMS_AS_STRING+"%";
+  static final String GEM_DELIMS_AS_STRING = """:/?#[]@""";
+  static final String SUB_DELIMS_AS_STRING = """!\$&'()*+,;=""";
+  static final String RFC3986_RESERVED_AS_STRING = GEM_DELIMS_AS_STRING+SUB_DELIMS_AS_STRING+"%";
+
+  static List<int> RFC3986_UNRESERVED = convert.UTF8.encode(RFC3986_UNRESERVED_AS_STRING);
+  static List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
   static List<int> SCHEME_HTTP = convert.UTF8.encode("http://");
   static List<int> SCHEME_HTTPS = convert.UTF8.encode("https://");
-  static List<int> PATH = convert.UTF8.encode(RfcTable.RFC3986_PCHAR_AS_STRING + "/");
-  static List<int> QUERY = convert.UTF8.encode(RfcTable.RFC3986_RESERVED_AS_STRING + RfcTable.RFC3986_UNRESERVED_AS_STRING);
+  static List<int> PATH = convert.UTF8.encode(RFC3986_PCHAR_AS_STRING + "/");
+  static List<int> QUERY = convert.UTF8.encode(RFC3986_RESERVED_AS_STRING + RFC3986_UNRESERVED_AS_STRING);
 
   static HttpUrlDecoder _sDecoder = new HttpUrlDecoder();
 
@@ -97,7 +109,7 @@ class HttpUrlDecoder {
   String host() {
     try {
       push();
-      while (matchChar(RfcTable.RFC3986_UNRESERVED)) {
+      while (matchChar(RFC3986_UNRESERVED)) {
         ;
       }
       return convert.UTF8.decode(last());
@@ -160,7 +172,7 @@ class HttpUrlDecoder {
         return 80;
       }
       index++;
-      while (matchChar(RfcTable.DIGIT)) {
+      while (matchChar(DIGIT)) {
         ;
       }
       List<int> portAsList = last();
