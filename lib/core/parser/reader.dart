@@ -12,10 +12,19 @@ abstract class TetReader {
 
   //
   //
-  bool _loadCompleted = false;
-  Completer<bool> _loadCompletedCompleter = new Completer();
   Completer<bool> get loadCompletedCompleter => _loadCompletedCompleter;
+  bool get loadCompleted => _loadCompleted;
+  void set loadCompleted(bool v) {
+    if (_loadCompleted == false && v == true) {
+      _loadCompletedCompleter.complete(true);
+      _loadCompleted = true;
+    } else {
+      // not define
+    }
+  }
 
+  //
+  //
   Future<List<int>> getAllBytes({bool allowMalformed: true}) async {
     if(_loadCompleted == false) {
       await loadCompletedCompleter.future;
@@ -28,18 +37,12 @@ abstract class TetReader {
     return convert.UTF8.decode(await getAllBytes(), allowMalformed: allowMalformed);
   }
 
-  bool get loadCompleted => _loadCompleted;
 
-  void set loadCompleted(bool v) {
-    if (_loadCompleted == false && v == true) {
-      _loadCompletedCompleter.complete(true);
-      _loadCompleted = true;
-    } else {
-      // not define
-    }
-  }
 
   void unusedBuffer(int len) {}
+  bool _loadCompleted = false;
+  Completer<bool> _loadCompletedCompleter = new Completer();
+
 }
 
 class TetReaderWithIndex extends TetReader {
