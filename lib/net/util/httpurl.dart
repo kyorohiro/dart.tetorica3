@@ -5,10 +5,11 @@ class HttpUrl {
   String host = "127.0.0.1";
   String path = "";
   String query = "";
+  String get pathWithQuery => (query == null || query.length ==0?(path==""?"/":path):path+"?"+query);
   int port = 80;
 
-  static HttpUrl decode() {
-    return null;
+  static HttpUrl decodeUrl(String url,{String baseUrl: null}) {
+    return HttpUrlDecoder.decodeUrl(url, baseUrl);
   }
 
 }

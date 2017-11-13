@@ -5,8 +5,8 @@ class HttpClientPlus {
   bool verbose = false;
 
   HttpClientPlus(this.socketBuilder,{this.verbose: false}){}
-  
-  Future<HttpClientResponse> base(String address, int port, String action, String pathAndOption,
+
+  Future<HttpClientResponse> doAction(String address, int port, String action, String pathAndOption,
      List<int> data, {
         List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
         Map<String, String> header,
@@ -26,9 +26,16 @@ class HttpClientPlus {
       isLoadBody:isLoadBody);
 
     client.close();
-
+    
     //
-    if (redirectStatusCode.contains(res.info.line.statusCode)) {
+    if (redirectStatusCode.contains(res.info.line.statusCode) && redirect > 0) {
+      //
+      //
+      for(HttpResponseHeaderField head in res.info.headerField) {
+        print("HEAD = ${head.fieldName} : ${head.fieldValue}");
+      }
+      //
+      //
       HttpResponseHeaderField locationField = res.info.find("Location");
       String scheme;
       if(useSecure) {
@@ -43,10 +50,11 @@ class HttpClientPlus {
         option = pathAndOption.substring(optionIndex);
       }
       pathAndOption = "${hurl.path}${option}";
+      log("status code:${res.info.line.statusCode}");
       log("Location:${locationField.fieldValue}");
       log("scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
       useSecure = (hurl.scheme == "https"?true:false);
-      return base(hurl.host, hurl.port, action, pathAndOption, data,
+      return doAction(hurl.host, hurl.port, action, pathAndOption, data,
         redirectStatusCode: redirectStatusCode, header: header,
         redirect: (redirect - 1),
         reuseQuery: reuseQuery,useSecure:useSecure);

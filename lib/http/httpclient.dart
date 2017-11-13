@@ -66,14 +66,17 @@ class HttpClient {
 
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     Map<String, String> headerTmp = {};
-    headerTmp["Host"] = host + ":" + port.toString();
+    headerTmp["Host"] = host;// + ":" + port.toString();
     headerTmp["Connection"] = "Close";
+    //headerTmp["User-Agent"] = "test/01";
+    //headerTmp["Accept"] = "*/*";
+
     if (header != null) {
       for (String key in header.keys) {
         headerTmp[key] = header[key];
       }
     }
-    if(body != null) {
+    if(body != null && body.length > 0) {
       headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
     }
     ParserBuffer builder = new ParserBuffer();
@@ -88,6 +91,8 @@ class HttpClient {
     }
     //
     socket.onReceive.listen((TetReceiveInfo info) {});
+    builder.loadCompleted = true;
+    //print(await builder.getAllString());
     socket.send(builder.toList()).then((TetSendInfo info) {});
 
     return handleResponse(isLoadBody:isLoadBody);

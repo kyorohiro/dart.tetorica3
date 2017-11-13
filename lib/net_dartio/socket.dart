@@ -32,7 +32,7 @@ class TetSocketDartIo extends TetSocket {
     if (_nowConnecting == true || _socket != null) {
       throw "connecting now";
     }
-
+    String host = peerAddress;
     try {
       IPConv.toRawIP(peerAddress);
     } catch (e) {
@@ -49,8 +49,8 @@ class TetSocketDartIo extends TetSocket {
     try {
       _nowConnecting = true;
       if (isSecure == true) {
-        _socket = await io.SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (io.X509Certificate c) {
-          print("Certificate WARNING: ${c.issuer}:${c.subject}");
+        _socket = await io.SecureSocket.connect(host, peerPort, onBadCertificate: (io.X509Certificate c) {
+          //print("Certificate WARNING: ${c.issuer}:${c.subject}");
           if(onBadCertificate != null) {
             return onBadCertificate(new X509Certificate(c.subject, c.issuer, c.startValidity.millisecondsSinceEpoch, c.endValidity.millisecondsSinceEpoch));
           }
@@ -68,7 +68,7 @@ class TetSocketDartIo extends TetSocket {
   }
 
   void _listen(){
-    _socket.listen((List<int> data) {
+    _socket.listen((List<int> data)  {
       log('<<<lis>>> ');
       if(_mode != TetSocketMode.notifyOnly) {
         this.buffer.appendIntList(data, 0, data.length);
@@ -80,6 +80,8 @@ class TetSocketDartIo extends TetSocket {
       log('<<<Done>>>');
       _socket.close();
       _closeStream.add(new TetCloseInfo());
+     // print(await this.buffer.getAllString(allowMalformed: true));
+
     }, onError: (e) {
       log('<<<Got error>>> $e');
       _socket.close();
