@@ -15,7 +15,7 @@ main() async {
   for(tet.HttpResponseHeaderField f in response.info.headerField ) {
     print("# HEA : " + f.fieldName + " " + f.fieldValue + "");
   }
-  tet.TetReader reader = response.body;
+  tet.ParserReader reader = response.body;
   String ret = await reader.getAllString();
   print("${ret}");
 

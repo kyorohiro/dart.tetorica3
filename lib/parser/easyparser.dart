@@ -3,20 +3,20 @@ part of hetimaparsr;
 class EasyParser {
   int index = 0;
   List<int> stack = new List();
-  TetReader _buffer = null;
-  TetReader get buffer => _buffer;
+  ParserReader _buffer = null;
+  ParserReader get buffer => _buffer;
   bool logon = false;
   Exception myException = new Exception();
   MemoryBuffer _cache;
   convert.Utf8Decoder _utfDecoder = new convert.Utf8Decoder(allowMalformed: true);
 
-  EasyParser(TetReader builder, {this.logon: false, int cacheSize: 256}) {
+  EasyParser(ParserReader builder, {this.logon: false, int cacheSize: 256}) {
     _buffer = builder;
     _cache = new MemoryBuffer(cacheSize);
   }
 
   EasyParser toClone() {
-    EasyParser parser = new EasyParser(new TetReaderWithIndex(_buffer, 0), cacheSize: _cache.bufferSize);
+    EasyParser parser = new EasyParser(new ParserReaderWithIndex(_buffer, 0), cacheSize: _cache.bufferSize);
     parser.index = index;
     parser.stack = new List.from(stack);
     return parser;

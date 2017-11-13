@@ -2,7 +2,7 @@ part of hetimanet_http;
 
 class HttpClientResponse {
   HttpClientResponseInfo info;
-  TetReader body;
+  ParserReader body;
 }
 
 //class HttpClientConnectResult {}
@@ -76,7 +76,7 @@ class HttpClient {
     if(body != null) {
       headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
     }
-    ArrayBuilder builder = new ArrayBuilder();
+    ParserBuffer builder = new ParserBuffer();
     builder.appendString(action + " " + path + " " + "HTTP/1.1" + "\r\n");
     for (String key in headerTmp.keys) {
       builder.appendString("" + key + ": " + headerTmp[key] + "\r\n");
@@ -100,7 +100,7 @@ class HttpClient {
     HttpClientResponse result = new HttpClientResponse();
     result.info = message;
     if(isLoadBody == false) {
-      result.body = new TetReaderWithIndex(socket.buffer, message.index);
+      result.body = new ParserReaderWithIndex(socket.buffer, message.index);
       result.body.loadCompleted = true;
       return result;
     }
@@ -108,7 +108,7 @@ class HttpClient {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
 
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
-      result.body = new TetReaderWithIndex(socket.buffer, message.index);
+      result.body = new ParserReaderWithIndex(socket.buffer, message.index);
       if (result.info.contentLength > 0) {
         await result.body.getBytes(0, result.info.contentLength);
         result.body.loadCompleted = true;
@@ -116,7 +116,7 @@ class HttpClient {
         result.body.loadCompleted = true;
       }
     } else {
-      result.body = new ChunkedBuilderAdapter(new TetReaderWithIndex(socket.buffer, message.index)).start();
+      result.body = new ChunkedBuilderAdapter(new ParserReaderWithIndex(socket.buffer, message.index)).start();
     }
     return result;
   }

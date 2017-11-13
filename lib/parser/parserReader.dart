@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-abstract class TetReader {
+abstract class ParserReader {
 
   //
   // need override
@@ -48,14 +48,14 @@ abstract class TetReader {
 
 }
 
-class TetReaderWithIndex extends TetReader {
-  TetReader _base = null;
+class ParserReaderWithIndex extends ParserReader {
+  ParserReader _base = null;
   int _start = 0;
   int operator [](int index) {
     return _base[index + _start];
   }
 
-  TetReaderWithIndex(TetReader base, int start) {
+  ParserReaderWithIndex(ParserReader base, int start) {
     _base = base;
     _start = start;
   }

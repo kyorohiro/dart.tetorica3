@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-class ArrayBuilder extends TetReader {
+class ParserBuffer extends ParserReader {
   int _max = 1024;
   MemoryBuffer _buffer8;
   int _length = 0;
@@ -11,13 +11,13 @@ class ArrayBuilder extends TetReader {
   int get clearedBuffer => _buffer8.bufferIndex;
 
   bool logon = false;
-  ArrayBuilder({bufferSize: 1024}) {
+  ParserBuffer({bufferSize: 1024}) {
     this.logon = logon;
     _max = bufferSize;
     _buffer8 = new MemoryBuffer(_max); //new data.Uint8List(_max);
   }
 
-  ArrayBuilder.fromList(List<int> buffer, [isFin = false]) {
+  ParserBuffer.fromList(List<int> buffer, [isFin = false]) {
     _buffer8 = new MemoryBuffer.fromList(buffer);
     _length = buffer.length;
     if (isFin == true) {

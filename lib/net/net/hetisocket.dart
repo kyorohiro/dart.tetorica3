@@ -22,8 +22,8 @@ abstract class TetServerSocket {
 
 abstract class TetSocket {
  // int lastUpdateTime = 0;
-  heti.ArrayBuilder _buffer = new heti.ArrayBuilder();
-  heti.ArrayBuilder get buffer => _buffer;
+  heti.ParserBuffer _buffer = new heti.ParserBuffer();
+  heti.ParserBuffer get buffer => _buffer;
   Future<TetSocket> connect(String peerAddress, int peerPort) ;
   Future<TetSendInfo> send(List<int> data);
   Future<TetSocketInfo> getSocketInfo();

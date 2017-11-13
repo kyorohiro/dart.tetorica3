@@ -191,7 +191,7 @@ class Bdecoder {
 }
 
 class Bencoder {
-  ArrayBuilder builder = new ArrayBuilder();
+  ParserBuffer builder = new ParserBuffer();
 
   data.Uint8List enode(Object obj) {
     builder.clear();

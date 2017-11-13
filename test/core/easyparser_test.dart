@@ -6,7 +6,7 @@ import 'package:tetorica/util.dart';
 void main() {
   unit.test("nextBuffer", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendIntList([1, 2, 3, 4, 5]);
       EasyParser parser = new EasyParser(b);
       List<int> bb = await parser.nextBuffer(3);
@@ -16,7 +16,7 @@ void main() {
 
   unit.test("nextString", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendString("abc");
       EasyParser parser = new EasyParser(b);
       String bb = await parser.nextString("abc");
@@ -26,7 +26,7 @@ void main() {
 
   unit.test("readSign", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendString("abc");
       EasyParser parser = new EasyParser(b);
       String bb = await parser.readSignWithLength(2);
@@ -35,7 +35,7 @@ void main() {
   });
   unit.test("readShort", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendIntList(ByteOrder.parseShortByte(10, ByteOrderType.BigEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readShort(ByteOrderType.BigEndian);
@@ -46,7 +46,7 @@ void main() {
 
   unit.test("readInt", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendIntList(ByteOrder.parseIntByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readInt(ByteOrderType.LittleEndian);
@@ -56,7 +56,7 @@ void main() {
 
   unit.test("readLong", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendIntList(ByteOrder.parseLongByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readLong(ByteOrderType.LittleEndian);
@@ -66,7 +66,7 @@ void main() {
 
   unit.test("readByte", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendByte(10);
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readByte();
@@ -76,7 +76,7 @@ void main() {
 
   unit.test("nextBuffer", () async {
     {
-      ArrayBuilder b = new ArrayBuilder();
+      ParserBuffer b = new ParserBuffer();
       b.appendIntList([1,2,3,4,5,6]);
       EasyParser parser = new EasyParser(b);
       List<int> b1 = await parser.nextBuffer(3);

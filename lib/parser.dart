@@ -6,7 +6,7 @@ import 'dart:convert' as convert;
 import 'dart:typed_data' as data;
 import 'data.dart';
 
-part 'parser/reader.dart';
+part 'parser/parserReader.dart';
 part 'parser/byteorder.dart';
 part 'parser/easyparser.dart';
-part 'parser/arraybuilder.dart';
+part 'parser/parserBuffer.dart';

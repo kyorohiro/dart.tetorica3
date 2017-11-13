@@ -8,7 +8,7 @@ import 'package:tetorica/http.dart' as hetima;
 
 void main() {
   unit.test("request-line", () async {
-      hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+      hetima.ParserBuffer builder = new hetima.ParserBuffer();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiRequestLine> ret = hetima.HetiHttpResponse.decodeRequestLine(parser);
       builder.appendString("GET /xxx/yy/zz HTTP/1.1\r\n");
@@ -18,7 +18,7 @@ void main() {
   });
 
   unit.test("request message",() async{
-      hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+      hetima.ParserBuffer builder = new hetima.ParserBuffer();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiHttpRequestMessageWithoutBody> ret = hetima.HetiHttpResponse.decodeRequestMessage(parser);
       builder.appendString("GET /xxx/yy/zz HTTP/1.1\r\n");

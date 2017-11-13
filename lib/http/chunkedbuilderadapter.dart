@@ -1,11 +1,11 @@
 part of hetimanet_http;
 
-class ChunkedBuilderAdapter extends TetReader {
+class ChunkedBuilderAdapter extends ParserReader {
   bool _started = false;
-  ArrayBuilder _buffer = new ArrayBuilder();
-  TetReader _base = null;
+  ParserBuffer _buffer = new ParserBuffer();
+  ParserReader _base = null;
 
-  ChunkedBuilderAdapter(TetReader builder) {
+  ChunkedBuilderAdapter(ParserReader builder) {
     _base = builder;
     start();
   }

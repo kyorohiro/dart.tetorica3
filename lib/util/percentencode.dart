@@ -2,7 +2,7 @@ part of hetimacore;
 
 class PercentEncode
 {
-  ArrayBuilder builder = new ArrayBuilder();
+  ParserBuffer builder = new ParserBuffer();
 
   static final Map<String,int> DECODE_TABLE = {
     "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,

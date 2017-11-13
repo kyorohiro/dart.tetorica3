@@ -5,7 +5,7 @@ class RegexLexer {
   async.Future<List<RegexToken>> scan(List<int> text) {
     async.Completer completer = new async.Completer();
     heti.EasyParser parser =
-        new heti.EasyParser(new heti.ArrayBuilder.fromList(text, true));
+        new heti.EasyParser(new heti.ParserBuffer.fromList(text, true));
 
     List<RegexToken> tokens = [];
     loop() {
