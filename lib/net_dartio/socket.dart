@@ -4,7 +4,7 @@ class TetSocketDartIo extends TetSocket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;
-  Socket _socket = null;
+  io.Socket _socket = null;
   TetSocketMode _mode = TetSocketMode.bufferAndNotify;
   bool _isSecure = false;
   bool get isSecure => _isSecure;
@@ -15,7 +15,7 @@ class TetSocketDartIo extends TetSocket {
     _isSecure = isSecure;
   }
 
-  TetSocketDartIo.fromSocket(Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
+  TetSocketDartIo.fromSocket(io.Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;
@@ -35,7 +35,7 @@ class TetSocketDartIo extends TetSocket {
     try {
       IPConv.toRawIP(peerAddress);
     } catch (e) {
-      List<InternetAddress> hosts = await InternetAddress.lookup(peerAddress);
+      List<io.InternetAddress> hosts = await io.InternetAddress.lookup(peerAddress);
       if (hosts == null || hosts.length == 0) {
         throw {"error": "not found ip from host ${peerAddress}"};
       }
@@ -48,12 +48,12 @@ class TetSocketDartIo extends TetSocket {
     try {
       _nowConnecting = true;
       if (isSecure == true) {
-        _socket = await SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (X509Certificate c) {
+        _socket = await io.SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (io.X509Certificate c) {
           print("Certificate WARNING: ${c.issuer}:${c.subject}");
           return true;
         });
       } else {
-        _socket = await Socket.connect(peerAddress, peerPort);
+        _socket = await io.Socket.connect(peerAddress, peerPort);
       }
 
       _listen();

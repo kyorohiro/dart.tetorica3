@@ -1,14 +1,14 @@
 part of hetimacore_dartio;
 
 class HetimaDataDartIO extends Data {
-  RandomAccessFile _randomFile = null;
+  io.RandomAccessFile _randomFile = null;
   bool _readOnly = false;
   HetimaDataDartIO(String path,{erace: false}) {
-    File _f = new File(path);
+    io.File _f = new io.File(path);
     if(erace == true) {
-      _randomFile = _f.openSync(mode: FileMode.WRITE);
+      _randomFile = _f.openSync(mode: io.FileMode.WRITE);
     } else {
-      _randomFile = _f.openSync(mode: FileMode.APPEND);
+      _randomFile = _f.openSync(mode: io.FileMode.APPEND);
     }
   }
 
@@ -52,21 +52,21 @@ class HetimaDataDartIO extends Data {
   }
 
   static Future<List<String>> getFiles(String path) async {
-    Directory d = new Directory(path);
-    List<FileSystemEntity> l = await d.list().toList();
+    io.Directory d = new io.Directory(path);
+    List<io.FileSystemEntity> l = await d.list().toList();
     List<String> ret = [];
-    for (FileSystemEntity e in l) {
+    for (io.FileSystemEntity e in l) {
       ret.add(e.path);
     }
     return ret;
   }
 
   static Future removeFile(String filename, {persistent: false}) async {
-    if (await FileSystemEntity.isDirectory(filename)) {
-      Directory d = new Directory(filename);
+    if (await io.FileSystemEntity.isDirectory(filename)) {
+      io.Directory d = new io.Directory(filename);
       return d.delete(recursive: true);
-    } else if (await FileSystemEntity.isFile(filename)) {
-      File f = new File(filename);
+    } else if (await io.FileSystemEntity.isFile(filename)) {
+      io.File f = new io.File(filename);
       return f.delete();
     }
   }

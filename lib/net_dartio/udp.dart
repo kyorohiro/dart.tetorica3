@@ -4,7 +4,7 @@ class TetUdpSocketDartIo extends TetUdpSocket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;
-  RawDatagramSocket _udpSocket = null;
+  io.RawDatagramSocket _udpSocket = null;
   TetUdpSocketDartIo({verbose: false}) {
     _verbose = verbose;
   }
@@ -19,12 +19,12 @@ class TetUdpSocketDartIo extends TetUdpSocket {
     }
     _isBindingNow = true;
     try {
-      RawDatagramSocket socket = await RawDatagramSocket.bind(address, port, reuseAddress: true);
+      io.RawDatagramSocket socket = await io.RawDatagramSocket.bind(address, port, reuseAddress: true);
       _udpSocket = socket;
       socket.multicastLoopback = multicast;
-      socket.listen((RawSocketEvent event) {
-        if (event == RawSocketEvent.READ) {
-          Datagram dg = socket.receive();
+      socket.listen((io.RawSocketEvent event) {
+        if (event == io.RawSocketEvent.READ) {
+          io.Datagram dg = socket.receive();
           if (dg != null) {
             log("read ${dg.address}:${dg.port} ${dg.data.length}");
             _receiveStream.add(new TetReceiveUdpInfo(dg.data, dg.address.address, dg.port));
@@ -52,7 +52,7 @@ class TetUdpSocketDartIo extends TetUdpSocket {
       try {
         IPConv.toRawIP(address);
       } catch (e) {
-        List<InternetAddress> hosts = await InternetAddress.lookup(address);
+        List<io.InternetAddress> hosts = await io.InternetAddress.lookup(address);
         if (hosts == null || hosts.length == 0) {
           throw {"error": "not found ip from host ${address}"};
         }
@@ -62,7 +62,7 @@ class TetUdpSocketDartIo extends TetUdpSocket {
         }
         address = hosts[n].address;
       }
-      _udpSocket.send(buffer, new InternetAddress(address), port);
+      _udpSocket.send(buffer, new io.InternetAddress(address), port);
       return await new TetUdpSendInfo(0);
     } catch (e) {
       throw e;

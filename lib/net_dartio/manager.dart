@@ -25,10 +25,10 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
   }
 
   Future<List<TetNetworkInterface>> getNetworkInterfaces() async {
-    List<NetworkInterface> interfaces = await NetworkInterface.list(includeLoopback: true, includeLinkLocal: true);
+    List<io.NetworkInterface> interfaces = await io.NetworkInterface.list(includeLoopback: true, includeLinkLocal: true);
     List<TetNetworkInterface> ret = [];
-    for (NetworkInterface i in interfaces) {
-      for (InternetAddress a in i.addresses) {
+    for (io.NetworkInterface i in interfaces) {
+      for (io.InternetAddress a in i.addresses) {
         int prefixLength = 24;
         if (a.rawAddress.length > 4) {
           prefixLength = 64;

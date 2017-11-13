@@ -2,7 +2,7 @@ library hetimanet_dartio;
 
 import 'net.dart';
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:math';
 //import 'net.dart';
 
