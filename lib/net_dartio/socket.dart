@@ -49,10 +49,13 @@ class TetSocketDartIo extends TetSocket {
     try {
       _nowConnecting = true;
       if (isSecure == true) {
-        _socket = await io.SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (io.X509Certificate c) {
-          //print("Certificate WARNING: ${c.issuer}:${c.subject}");
-          if(onBadCertificate != null) {
-            return onBadCertificate(new X509Certificate(c.subject, c.issuer, c.startValidity.millisecondsSinceEpoch, c.endValidity.millisecondsSinceEpoch));
+        _socket = await io.SecureSocket.connect(
+            peerAddress, peerPort, onBadCertificate: (io.X509Certificate c) {
+          print("Certificate WARNING: ${c.issuer}:${c.subject}");
+          if (onBadCertificate != null) {
+            return onBadCertificate(new X509Certificate(
+                c.subject, c.issuer, c.startValidity.millisecondsSinceEpoch,
+                c.endValidity.millisecondsSinceEpoch));
           }
           return false;
         });

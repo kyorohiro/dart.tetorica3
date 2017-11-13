@@ -21,7 +21,7 @@ class HttpClient {
   }
 
 //  Future<HttpClientConnectResult>
-  Future connect(String _host, int _port ,{bool useSecure:false}) async {
+  Future connect(String _host, int _port ,{bool useSecure:false, SocketOnBadCertificate onBadCertificate:null}) async {
     host = _host;
     port = _port;
     socket = (useSecure?_socketBuilder.createSecureClient():_socketBuilder.createClient());
@@ -29,7 +29,7 @@ class HttpClient {
       throw {};
     }
     log("<hetihttpclient f=connect> ${socket}");
-    TetSocket s = await socket.connect(host, port);
+    TetSocket s = await socket.connect(host, port, onBadCertificate:onBadCertificate);
     if (s == null) {
       throw {};
     }
