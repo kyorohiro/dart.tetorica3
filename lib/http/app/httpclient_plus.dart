@@ -2,9 +2,9 @@ part of hetimanet_http;
 
 class HttpClientPlus {
   TetSocketBuilder socketBuilder;
-  bool _verbose = false;
+  bool verbose = false;
 
-  HttpClientPlus(this.socketBuilder,{bool verbose: false}){}
+  HttpClientPlus(this.socketBuilder,{this.verbose: false}){}
   Future<HttpClientResponse> get(String address, int port, String pathAndOption,
     {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
        Map<String, String> header, int redirect: 5,
@@ -86,7 +86,7 @@ class HttpClientPlus {
         SocketOnBadCertificate onBadCertificate:null}) async {
     log("address:${address}, port:${port}, actopn:${action}, path:${pathAndOption}");
 
-    HttpClient client = new HttpClient(socketBuilder,verbose: _verbose);
+    HttpClient client = new HttpClient(socketBuilder,verbose: verbose);
 
     await client.connect(address, port, useSecure:useSecure, onBadCertificate: onBadCertificate);
 
@@ -112,6 +112,7 @@ class HttpClientPlus {
         option = pathAndOption.substring(optionIndex);
       }
       pathAndOption = "${hurl.path}${option}";
+      log("Location:${locationField.fieldValue}");
       log("scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
       useSecure = (hurl.scheme == "https"?true:false);
       return base(hurl.host, hurl.port, action, pathAndOption, data,
@@ -124,7 +125,7 @@ class HttpClientPlus {
   }
 
   void log(String message) {
-    if (_verbose) {
+    if (verbose) {
       print("++${message}");
     }
   }

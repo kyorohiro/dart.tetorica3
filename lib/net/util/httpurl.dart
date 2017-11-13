@@ -69,7 +69,7 @@ class HttpUrlDecoder {
       try {
         ret.scheme = scheme();
         ret.host = host();
-        ret.port = port();
+        ret.port = port(scheme:ret.scheme);
       } catch (e) {
         if (baseAddr == null) {
           throw e;
@@ -161,15 +161,15 @@ class HttpUrlDecoder {
     }
   }
 
-  int port() {
+  int port({String scheme:"http"}) {
     try {
       push();
       if (url.length <= index) {
-        return 80;
+        return (scheme=="http"?80:443);
       }
       //:
       if (!(url[index] == 0x3a)) {
-        return 80;
+        return (scheme=="http"?80:443);
       }
       index++;
       while (matchChar(DIGIT)) {
@@ -177,7 +177,7 @@ class HttpUrlDecoder {
       }
       List<int> portAsList = last();
       if (portAsList.length <= 1) {
-        return 80;
+        return (scheme=="http"?80:443);
       }
       String portAsString = convert.UTF8.decode(portAsList);
       return int.parse(portAsString.substring(1));
