@@ -16,8 +16,6 @@ class ChunkParserReader extends ParserReaderBase {
     }
     _started = true;
     _decodeChunked(new EasyParser(_base)).catchError((e) {}).then((e) {
-      // print("\r\n#~55www#\r\n");
-//      _buffer.fin();
       _buffer.loadCompleted = true;
     });
     return this;
