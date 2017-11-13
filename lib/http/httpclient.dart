@@ -116,7 +116,7 @@ class HttpClient {
         result.body.loadCompleted = true;
       }
     } else {
-      result.body = new ChunkedBuilderAdapter(new ParserReaderWithIndex(socket.buffer, message.index)).start();
+      result.body = new ChunkParserReader(new ParserReaderWithIndex(socket.buffer, message.index)).start();
     }
     return result;
   }

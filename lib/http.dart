@@ -11,7 +11,7 @@ import 'net/tmp/rfctable.dart';
 part 'http/httpclient.dart';
 part 'package:tetorica/http/app/httpclient_plus.dart';
 part 'http/httpresponse.dart';
-part 'http/chunkedbuilderadapter.dart';
+part 'http/chunkParserReader.dart';
 
 part 'http/httpserver.dart';
 part 'package:tetorica/http/app/httpserver_plus.dart';

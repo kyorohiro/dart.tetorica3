@@ -1,16 +1,16 @@
 part of hetimanet_http;
 
-class ChunkedBuilderAdapter extends ParserReaderBase {
+class ChunkParserReader extends ParserReaderBase {
   bool _started = false;
   ParserBuffer _buffer = new ParserBuffer();
   ParserReader _base = null;
 
-  ChunkedBuilderAdapter(ParserReader builder) {
+  ChunkParserReader(ParserReader builder) {
     _base = builder;
     start();
   }
 
-  ChunkedBuilderAdapter start() {
+  ChunkParserReader start() {
     if (_started == true) {
       return this;
     }
