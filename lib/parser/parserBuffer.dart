@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-class ParserBuffer extends ParserReaderBase {
+class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserReader {
   int _max = 1024;
   MemoryBuffer _buffer8;
   int _length = 0;

@@ -7,7 +7,7 @@ import 'package:tetorica/http.dart' as tet;
 main() async {
   print("Hello World!!");
   tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
-  tet.HttpClientPlus client = new tet.HttpClientPlus(socketBuilder);
+  tet.HttpClientPlus client = new tet.HttpClientPlus(socketBuilder,verbose: true);
 //  tet.HttpClientResponse response = await client.get("www.google.co.jp", 80, "/");
   tet.HttpClientResponse response = await client.get("www.google.com", 80, "/");
 
