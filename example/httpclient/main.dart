@@ -8,8 +8,8 @@ main() async {
   print("Hello World!!");
   tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
   tet.HttpClientPlus client = new tet.HttpClientPlus(socketBuilder);
-  tet.HttpClientResponse response = await client.get("www.google.co.jp", 80, "/");
-//  tet.HttpClientResponse response = await client.get("www.google.com", 80, "/");
+//  tet.HttpClientResponse response = await client.get("www.google.co.jp", 80, "/");
+  tet.HttpClientResponse response = await client.get("www.google.com", 80, "/");
 
   print("# LEN : ${response.info.contentLength}");
   for(tet.HttpResponseHeaderField f in response.info.headerField ) {

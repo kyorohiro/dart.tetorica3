@@ -3,6 +3,32 @@ part of hetimaparsr;
 abstract class ParserReader {
 
   //
+  // async
+  Future<int> getIndex(int index, int length);
+  Future<List<int>> getBytes(int index, int length, {List<int> out: null});
+  Future<int> getLength();
+
+  // buffer
+  int get currentSize;
+  int operator [](int index);
+  void unusedBuffer(int len);
+
+  //
+  // complete check
+  Completer<bool> get loadCompletedCompleter;
+  bool get loadCompleted;
+  void set loadCompleted(bool v);
+
+  //
+  // helper
+  Future<List<int>> getAllBytes({bool allowMalformed: true});
+  Future<String> getAllString({bool allowMalformed: true});
+
+}
+
+abstract class ParserReaderBase extends ParserReader {
+
+  //
   // need override
   Future<int> getIndex(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
@@ -41,14 +67,12 @@ abstract class ParserReader {
   }
 
 
-
-
   bool _loadCompleted = false;
   Completer<bool> _loadCompletedCompleter = new Completer();
 
 }
 
-class ParserReaderWithIndex extends ParserReader {
+class ParserReaderWithIndex extends ParserReaderBase {
   ParserReader _base = null;
   int _start = 0;
   int operator [](int index) {
@@ -71,10 +95,15 @@ class ParserReaderWithIndex extends ParserReader {
   }
 
   int get currentSize {
-    return _base.currentSize;
+    return _base.currentSize - _start;
+  }
+
+  void unusedBuffer(int len) {
+    _base.unusedBuffer(len);
   }
 
   Completer<bool> get loadCompletedCompleter => _base.loadCompletedCompleter;
+
 
   Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
     return await _base.getBytes(index + _start, length);
@@ -89,4 +118,5 @@ class ParserReaderWithIndex extends ParserReader {
   void set loadCompleted(bool v) {
     _base.loadCompleted = v;
   }
+
 }

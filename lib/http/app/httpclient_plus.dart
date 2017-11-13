@@ -2,7 +2,9 @@ part of hetimanet_http;
 
 class HttpClientPlus {
   TetSocketBuilder socketBuilder;
-  HttpClientPlus(this.socketBuilder){}
+  bool _verbose = false;
+
+  HttpClientPlus(this.socketBuilder,{bool verbose: false}){}
   Future<HttpClientResponse> get(String address, int port, String pathAndOption,
     {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
        Map<String, String> header, int redirect: 5,
@@ -68,13 +70,12 @@ class HttpClientPlus {
   }
 
   Future<HttpClientResponse> base(String address, int port, String action, String pathAndOption,
-     List<int> data,
-    {
+     List<int> data, {
       List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
       Map<String, String> header, int redirect: 5, bool reuseQuery: true,
       bool useSecure:false, isLoadBody:true}) async {
-    print("${pathAndOption}");
-    HttpClient client = new HttpClient(socketBuilder);
+    log("address:${address}, port:${port}, actopn:${action}, path:${pathAndOption}");
+    HttpClient client = new HttpClient(socketBuilder,verbose: _verbose);
     await client.connect(address, port, useSecure:useSecure);
     HttpClientResponse res = await client.base(action,pathAndOption, data,
       header:header,
@@ -90,12 +91,20 @@ class HttpClientPlus {
         option = pathAndOption.substring(optionIndex);
       }
       pathAndOption = "${hurl.path}${option}";
-      return base(address, port, action, pathAndOption, data,
+      log("scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
+
+      return base(hurl.host, hurl.port, action, pathAndOption, data,
         redirectStatusCode: redirectStatusCode, header: header,
         redirect: (redirect - 1),
         reuseQuery: reuseQuery,useSecure:useSecure);
     } else {
       return res;
+    }
+  }
+
+  void log(String message) {
+    if (_verbose) {
+      print("++${message}");
     }
   }
 }
