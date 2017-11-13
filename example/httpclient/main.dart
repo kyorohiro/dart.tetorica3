@@ -9,8 +9,9 @@ main() async {
   tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
   tet.HttpClientPlus client = new tet.HttpClientPlus(socketBuilder,verbose: true);
 //  tet.HttpClientResponse response = await client.get("www.google.co.jp", 80, "/");
-  tet.HttpClientResponse response = await client.get(
-      "www.google.com", 443, "/", useSecure: true, onBadCertificate: (tet.X509Certificate i){return true;});
+  tet.HttpClientResponse response = await client.base(
+      "google.com", 443, "GET", "/", null,
+      useSecure: true, onBadCertificate: (tet.X509Certificate i){return true;});
 
   print("# LEN : ${response.info.contentLength}");
   for(tet.HttpResponseHeaderField f in response.info.headerField ) {
