@@ -1,5 +1,26 @@
 part of hetimanet;
 
+typedef bool SocketOnBadCertificate(X509Certificate node);
+
+class X509Certificate {
+  String _subject;
+  String _issuer;
+  int _startValidity;//millisecondsSinceEpoch
+  int _endValidity;//millisecondsSinceEpoch
+
+  String get subject => _subject;
+  String get issuer => _issuer;
+  int get startValidity => _startValidity;
+  int get endValidity => _endValidity;
+
+  X509Certificate(String subject, String issuer, int startValidity, int endValidity) {
+    this._subject = subject;
+    this._issuer = issuer;
+    this._startValidity = startValidity;
+    this._endValidity = endValidity;
+  }
+}
+
 abstract class TetServerSocket {
   Stream<TetSocket> onAccept();
   void close();
@@ -9,7 +30,7 @@ abstract class TetSocket {
  // int lastUpdateTime = 0;
   heti.ParserBuffer _buffer = new heti.ParserBuffer();
   heti.ParserBuffer get buffer => _buffer;
-  Future<TetSocket> connect(String peerAddress, int peerPort) ;
+  Future<TetSocket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null}) ;
   Future<TetSendInfo> send(List<int> data);
   Future<TetSocketInfo> getSocketInfo();
   Stream<TetReceiveInfo> onReceive;

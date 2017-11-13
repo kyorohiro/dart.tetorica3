@@ -1,5 +1,6 @@
 part of hetimanet_dartio;
 
+
 class TetSocketDartIo extends TetSocket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
@@ -27,7 +28,7 @@ class TetSocketDartIo extends TetSocket {
   StreamController<TetReceiveInfo> _receiveStream = new StreamController.broadcast();
 
   @override
-  Future<TetSocket> connect(String peerAddress, int peerPort) async {
+  Future<TetSocket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null})async {
     if (_nowConnecting == true || _socket != null) {
       throw "connecting now";
     }
@@ -49,8 +50,11 @@ class TetSocketDartIo extends TetSocket {
       _nowConnecting = true;
       if (isSecure == true) {
         _socket = await io.SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (io.X509Certificate c) {
-          print("Certificate WARNING: ${c.issuer}:${c.subject}");
-          return true;
+          //print("Certificate WARNING: ${c.issuer}:${c.subject}");
+          if(onBadCertificate != null) {
+            return onBadCertificate(new X509Certificate(c.subject, c.issuer, c.startValidity.millisecondsSinceEpoch, c.endValidity.millisecondsSinceEpoch));
+          }
+          return false;
         });
       } else {
         _socket = await io.Socket.connect(peerAddress, peerPort);
