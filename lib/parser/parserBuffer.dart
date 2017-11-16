@@ -28,23 +28,6 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
 
   bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
 
-  void _updateGetInfos() {
-    var removeList = null;
-    for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (true == cached(f.index, f.completerResultLength)) {
-        f.completer.complete(f.index);
-        if (removeList == null) {
-          removeList = [];
-        }
-        removeList.add(f);
-      }
-    }
-    if (removeList != null) {
-      for (GetByteFutureInfo f in removeList) {
-        mGetByteFutreList.remove(f);
-      }
-    }
-  }
 
   Future<int> getIndex(int index, int length) async {
     if (false == cached(index, length)) {
@@ -98,7 +81,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   @override
   void set loadCompleted(bool v) {
     super.loadCompleted = true;
-    _updateGetInfos();
+    updated();
     mGetByteFutreList.clear();
   }
 
@@ -113,18 +96,36 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-  void addByte(int v) {
+  void updated() {
+    var removeList = null;
+    for (GetByteFutureInfo f in mGetByteFutreList) {
+      if (true == cached(f.index, f.completerResultLength)) {
+        f.completer.complete(f.index);
+        if (removeList == null) {
+          removeList = [];
+        }
+        removeList.add(f);
+      }
+    }
+    if (removeList != null) {
+      for (GetByteFutureInfo f in removeList) {
+        mGetByteFutreList.remove(f);
+      }
+    }
+  }
+  void addByte(int v, {bool autoUpdate = true}) {
     if (loadCompleted) {
       return;
     }
     update(1);
     _buffer8[_length] = v;
     _length += 1;
-
-    _updateGetInfos();
+    if(autoUpdate) {
+      updated();
+    }
   }
 
-  void addBytes(List<int> buffer, {int index = 0, int length = -1}) {
+  void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true}) {
     if (loadCompleted) {
       return;
     }
@@ -137,7 +138,9 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
       _buffer8[_length + i] = buffer[index + i];
     }
     _length += length;
-    _updateGetInfos();
+    if(autoUpdate) {
+      updated();
+    }
   }
 
   void appendString(String text) => addBytes(convert.UTF8.encode(text));

@@ -28,8 +28,9 @@ abstract class ParserReader {
 
 
 abstract class ParserAppender {
-  void addByte(int v);
-  void addBytes(List<int> buffer, {int index = 0, int length = -1});
+  void updated();
+  void addByte(int v,{bool autoUpdate = true});
+  void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true});
 }
 
 
