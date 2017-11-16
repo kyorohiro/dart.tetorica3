@@ -44,7 +44,7 @@ class HttpClient {
 
     await client.connect(address, port, useSecure:useSecure, onBadCertificate: _onBadCertificate);
 
-    tet.HttpClientResponse res = await client.base(action,pathAndOption, data, header:header, isLoadBody:isLoadBody);
+    tet.HttpClientResponse res = await client.requestAndResponse(action,pathAndOption, data, header:header, isLoadBody:isLoadBody);
 
     client.close();
     

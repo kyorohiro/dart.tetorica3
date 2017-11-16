@@ -5,7 +5,6 @@ class HttpClientResponse {
   ParserReader body;
 }
 
-//class HttpClientConnectResult {}
 
 class HttpClient {
   TetSocketBuilder _socketBuilder;
@@ -35,7 +34,7 @@ class HttpClient {
     //return new HttpClientConnectResult();
   }
 
-  Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
+  Future<HttpClientResponse> requestAndResponse(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     await request(action, path, body, header:header);
     HttpClientHead head = await getHead();
     HttpClientResponse result = new HttpClientResponse();
@@ -105,7 +104,7 @@ class HttpClient {
       return ret;
     }
   }
-  
+
   void close() {
     if (socket != null) {
       socket.close();
