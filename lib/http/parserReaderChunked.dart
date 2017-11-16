@@ -26,6 +26,7 @@ class ChunkParserReader extends ParserReaderBase {
       int size = await HetiHttpResponse.decodeChunkedSize(parser);
       List<int> v = await parser.buffer.getBytes(parser.index, size);
       _buffer.addBytes(v, index:0, length:v.length);
+      //_base.unusedBuffer(_buffer.currentSize);
       parser.index += v.length;
       if (v.length == 0) {
         break;
