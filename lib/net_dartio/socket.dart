@@ -48,7 +48,7 @@ class TetSocketDartIo extends SocketBase {
       _nowConnecting = true;
       if (isSecure == true) {
         _socket = await io.SecureSocket.connect(host, peerPort, onBadCertificate: (io.X509Certificate c) {
-          //print("Certificate WARNING: ${c.issuer}:${c.subject}");
+          log("<<bad certificate>>");
           if(onBadCertificate != null) {
             return onBadCertificate(new X509Certificate(c.subject, c.issuer, c.startValidity.millisecondsSinceEpoch, c.endValidity.millisecondsSinceEpoch));
           }
@@ -75,13 +75,13 @@ class TetSocketDartIo extends SocketBase {
         receiveStreamController.add(data);
       }
     }, onDone: () {
-      log('<<<Done>>>');
+      log('<<<done>>>');
       _socket.close();
       closeStreamController.add(this);
      // print(await this.buffer.getAllString(allowMalformed: true));
 
     }, onError: (e) {
-      log('<<<Got error>>> $e');
+      log('<<<error>>> $e');
       _socket.close();
       closeStreamController.add(this);
     });
