@@ -24,8 +24,9 @@ class TetServerSocketDartIo extends ServerSocket {
   }
 
   @override
-  void close() {
+  Future<ServerSocket> close() async {
     _server.close();
+    return this;
   }
 
   @override

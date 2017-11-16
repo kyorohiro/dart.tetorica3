@@ -23,7 +23,7 @@ class X509Certificate {
 
 abstract class ServerSocket {
   Stream<Socket> onAccept();
-  void close();
+  Future<ServerSocket> close();
 }
 
 abstract class Socket {
