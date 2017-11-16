@@ -36,6 +36,12 @@ class HttpClient {
   }
 
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
+    HttpClientResponseInfo info = await getResponseHead(action, path, body, header:header, isLoadBody:isLoadBody);
+    return handleResponse(info, isLoadBody:isLoadBody);
+  }
+
+
+  Future<HttpClientResponseInfo> getResponseHead(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host;// + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -66,13 +72,11 @@ class HttpClient {
     //print(await builder.getAllString());
     socket.send(builder.toList());
 
-    return handleResponse(isLoadBody:isLoadBody);
+    EasyParser parser = new EasyParser(socket.buffer);
+    return HetiHttpResponse.decodeHttpMessage(parser);
   }
 
-
-  Future<HttpClientResponse> handleResponse({isLoadBody:true}) async {
-    EasyParser parser = new EasyParser(socket.buffer);
-    HttpClientResponseInfo message = await HetiHttpResponse.decodeHttpMessage(parser);
+  Future<HttpClientResponse> handleResponse(HttpClientResponseInfo message, {isLoadBody:true}) async {
     HttpClientResponse result = new HttpClientResponse();
     result.info = message;
     if(isLoadBody == false) {
