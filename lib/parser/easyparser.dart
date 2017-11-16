@@ -57,7 +57,7 @@ class EasyParser {
   }
 
   Future<int> jumpBuffer(int length) async {
-    int i = await _buffer.getIndex(index, length);
+    int i = await _buffer.waitByBuffered(index, length);
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -75,7 +75,7 @@ class EasyParser {
 // todo write test
   Future<bool> checkString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
-    int i = await _buffer.getIndex(index, encoded.length);
+    int i = await _buffer.waitByBuffered(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       return false;
     }
@@ -90,7 +90,7 @@ class EasyParser {
   Future<String> nextString(String value,{bool checkUpperLowerCase:false}) async {
     List<int> encoded = convert.UTF8.encode(value);
 //    print("${encoded}");
-    int i = await _buffer.getIndex(index, encoded.length);
+    int i = await _buffer.waitByBuffered(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -140,7 +140,7 @@ class EasyParser {
   }
 
   Future<int> readLong(ByteOrderType byteorder) async {
-    int i = await _buffer.getIndex(index, 8);
+    int i = await _buffer.waitByBuffered(index, 8);
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -149,7 +149,7 @@ class EasyParser {
   }
 
   Future<int> readInt(ByteOrderType byteorder) async {
-    int i = await _buffer.getIndex(index, 4);
+    int i = await _buffer.waitByBuffered(index, 4);
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -158,7 +158,7 @@ class EasyParser {
   }
 
   Future<int> readShort(ByteOrderType byteorder) async {
-    int i = await _buffer.getIndex(index, 2);
+    int i = await _buffer.waitByBuffered(index, 2);
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -167,7 +167,7 @@ class EasyParser {
   }
 
   Future<int> readByte() async {
-    int i = await _buffer.getIndex(index, 1);
+    int i = await _buffer.waitByBuffered(index, 1);
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }

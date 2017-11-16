@@ -29,7 +29,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
 
 
-  Future<int> getIndex(int index, int length) async {
+  Future<int> waitByBuffered(int index, int length) async {
     if (false == cached(index, length)) {
       GetByteFutureInfo info = new GetByteFutureInfo();
       info.completerResultLength = length;
@@ -50,7 +50,9 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     if(length == 0) {
       return [];
     }
-    await getIndex(index, length);
+    if(!cached(index, length)) {
+      await waitByBuffered(index, length);
+    }
     int len = currentSize - index;
     len = (len > length ? length : len);
     if(out == null) {

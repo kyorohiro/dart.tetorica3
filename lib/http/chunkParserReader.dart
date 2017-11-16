@@ -48,8 +48,8 @@ class ChunkParserReader extends ParserReaderBase {
     return _buffer.getBytes(index, length, out: out);
   }
 
-  Future<int> getIndex(int index, int length) {
-    return _buffer.getIndex(index, length);
+  Future<int> waitByBuffered(int index, int length) {
+    return _buffer.waitByBuffered(index, length);
   }
 
   int operator [](int index) {

@@ -4,7 +4,7 @@ abstract class ParserReader {
 
   //
   // async
-  Future<int> getIndex(int index, int length);
+  Future<int> waitByBuffered(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
 
@@ -38,7 +38,7 @@ abstract class ParserReaderBase extends ParserReader {
 
   //
   // need override
-  Future<int> getIndex(int index, int length);
+  Future<int> waitByBuffered(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
 
