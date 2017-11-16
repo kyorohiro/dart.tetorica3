@@ -38,7 +38,7 @@ class HttpClient {
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     await request(action, path, body, header:header);
     HttpClientResponseInfo info = await getResponseHead();
-    return handleResponse(info, isLoadBody:isLoadBody);
+    return getBody(info, isLoadBody:isLoadBody);
   }
 
   Future<HttpClient> request(String action, String path, List<int> body, {Map<String, String> header}) async {
@@ -79,7 +79,7 @@ class HttpClient {
     return HetiHttpResponse.decodeHttpMessage(parser);
   }
 
-  Future<HttpClientResponse> handleResponse(HttpClientResponseInfo message, {isLoadBody:true}) async {
+  Future<HttpClientResponse> getBody(HttpClientResponseInfo message, {isLoadBody:true}) async {
     HttpClientResponse result = new HttpClientResponse();
     result.info = message;
     if(isLoadBody == false) {
