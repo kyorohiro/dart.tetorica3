@@ -81,7 +81,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   @override
   void set loadCompleted(bool v) {
     super.loadCompleted = true;
-    updated();
+    updatedBytes();
     mGetByteFutreList.clear();
   }
 
@@ -96,7 +96,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-  void updated() {
+  void updatedBytes() {
     var removeList = null;
     for (GetByteFutureInfo f in mGetByteFutreList) {
       if (true == cached(f.index, f.completerResultLength)) {
@@ -121,7 +121,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     _buffer8[_length] = v;
     _length += 1;
     if(autoUpdate) {
-      updated();
+      updatedBytes();
     }
   }
 
@@ -139,7 +139,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
     _length += length;
     if(autoUpdate) {
-      updated();
+      updatedBytes();
     }
   }
 
