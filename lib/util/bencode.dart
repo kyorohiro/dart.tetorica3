@@ -206,7 +206,7 @@ class Bencoder {
 
   void encodeUInt8List(data.Uint8List buffer) {
     builder.appendString("" + buffer.lengthInBytes.toString() + ":");
-    builder.appendIntList(buffer, 0, buffer.length);
+    builder.appendIntList(buffer, index:0, length:buffer.length);
   }
 
   void encodeNumber(num num) {

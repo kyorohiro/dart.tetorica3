@@ -29,7 +29,7 @@ abstract class ParserReader {
 
 abstract class ParserAppender {
   void appendByte(int v);
-  void appendIntList(List<int> buffer, [int index = 0, int length = -1]);
+  void appendIntList(List<int> buffer, {int index = 0, int length = -1});
 }
 
 

@@ -124,7 +124,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     _updateGetInfos();
   }
 
-  void appendIntList(List<int> buffer, [int index = 0, int length = -1]) {
+  void appendIntList(List<int> buffer, {int index = 0, int length = -1}) {
     if (loadCompleted) {
       return;
     }

@@ -69,7 +69,7 @@ class TetSocketDartIo extends SocketBase {
     _socket.listen((List<int> data)  {
       log('<<<lis>>> ');
       if(_mode != TetSocketMode.notifyOnly) {
-        this.buffer.appendIntList(data, 0, data.length);
+        this.buffer.appendIntList(data, index:0, length:data.length);
       }
       if (_mode != TetSocketMode.bufferOnly) {
         receiveStreamController.add(data);
