@@ -31,6 +31,7 @@ abstract class Socket {
   void send(List<int> data);
   Future<SocketInfo> getSocketInfo();
   bool get isClosed;
+  bool get isSecure;
   Future<Socket> close();
   Future<Socket> clearBuffer();
   heti.ParserBuffer get buffer;
@@ -39,12 +40,7 @@ abstract class Socket {
 }
 
 abstract class SocketBase extends Socket{
-  // int lastUpdateTime = 0;
-  Future<Socket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null}) ;
-  void send(List<int> data);
-  Future<SocketInfo> getSocketInfo();
   bool isClosed = false;
-
   Future<Socket> close() async {
     _buffer.loadCompleted = true;
     isClosed = true;
@@ -55,6 +51,7 @@ abstract class SocketBase extends Socket{
   Future<Socket> clearBuffer() async {
     _buffer.unusedBuffer(_buffer.currentSize,reuse:false);
     _buffer.clear();
+    return this;
   }
   heti.ParserBuffer _buffer = new heti.ParserBuffer();
   heti.ParserBuffer get buffer => _buffer;
