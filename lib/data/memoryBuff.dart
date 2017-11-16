@@ -55,6 +55,8 @@ class MemoryBuffer implements Buffer {
   @override
   void unusedBuffer(int len, {bool reuse: true}) {
     if (_bufferIndex >= len) {
+      _length = len;
+      _bufferIndex = len;
       return;
     } else if (length < len) {
       len = length;

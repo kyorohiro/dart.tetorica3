@@ -115,6 +115,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
       }
     }
   }
+
   void addByte(int v, {bool autoUpdate = true}) {
     if (loadCompleted) {
       return;
@@ -143,6 +144,12 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     if(autoUpdate) {
       updatedBytes();
     }
+  }
+
+  void addDummyBytes(int length) {
+    _length += length;
+    unusedBuffer(currentSize);
+    update(length);
   }
 
   void appendString(String text) => addBytes(convert.UTF8.encode(text));
