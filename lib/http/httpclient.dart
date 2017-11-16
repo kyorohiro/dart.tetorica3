@@ -49,8 +49,6 @@ class HttpClient {
     return result;
   }
 
-
-
   Future<HttpClient> request(String action, String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host;// + ":" + port.toString();
