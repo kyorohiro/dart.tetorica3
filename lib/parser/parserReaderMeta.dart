@@ -28,7 +28,7 @@ class ParserReaderWithIndex extends ParserReaderBase {
   }
 
   void unusedBuffer(int len) {
-    _base.unusedBuffer(len);
+    _base.unusedBuffer(len + _start);
   }
 
   Completer<bool> get loadCompletedCompleter => _base.loadCompletedCompleter;

@@ -34,6 +34,11 @@ class ChunkParserReader extends ParserReaderBase {
     }
   }
 
+  void unusedBuffer(int len) {
+    _base.unusedBuffer(len);
+    _buffer.unusedBuffer(len);
+  }
+
   int get currentSize {
     return _buffer.currentSize;
   }
