@@ -20,7 +20,6 @@ class HttpClient {
     _verbose = verbose;
   }
 
-//  Future<HttpClientConnectResult>
   Future connect(String _host, int _port ,{bool useSecure:false, SocketOnBadCertificate onBadCertificate:null}) async {
     host = _host;
     port = _port;
@@ -34,34 +33,6 @@ class HttpClient {
       throw {};
     }
     //return new HttpClientConnectResult();
-  }
-
-  Future<HttpClientResponse> get(String path, {Map<String, String> header}) async {
-     return base("GET", path, null, header:header);
-  }
-
-  Future<HttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
-    return base("POST", path, body, header:header);
-  }
-
-  Future<HttpClientResponse> put(String path, List<int> body, {Map<String, String> header}) async {
-     return base("PUT", path, body, header:header);
-  }
-
-  Future<HttpClientResponse> patch(String path, List<int> body, {Map<String, String> header}) async {
-     return base("PATCH", path, body, header:header);
-  }
-
-  Future<HttpClientResponse> delete(String path, {Map<String, String> header}) async {
-     return base("DELETE", path, null, header:header);
-  }
-
-  Future<HttpClientResponse> head(String path, {Map<String, String> header}) async {
-     return base("HEAD", path, null, header:header, isLoadBody:false);
-  }
-
-  Future<HttpClientResponse> mpost(String path, List<int> body, {Map<String, String> header}) async {
-    return base("M-POST", path, body, header:header);
   }
 
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
