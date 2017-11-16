@@ -26,19 +26,13 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-  bool _updateGetInfo(GetByteFutureInfo info) {
-    if (this.loadCompleted == true || info.index + info.completerResultLength - 1 < _length) {
-      info.completer.complete(info.index);
-      return true;
-    } else {
-      return false;
-    }
-  }
+  bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
 
   void _updateGetInfos() {
     var removeList = null;
     for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (true == _updateGetInfo(f)) {
+      if (true == cached(f.index, f.completerResultLength)) {
+        f.completer.complete(f.index);
         if (removeList == null) {
           removeList = [];
         }
@@ -52,18 +46,19 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-  Future<int> getIndex(int index, int length) {
+  Future<int> getIndex(int index, int length) async {
     GetByteFutureInfo info = new GetByteFutureInfo();
 
-    info.completerResultLength = length;
-    info.index = index;
-    info.completer = new Completer();
-
-    if (false == _updateGetInfo(info)) {
+    if (false == cached(index, length)) {
+      info.completerResultLength = length;
+      info.index = index;
+      info.completer = new Completer();
       mGetByteFutreList.add(info);
+      return info.completer.future;
+    } else {
+      return index;
     }
 
-    return info.completer.future;
   }
 
   Future<List<int>> getBytes(int index, int length, {List<int> out:null}) async {
@@ -108,11 +103,6 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     mGetByteFutreList.clear();
   }
 
-//  void fin() {
-//    loadCompleted = true;
-//    _updateGetInfos();
- //   mGetByteFutreList.clear();
-//  }
 
   void update(int plusLength) {
     if (_length + plusLength < _max) {
