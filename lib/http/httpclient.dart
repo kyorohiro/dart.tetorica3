@@ -90,17 +90,11 @@ class HttpClient {
     ParserReader ret;
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
       ret = new ParserReaderWithIndex(socket.buffer, message.index);
-      if (message.contentLength > 0) {
-        await ret.getBytes(0, message.contentLength);
-        ret.loadCompleted = true;
-      } else {
-        ret.loadCompleted = true;
-      }
-      return ret;
+      ret.waitByBuffered(0, message.contentLength).then((int v){ret.loadCompleted = true;});
     } else {
       ret = new ChunkParserReader(new ParserReaderWithIndex(socket.buffer, message.index)).start();
-      return ret;
     }
+    return ret;
   }
 
   void close() {

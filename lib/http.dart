@@ -12,7 +12,6 @@ part 'http/httpclient.dart';
 //part '../example/httpclient/httpclient.dart';
 part 'http/httpresponse.dart';
 part 'http/parserReaderChunked.dart';
-part 'http/parserReaderLength.dart';
 
 part 'http/httpserver.dart';
 part 'package:tetorica/http/app/httpserver_plus.dart';

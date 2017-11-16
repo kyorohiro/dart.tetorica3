@@ -18,6 +18,7 @@ abstract class ParserReader {
   Completer<bool> get loadCompletedCompleter;
   bool get loadCompleted;
   void set loadCompleted(bool v);
+  Future<ParserReader> waitByLoadCompleted();
 
   //
   // helper
@@ -60,6 +61,10 @@ abstract class ParserReaderBase extends ParserReader {
     }
   }
 
+  Future<ParserReader> waitByLoadCompleted() async {
+    await loadCompletedCompleter.future;
+    return this;
+  }
   //
   //
   Future<List<int>> getAllBytes({bool allowMalformed: true}) async {

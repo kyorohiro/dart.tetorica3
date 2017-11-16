@@ -31,6 +31,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
 
   Future<int> waitByBuffered(int index, int length) async {
     if (false == cached(index, length)) {
+      print("test:-1:");
       GetByteFutureInfo info = new GetByteFutureInfo();
       info.completerResultLength = length;
       info.index = index;
@@ -128,6 +129,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   }
 
   void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true}) {
+    print("test:z: ${buffer.length} ${currentSize}");
     if (loadCompleted) {
       return;
     }

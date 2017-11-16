@@ -46,6 +46,7 @@ class HttpClient {
 
     tet.HttpClientResponse res = await client.requestAndResponse(action,pathAndOption, data, header:header, isLoadBody:isLoadBody);
 
+    await res.body.waitByLoadCompleted();
     client.close();
     
     //

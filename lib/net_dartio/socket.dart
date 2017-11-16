@@ -106,7 +106,8 @@ class TetSocketDartIo extends SocketBase {
   }
 
   log(String message) {
-    if (_verbose) {
+    if (_verbose)
+    {
       print("d..${message}");
     }
   }
