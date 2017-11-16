@@ -9,7 +9,7 @@ class HttpClientResponse {
 
 class HttpClient {
   TetSocketBuilder _socketBuilder;
-  TetSocket socket = null;
+  Socket socket = null;
   String host;
   int port;
 
@@ -28,7 +28,7 @@ class HttpClient {
       throw {};
     }
     log("<hetihttpclient f=connect> ${socket}");
-    TetSocket s = await socket.connect(host, port, onBadCertificate:onBadCertificate);
+    Socket s = await socket.connect(host, port, onBadCertificate:onBadCertificate);
     if (s == null) {
       throw {};
     }

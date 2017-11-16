@@ -1,7 +1,7 @@
 part of hetimanet_dartio;
 
 
-class TetSocketDartIo extends TetSocket {
+class TetSocketDartIo extends Socket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;
@@ -10,10 +10,10 @@ class TetSocketDartIo extends TetSocket {
   bool _isSecure = false;
   bool get isSecure => _isSecure;
 
-  TetSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecure: false}) {
+  TetSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecureSocket: false}) {
     _verbose = verbose;
     _mode = mode;
-    _isSecure = isSecure;
+    _isSecure = isSecureSocket;
   }
 
   TetSocketDartIo.fromSocket(io.Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
@@ -28,7 +28,7 @@ class TetSocketDartIo extends TetSocket {
   StreamController<TetReceiveInfo> _receiveStream = new StreamController.broadcast();
 
   @override
-  Future<TetSocket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null})async {
+  Future<Socket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null})async {
     if (_nowConnecting == true || _socket != null) {
       throw "connecting now";
     }
@@ -89,8 +89,8 @@ class TetSocketDartIo extends TetSocket {
     });
   }
   @override
-  Future<TetSocketInfo> getSocketInfo() async {
-    TetSocketInfo info = new TetSocketInfo();
+  Future<SocketInfo> getSocketInfo() async {
+    SocketInfo info = new SocketInfo();
     info.localAddress = _socket.address.address;
     info.localPort = _socket.port;
     info.peerAddress = _socket.remoteAddress.address;

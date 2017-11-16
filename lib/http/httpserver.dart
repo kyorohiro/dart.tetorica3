@@ -7,8 +7,8 @@ class HetiHttpServer {
 //  HetimaSocketBuilder _builder;
   String host;
   int port;
-  TetServerSocket _serverSocket = null;
-  HetiHttpServer._internal(TetServerSocket s) {
+  ServerSocket _serverSocket = null;
+  HetiHttpServer._internal(ServerSocket s) {
     _serverSocket = s;
   }
 
@@ -23,14 +23,14 @@ class HetiHttpServer {
 
   static Future<HetiHttpServer> bind(TetSocketBuilder builder, String address, int port) {
     Completer<HetiHttpServer> completer = new Completer();
-    builder.startServer(address, port).then((TetServerSocket serverSocket){
+    builder.startServer(address, port).then((ServerSocket serverSocket){
       if(serverSocket == null) {
         completer.completeError({});
         return;
       }
       HetiHttpServer server = new HetiHttpServer._internal(serverSocket);
       completer.complete(server);
-      serverSocket.onAccept().listen((TetSocket socket){
+      serverSocket.onAccept().listen((Socket socket){
         EasyParser parser = new EasyParser(socket.buffer);
         HetiHttpResponse.decodeRequestMessage(parser).then((HetiHttpRequestMessageWithoutBody body){
           HetiHttpServerRequest request = new HetiHttpServerRequest();
@@ -57,6 +57,6 @@ class HetiHttpServer {
 
 class HetiHttpServerRequest
 {
-  TetSocket socket;
+  Socket socket;
   HetiHttpRequestMessageWithoutBody info;
 }

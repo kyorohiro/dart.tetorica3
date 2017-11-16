@@ -80,7 +80,7 @@ class HetiHttpServerPlus {
   }
 
 
-  void _startResponseRangeFile(TetSocket socket, Data file, Map<String,String> header, int start, int end) {
+  void _startResponseRangeFile(Socket socket, Data file, Map<String,String> header, int start, int end) {
     ParserBuffer response = new ParserBuffer();
     file.getLength().then((int length) {
       if (end == -1 || end > length - 1) {
@@ -104,7 +104,7 @@ class HetiHttpServerPlus {
     });
   }
 
-  void _startResponseFile(TetSocket socket, int statuCode, Map<String,String> header, Data file) {
+  void _startResponseFile(Socket socket, int statuCode, Map<String,String> header, Data file) {
     ParserBuffer response = new ParserBuffer();
     if(statuCode == null) {
       statuCode = 200;
@@ -125,7 +125,7 @@ class HetiHttpServerPlus {
     });
   }
 
-  void _startResponseBuffer(TetSocket socket, Data file, int index, int length) {
+  void _startResponseBuffer(Socket socket, Data file, int index, int length) {
     int start = index;
     responseTask() {
       int end = start + 256 * 1024;
@@ -180,7 +180,7 @@ class HetiHttpServerPlusResponseItem {
     this.req = req;
   }
 
-  TetSocket get socket => req.socket;
+  Socket get socket => req.socket;
   String get targetLine => req.info.line.requestTarget;
   String get path {
     int index = targetLine.indexOf("?");

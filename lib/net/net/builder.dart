@@ -8,9 +8,9 @@ enum TetSocketMode {
 }
 
 abstract class TetSocketBuilder {
-  TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
-  TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
+  Socket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
+  Socket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
   TetUdpSocket createUdpClient();
-  Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) ;
+  Future<ServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) ;
   Future<List<NetworkInterface>> getNetworkInterfaces();
 }

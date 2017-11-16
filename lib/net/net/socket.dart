@@ -21,18 +21,16 @@ class X509Certificate {
   }
 }
 
-abstract class TetServerSocket {
-  Stream<TetSocket> onAccept();
+abstract class ServerSocket {
+  Stream<Socket> onAccept();
   void close();
 }
 
-abstract class TetSocket {
+abstract class Socket {
  // int lastUpdateTime = 0;
-  heti.ParserBuffer _buffer = new heti.ParserBuffer();
-  heti.ParserBuffer get buffer => _buffer;
-  Future<TetSocket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null}) ;
+  Future<Socket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null}) ;
   Future<TetSendInfo> send(List<int> data);
-  Future<TetSocketInfo> getSocketInfo();
+  Future<SocketInfo> getSocketInfo();
   Stream<TetReceiveInfo> onReceive;
   Stream<TetCloseInfo> onClose;
   bool isClosed = false;
@@ -40,19 +38,17 @@ abstract class TetSocket {
     _buffer.loadCompleted = true;
     isClosed = true;
   }
-//
-//  void updateTime() {
-//    lastUpdateTime = (new DateTime.now()).millisecondsSinceEpoch;
-//  }
-//
   Future clearBuffer() async {
     _buffer.unusedBuffer(_buffer.currentSize,reuse:false);
     _buffer.clear();
   }
+  heti.ParserBuffer _buffer = new heti.ParserBuffer();
+  heti.ParserBuffer get buffer => _buffer;
+
 }
 
 
-class TetSocketInfo {
+class SocketInfo {
   String peerAddress = "";
   int peerPort = 0;
   String localAddress = "";
