@@ -61,7 +61,7 @@ class HttpClient {
       builder.appendIntList(body, 0, body.length);
     }
     //
-    socket.onReceive.listen((TetReceiveInfo info) {});
+    socket.onReceive.listen((List<int> data) {});
     builder.loadCompleted = true;
     //print(await builder.getAllString());
     socket.send(builder.toList());

@@ -34,7 +34,7 @@ abstract class Socket {
   Future<Socket> close();
   Future<Socket> clearBuffer();
   heti.ParserBuffer get buffer;
-  Stream<TetReceiveInfo> get onReceive;
+  Stream<List<int>> get onReceive;
   Stream<Socket> get onClose;
 }
 
@@ -59,10 +59,10 @@ abstract class SocketBase extends Socket{
   heti.ParserBuffer get buffer => _buffer;
 
   StreamController<Socket> _closeStreamController = new StreamController.broadcast();
-  StreamController<TetReceiveInfo> _receiveStreamController = new StreamController.broadcast();
+  StreamController<List<int>> _receiveStreamController = new StreamController.broadcast();
   StreamController<Socket> get closeStreamController => _closeStreamController;
-  StreamController<TetReceiveInfo> get receiveStreamController => _receiveStreamController;
-  Stream<TetReceiveInfo> get onReceive => receiveStreamController.stream;
+  StreamController<List<int>> get receiveStreamController => _receiveStreamController;
+  Stream<List<int>> get onReceive => receiveStreamController.stream;
   Stream<Socket> get onClose  => closeStreamController.stream;
 
 }
@@ -75,10 +75,4 @@ class SocketInfo {
 }
 
 
-class TetReceiveInfo {
-  List<int> data;
-  TetReceiveInfo(List<int> _data) {
-    data = _data;
-  }
-}
 
