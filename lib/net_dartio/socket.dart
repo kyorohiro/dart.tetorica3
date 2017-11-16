@@ -1,7 +1,7 @@
 part of hetimanet_dartio;
 
 
-class TetSocketDartIo extends Socket {
+class TetSocketDartIo extends SocketBase {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;
