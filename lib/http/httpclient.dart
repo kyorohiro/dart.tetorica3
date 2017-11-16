@@ -1,7 +1,7 @@
 part of hetimanet_http;
 
 class HttpClientResponse {
-  HttpClientResponseInfo info;
+  HttpClientHead info;
   ParserReader body;
 }
 
@@ -37,7 +37,7 @@ class HttpClient {
 
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     await request(action, path, body, header:header);
-    HttpClientResponseInfo info = await getResponseHead();
+    HttpClientHead info = await getHead();
     return getBody(info, isLoadBody:isLoadBody);
   }
 
@@ -74,12 +74,12 @@ class HttpClient {
     return this;
   }
 
-  Future<HttpClientResponseInfo> getResponseHead() async {
+  Future<HttpClientHead> getHead() async {
     EasyParser parser = new EasyParser(socket.buffer);
     return HetiHttpResponse.decodeHttpMessage(parser);
   }
 
-  Future<HttpClientResponse> getBody(HttpClientResponseInfo message, {isLoadBody:true}) async {
+  Future<HttpClientResponse> getBody(HttpClientHead message, {isLoadBody:true}) async {
     HttpClientResponse result = new HttpClientResponse();
     result.info = message;
     if(isLoadBody == false) {
