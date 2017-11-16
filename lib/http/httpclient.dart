@@ -52,7 +52,7 @@ class HttpClient {
   Future<HttpClient> request(String action, String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host;// + ":" + port.toString();
-    headerTmp["Connection"] = "Close";
+    //headerTmp["Connection"] = "Close";
 
     if (header != null) {
       for (String key in header.keys) {
@@ -91,13 +91,21 @@ class HttpClient {
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
       ParserBuffer ret = new ParserBuffer();
       ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
-      reader.getBytes(0, message.contentLength).then((List<int> v){
-        ret.addBytes(v);
+      new Future(()async {
+        int contentLength = message.contentLength;
+        int length = 10*1024;
+        while(contentLength > 0) {
+          if(length > contentLength) {
+            length = contentLength;
+          }
+          ret.addBytes(await reader.getBytes(0, length));
+          contentLength-=length;
+        }
         ret.loadCompleted = true;
       });
       return ret;
     } else {
-      return new ChunkParserReader(new ParserReaderWithIndex(socket.buffer, message.index)).start();
+      return new ChunkParserReader(reader).start();
     }
   }
 
