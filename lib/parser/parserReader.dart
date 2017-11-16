@@ -27,12 +27,13 @@ abstract class ParserReader {
 
 }
 
-
+typedef bool ParserAppenderOnAddBytes(List<int> v);
 abstract class ParserAppender {
   void updatedBytes();
   void addByte(int v,{bool autoUpdate = true});
   void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true});
-  void addDummyBytes(int length);
+  void setOnAddBytes(ParserAppenderOnAddBytes onAddBytes);
+ // void addDummyBytes(int length);
 }
 
 
