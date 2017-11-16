@@ -48,6 +48,7 @@ abstract class SocketBase extends Socket{
   Future<Socket> close() async {
     _buffer.loadCompleted = true;
     isClosed = true;
+    closeStreamController.add(this);
     return this;
   }
 

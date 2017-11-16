@@ -77,13 +77,9 @@ class TetSocketDartIo extends SocketBase {
     }, onDone: () {
       log('<<<done>>>');
       _socket.close();
-      closeStreamController.add(this);
-     // print(await this.buffer.getAllString(allowMalformed: true));
-
     }, onError: (e) {
       log('<<<error>>> $e');
       _socket.close();
-      closeStreamController.add(this);
     });
   }
   @override
