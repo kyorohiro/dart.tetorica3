@@ -35,7 +35,7 @@ class PercentEncode
         int f = 0xFF&DECODE_TABLE[message[++i]];
         int e = 0xFF&DECODE_TABLE[message[++i]];
         int r = (f<<4)|e;
-        builder.appendByte(r);
+        builder.addByte(r);
       } else {
         builder.appendString(message[i]);
       }
@@ -49,7 +49,7 @@ class PercentEncode
     for(int i=0;i<count;i++) {
       if(45== target[i]||46==target[i]||(48<=target[i]&&target[i]<=57)||
         (65<=target[i]&&target[i]<=90) ||target[i]==95|| (97<=target[i]&&target[i]<=122)||target[i]==126){
-        builder.appendByte(target[i]);
+        builder.addByte(target[i]);
       } else {
         int f = ((0xf0&target[i])>>4);
         int e = ((0x0f&target[i]));

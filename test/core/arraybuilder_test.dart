@@ -136,22 +136,22 @@ void main() {
       isOK1 = true;
     });
     await new Future(() {
-      builder.appendByte(1);
+      builder.addByte(1);
     });
     await new Future(() {
-      builder.appendByte(2);
+      builder.addByte(2);
     });
     await new Future(() {
-      builder.appendByte(3);
+      builder.addByte(3);
     });
     await new Future(() {
-      builder.appendByte(4);
+      builder.addByte(4);
     });
     await new Future(() {
-      builder.appendByte(5);
+      builder.addByte(5);
     });
     await new Future(() {
-      builder.appendByte(6);
+      builder.addByte(6);
     });
 
     builder.getBytes(8, 1).then((List<int > v) {
@@ -159,7 +159,7 @@ void main() {
       isOK2 = true;
     });
     await new Future(() {
-      builder.appendIntList([7,8,9]);
+      builder.addBytes([7,8,9]);
     });
 
     await new Future((){});
@@ -177,16 +177,16 @@ void main() {
        unit.expect(4, v[1]);
      });
      await new Future(() {
-       builder.appendByte(1);
+       builder.addByte(1);
      });
      await new Future(() {
-       builder.appendByte(2);
+       builder.addByte(2);
      });
      await new Future(() {
-       builder.appendByte(3);
+       builder.addByte(3);
      });
      await new Future(() {
-       builder.appendByte(4);
+       builder.addByte(4);
      });
      //builder.fin();
     builder.loadCompleted = true;

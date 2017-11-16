@@ -18,7 +18,7 @@ void main() {
         int v = o;
         unit.expect(v,1024);
       });
-      builder.appendIntList(out, index:0, length:out.length);
+      builder.addBytes(out, index:0, length:out.length);
       return e;
     });
 
@@ -74,7 +74,7 @@ void main() {
       String v = o;
       unit.expect(v, "hetimatan");
     });
-    builder.appendIntList(out, index:0, length:out.length);
+    builder.addBytes(out, index:0, length:out.length);
     return e;
   });
 
@@ -141,7 +141,7 @@ void main() {
     }).catchError((e) {
 
     });
-    builder.appendIntList(out, index:0, length:out.length);
+    builder.addBytes(out, index:0, length:out.length);
     return e;
   });
   unit.test("list e1", (){
@@ -201,7 +201,7 @@ void main() {
       unit.expect(convert.UTF8.decode(dict["test"]),"test");
       unit.expect(dict["value"],1024);
     });
-    builder.appendIntList(out, index:0, length:out.length);
+    builder.addBytes(out, index:0, length:out.length);
     return e;
   });
 

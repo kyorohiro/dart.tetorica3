@@ -58,7 +58,7 @@ class HttpClient {
 
     builder.appendString("\r\n");
     if(body != null) {
-      builder.appendIntList(body, index:0, length:body.length);
+      builder.addBytes(body, index:0, length:body.length);
     }
     //
     socket.onReceive.listen((List<int> data) {});

@@ -113,7 +113,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-  void appendByte(int v) {
+  void addByte(int v) {
     if (loadCompleted) {
       return;
     }
@@ -124,7 +124,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     _updateGetInfos();
   }
 
-  void appendIntList(List<int> buffer, {int index = 0, int length = -1}) {
+  void addBytes(List<int> buffer, {int index = 0, int length = -1}) {
     if (loadCompleted) {
       return;
     }
@@ -140,7 +140,7 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     _updateGetInfos();
   }
 
-  void appendString(String text) => appendIntList(convert.UTF8.encode(text));
+  void appendString(String text) => addBytes(convert.UTF8.encode(text));
 
   List toList() => _buffer8.sublist(0, _length);
 

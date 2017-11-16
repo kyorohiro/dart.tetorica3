@@ -7,7 +7,7 @@ void main() {
   unit.test("nextBuffer", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendIntList([1, 2, 3, 4, 5]);
+      b.addBytes([1, 2, 3, 4, 5]);
       EasyParser parser = new EasyParser(b);
       List<int> bb = await parser.nextBuffer(3);
       unit.expect(bb, [1, 2, 3]);
@@ -36,7 +36,7 @@ void main() {
   unit.test("readShort", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendIntList(ByteOrder.parseShortByte(10, ByteOrderType.BigEndian));
+      b.addBytes(ByteOrder.parseShortByte(10, ByteOrderType.BigEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readShort(ByteOrderType.BigEndian);
       unit.expect(bb, 10);
@@ -47,7 +47,7 @@ void main() {
   unit.test("readInt", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendIntList(ByteOrder.parseIntByte(10, ByteOrderType.LittleEndian));
+      b.addBytes(ByteOrder.parseIntByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readInt(ByteOrderType.LittleEndian);
       unit.expect(bb, 10);
@@ -57,7 +57,7 @@ void main() {
   unit.test("readLong", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendIntList(ByteOrder.parseLongByte(10, ByteOrderType.LittleEndian));
+      b.addBytes(ByteOrder.parseLongByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readLong(ByteOrderType.LittleEndian);
       unit.expect(bb, 10);
@@ -67,7 +67,7 @@ void main() {
   unit.test("readByte", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendByte(10);
+      b.addByte(10);
       EasyParser parser = new EasyParser(b);
       int bb = await parser.readByte();
       unit.expect(bb, 10);
@@ -77,7 +77,7 @@ void main() {
   unit.test("nextBuffer", () async {
     {
       ParserBuffer b = new ParserBuffer();
-      b.appendIntList([1,2,3,4,5,6]);
+      b.addBytes([1,2,3,4,5,6]);
       EasyParser parser = new EasyParser(b);
       List<int> b1 = await parser.nextBuffer(3);
       unit.expect(b1, [1,2,3]);
