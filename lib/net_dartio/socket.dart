@@ -24,8 +24,6 @@ class TetSocketDartIo extends Socket {
   }
 
   bool _nowConnecting = false;
-  StreamController<TetCloseInfo> _closeStream = new StreamController.broadcast();
-  StreamController<TetReceiveInfo> _receiveStream = new StreamController.broadcast();
 
   @override
   Future<Socket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null})async {
@@ -74,18 +72,18 @@ class TetSocketDartIo extends Socket {
         this.buffer.appendIntList(data, 0, data.length);
       }
       if (_mode != TetSocketMode.bufferOnly) {
-        _receiveStream.add(new TetReceiveInfo(data));
+        receiveStreamController.add(new TetReceiveInfo(data));
       }
     }, onDone: () {
       log('<<<Done>>>');
       _socket.close();
-      _closeStream.add(new TetCloseInfo());
+      closeStreamController.add(this);
      // print(await this.buffer.getAllString(allowMalformed: true));
 
     }, onError: (e) {
       log('<<<Got error>>> $e');
       _socket.close();
-      _closeStream.add(new TetCloseInfo());
+      closeStreamController.add(this);
     });
   }
   @override
@@ -98,23 +96,17 @@ class TetSocketDartIo extends Socket {
     return info;
   }
 
-  void close() {
+  Future<Socket> close() {
     if (isClosed == false) {
       _socket.close();
     }
-    super.close();
+    return super.close();
   }
 
-  @override
-  Stream<TetCloseInfo> get onClose => _closeStream.stream;
 
   @override
-  Stream<TetReceiveInfo> get onReceive => _receiveStream.stream;
-
-  @override
-  Future<TetSendInfo> send(List<int> data) async {
-    await _socket.add(data);
-    return new TetSendInfo(0);
+  void send(List<int> data) {
+    _socket.add(data);
   }
 
   log(String message) {

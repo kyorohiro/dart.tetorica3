@@ -96,11 +96,8 @@ class HetiHttpServerPlus {
       }
       response.appendString("\r\n");
       //print(response.toText());
-      socket.send(response.toList()).then((TetSendInfo i) {
-        _startResponseBuffer(socket, file, start, contentLength);
-      }).catchError((e) {
-        socket.close();
-      });
+      socket.send(response.toList());
+       _startResponseBuffer(socket, file, start, contentLength);
     });
   }
 
@@ -117,11 +114,9 @@ class HetiHttpServerPlus {
         response.appendString("${key}: ${header[key]}\r\n");
       }
       response.appendString("\r\n");
-      socket.send(response.toList()).then((TetSendInfo i) {
-        _startResponseBuffer(socket, file, 0, length);
-      }).catchError((e) {
-        socket.close();
-      });
+      socket.send(response.toList());
+      _startResponseBuffer(socket, file, 0, length);
+       socket.close();
     });
   }
 
@@ -134,8 +129,7 @@ class HetiHttpServerPlus {
       }
       //print("####### ${start} ${end}");
       file.read(start, end-start).then((ReadResult readResult) {
-        return socket.send(readResult.buffer);
-      }).then((TetSendInfo i) {
+        socket.send(readResult.buffer);
         if (end >= (index + length)) {
           socket.close();
         } else {

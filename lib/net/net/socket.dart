@@ -29,21 +29,29 @@ abstract class ServerSocket {
 abstract class Socket {
  // int lastUpdateTime = 0;
   Future<Socket> connect(String peerAddress, int peerPort, {SocketOnBadCertificate onBadCertificate:null}) ;
-  Future<TetSendInfo> send(List<int> data);
+  void send(List<int> data);
   Future<SocketInfo> getSocketInfo();
-  Stream<TetReceiveInfo> onReceive;
-  Stream<TetCloseInfo> onClose;
   bool isClosed = false;
-  void close() {
+
+  Future<Socket> close() async {
     _buffer.loadCompleted = true;
     isClosed = true;
+    return this;
   }
+
   Future clearBuffer() async {
     _buffer.unusedBuffer(_buffer.currentSize,reuse:false);
     _buffer.clear();
   }
   heti.ParserBuffer _buffer = new heti.ParserBuffer();
   heti.ParserBuffer get buffer => _buffer;
+
+  StreamController<Socket> _closeStreamController = new StreamController.broadcast();
+  StreamController<TetReceiveInfo> _receiveStreamController = new StreamController.broadcast();
+  StreamController<Socket> get closeStreamController => _closeStreamController;
+  StreamController<TetReceiveInfo> get receiveStreamController => _receiveStreamController;
+  Stream<TetReceiveInfo> get onReceive => receiveStreamController.stream;
+  Stream<Socket> get onClose  => closeStreamController.stream;
 
 }
 
@@ -55,21 +63,11 @@ class SocketInfo {
   int localPort = 0;
 }
 
-class TetSendInfo {
-  int resultCode = 0;
-  TetSendInfo(int _resultCode) {
-    resultCode = _resultCode;
-  }
-}
 
 class TetReceiveInfo {
   List<int> data;
   TetReceiveInfo(List<int> _data) {
     data = _data;
   }
-}
-
-class TetCloseInfo {
-
 }
 

@@ -64,7 +64,7 @@ class HttpClient {
     socket.onReceive.listen((TetReceiveInfo info) {});
     builder.loadCompleted = true;
     //print(await builder.getAllString());
-    socket.send(builder.toList()).then((TetSendInfo info) {});
+    socket.send(builder.toList());
 
     return handleResponse(isLoadBody:isLoadBody);
   }
