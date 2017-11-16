@@ -47,9 +47,8 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   }
 
   Future<int> getIndex(int index, int length) async {
-    GetByteFutureInfo info = new GetByteFutureInfo();
-
     if (false == cached(index, length)) {
+      GetByteFutureInfo info = new GetByteFutureInfo();
       info.completerResultLength = length;
       info.index = index;
       info.completer = new Completer();
