@@ -12,38 +12,44 @@ import 'package:tetorica/http.dart' as tet;
 
 class HttpClient {
   tet.TetSocketBuilder _socketBuilder;
-  bool verbose = false;
-  List<int> redirectStatusCode;
-  int redirect;
-  tet.SocketOnBadCertificate onBadCertificate;
+
+  List<int> _redirectStatusCode;
+  tet.SocketOnBadCertificate _onBadCertificate;
+  bool _reuseQuery;
+  bool _verbose = false;
+
   HttpClient(this._socketBuilder,{
-      this.verbose: false,
-      this.redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
-      this.onBadCertificate:null
-  }){}
+    bool verbose: false,
+    List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
+    tet.SocketOnBadCertificate onBadCertificate:null,
+    bool reuseQuery: true,
+  }){
+    _reuseQuery = reuseQuery;
+    _onBadCertificate = onBadCertificate;
+    _redirectStatusCode = new List<int>.from(redirectStatusCode);
+    _verbose = verbose;
+  }
 
   Future<tet.HttpClientResponse> doAction(String address, int port, String action, String pathAndOption,
      List<int> data, {
         Map<String, String> header,
-        bool reuseQuery: true,
+
         bool useSecure:false,
         bool isLoadBody:true,
         int redirect: 5,
         }) async {
     _log("address:${address}, port:${port}, actopn:${action}, path:${pathAndOption}");
 
-    tet.HttpClient client = new tet.HttpClient(_socketBuilder,verbose: verbose);
+    tet.HttpClient client = new tet.HttpClient(_socketBuilder,verbose: _verbose);
 
-    await client.connect(address, port, useSecure:useSecure, onBadCertificate: onBadCertificate);
+    await client.connect(address, port, useSecure:useSecure, onBadCertificate: _onBadCertificate);
 
-    tet.HttpClientResponse res = await client.base(action,pathAndOption, data,
-      header:header,
-      isLoadBody:isLoadBody);
+    tet.HttpClientResponse res = await client.base(action,pathAndOption, data, header:header, isLoadBody:isLoadBody);
 
     client.close();
     
     //
-    if (redirectStatusCode.contains(res.info.line.statusCode) && redirect > 0) {
+    if (_redirectStatusCode.contains(res.info.line.statusCode) && redirect > 0) {
       //
       //
       for(tet.HttpResponseHeaderField head in res.info.headerField) {
@@ -69,14 +75,17 @@ class HttpClient {
       _log("Location:${locationField.fieldValue}");
       _log("scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
       useSecure = (hurl.scheme == "https"?true:false);
-      return doAction(hurl.host, hurl.port, action, pathAndOption, data, header: header, redirect: (redirect - 1), reuseQuery: reuseQuery,useSecure:useSecure);
+      return doAction(hurl.host, hurl.port, action, pathAndOption, data,
+          header: header,
+          redirect: (redirect - 1),
+          useSecure:useSecure);
     } else {
       return res;
     }
   }
 
   void _log(String message) {
-    if (verbose) {
+    if (_verbose) {
       print("++${message}");
     }
   }
