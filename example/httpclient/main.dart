@@ -6,6 +6,7 @@ import 'package:tetorica/http.dart' as tet;
 
 import 'package:args/args.dart' as arg;
 import 'dart:convert' as conv;
+import 'httpclient.dart';
 
 main(List<String> args) async {
   //
@@ -39,12 +40,12 @@ main(List<String> args) async {
     data = conv.UTF8.encode(parserResult["data"]);
   }
 
-  print("Hello World!!");
+
   tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
-  tet.HttpClientPlus client = new tet.HttpClientPlus(socketBuilder,verbose: true);
+  HttpClient client = new HttpClient(socketBuilder,verbose: true, onBadCertificate: (tet.X509Certificate i){return true;});
   tet.HttpClientResponse response = await client.doAction(
       host, port, action, pathWithQuery, data,
-      useSecure: useSecure, onBadCertificate: (tet.X509Certificate i){return true;});
+      useSecure: useSecure);
 
   print("# LEN : ${response.info.contentLength}");
   for(tet.HttpResponseHeaderField f in response.info.headerField ) {

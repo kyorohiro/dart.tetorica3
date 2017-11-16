@@ -9,7 +9,7 @@ import 'dart:typed_data' as data;
 import 'net/tmp/rfctable.dart';
 
 part 'http/httpclient.dart';
-part 'package:tetorica/http/app/httpclient_plus.dart';
+//part '../example/httpclient/httpclient.dart';
 part 'http/httpresponse.dart';
 part 'http/chunkParserReader.dart';
 
