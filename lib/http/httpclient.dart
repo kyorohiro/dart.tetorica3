@@ -19,6 +19,21 @@ class HttpClient {
     _verbose = verbose;
   }
 
+  Future<HttpClient> connect(String _host, int _port ,{bool useSecure:false, SocketOnBadCertificate onBadCertificate:null}) async {
+    host = _host;
+    port = _port;
+    socket = (useSecure?_socketBuilder.createSecureClient():_socketBuilder.createClient());
+    if (socket == null) {
+      throw {};
+    }
+    log("<hetihttpclient f=connect> ${socket}");
+    Socket s = await socket.connect(host, port, onBadCertificate:onBadCertificate);
+    if (s == null) {
+      throw {};
+    }
+    return this;
+  }
+
   Future<HttpClientResponse> requestAndResponse(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     await request(action, path, body, header:header);
     HttpClientHead head = await getHead();
@@ -35,21 +50,7 @@ class HttpClient {
   }
 
 
-  Future<HttpClient> connect(String _host, int _port ,{bool useSecure:false, SocketOnBadCertificate onBadCertificate:null}) async {
-    host = _host;
-    port = _port;
-    socket = (useSecure?_socketBuilder.createSecureClient():_socketBuilder.createClient());
-    if (socket == null) {
-      throw {};
-    }
-    log("<hetihttpclient f=connect> ${socket}");
-    Socket s = await socket.connect(host, port, onBadCertificate:onBadCertificate);
-    if (s == null) {
-      throw {};
-    }
-    return this;
-  }
-  
+
   Future<HttpClient> request(String action, String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host;// + ":" + port.toString();
