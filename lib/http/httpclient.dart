@@ -37,8 +37,17 @@ class HttpClient {
 
   Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     await request(action, path, body, header:header);
-    HttpClientHead info = await getHead();
-    return getBody(info, isLoadBody:isLoadBody);
+    HttpClientHead head = await getHead();
+    HttpClientResponse result = new HttpClientResponse();
+    if(isLoadBody) {
+      result.info = head;
+      result.body = await getBodyAsReader(head);
+    } else {
+      result.info = head;
+      result.body = new ParserBuffer();
+      result.body.loadCompleted = true;
+    }
+    return result;
   }
 
   Future<HttpClient> request(String action, String path, List<int> body, {Map<String, String> header}) async {
@@ -79,31 +88,24 @@ class HttpClient {
     return HetiHttpResponse.decodeHttpMessage(parser);
   }
 
-  Future<HttpClientResponse> getBody(HttpClientHead message, {isLoadBody:true}) async {
-    HttpClientResponse result = new HttpClientResponse();
-    result.info = message;
-    if(isLoadBody == false) {
-      result.body = new ParserReaderWithIndex(socket.buffer, message.index);
-      result.body.loadCompleted = true;
-      return result;
-    }
-
+  Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
-
+    ParserReader ret;
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
-      result.body = new ParserReaderWithIndex(socket.buffer, message.index);
-      if (result.info.contentLength > 0) {
-        await result.body.getBytes(0, result.info.contentLength);
-        result.body.loadCompleted = true;
+      ret = new ParserReaderWithIndex(socket.buffer, message.index);
+      if (message.contentLength > 0) {
+        await ret.getBytes(0, message.contentLength);
+        ret.loadCompleted = true;
       } else {
-        result.body.loadCompleted = true;
+        ret.loadCompleted = true;
       }
+      return ret;
     } else {
-      result.body = new ChunkParserReader(new ParserReaderWithIndex(socket.buffer, message.index)).start();
+      ret = new ChunkParserReader(new ParserReaderWithIndex(socket.buffer, message.index)).start();
+      return ret;
     }
-    return result;
   }
-
+  
   void close() {
     if (socket != null) {
       socket.close();
