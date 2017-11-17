@@ -116,24 +116,9 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     }
   }
 
-
-  ParserAppenderOnAddBytes _onAddBytes = null;
-  void setOnAddBytes(ParserAppenderOnAddBytes onAddBytes) {
-    _onAddBytes = onAddBytes;
-  }
-
   void addByte(int v, {bool autoUpdate = true}) {
     if (loadCompleted) {
       return;
-    }
-    //
-    // todo 
-    if(_onAddBytes != null) {
-      bool ret = _onAddBytes([v]);
-      if(ret){
-        addDummyBytes(1);
-        return;
-      }
     }
     update(1);
     _buffer8[_length] = v;
@@ -144,29 +129,11 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   }
 
   void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true}) {
+    print("length : ${buffer.length}");
     if (loadCompleted) {
       return;
     }
-    //
-    // todo
-    if(_onAddBytes != null) {
-      bool ret = false;
-      List<int> tmp = null;
-      if(index == 0 && length == -1) {
-        tmp = buffer;
-        ret = _onAddBytes(tmp);
-      } else if(length == -1) {
-        tmp = buffer.sublist(index);
-        ret = _onAddBytes(tmp);
-      } else {
-        tmp = buffer.sublist(index, index+length);
-        ret = _onAddBytes(tmp);
-      }
-      if(ret){
-        addDummyBytes(buffer.length);
-        return;
-      }
-    }
+
     if (length < 0) {
       length = buffer.length;
     }
@@ -179,12 +146,6 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
     if(autoUpdate) {
       updatedBytes();
     }
-  }
-
-  void addDummyBytes(int length) {
-    _length += length;
-    unusedBuffer(currentSize);
-    update(length);
   }
 
   void appendString(String text) => addBytes(convert.UTF8.encode(text));
