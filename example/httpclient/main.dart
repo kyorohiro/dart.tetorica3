@@ -16,7 +16,7 @@ main(List<String> args) async {
   parser.addFlag("continue", abbr: "c");
   parser.addOption("header", abbr: "h", allowMultiple: true);
   parser.addOption("data", abbr: "d");
-  parser.addOption("output", abbr: "o");
+  parser.addOption("output", abbr: "o", defaultsTo: "");
   parser.addOption("action", abbr: "a", defaultsTo: "GET");
   parser.addFlag("verbose", abbr: "v", defaultsTo: false);
 
@@ -31,6 +31,7 @@ main(List<String> args) async {
 //  print("# r #${parserResult.rest}");
 
   bool verbose = parserResult["verbose"];
+  String output = parserResult["output"];
   String addr = parserResult.rest[0];
   String action = parserResult["action"];
   tet.HttpUrl httpUrl = await tet.HttpUrl.decodeUrl(addr);
@@ -56,7 +57,9 @@ main(List<String> args) async {
     }
   }
   tet.ParserReader reader = response.body;
-  String ret = await reader.getAllString();
-  print("${ret}");
+  if(output == "") {
+    String ret = await reader.getAllString();
+    print("${ret}");
+  }
 
 }
