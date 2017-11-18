@@ -83,7 +83,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     print("${size} ${currentSize} ${_buffer8.bufferIndex}");
     List<int> ret = _buffer8.sublist(_buffer8.bufferIndex, _buffer8.bufferIndex+size);
-    unusedBuffer(_buffer8.bufferIndex);
+    unusedBuffer(_buffer8.bufferIndex+size);
     return ret;
   }
 
