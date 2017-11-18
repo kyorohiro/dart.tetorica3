@@ -22,14 +22,6 @@ main(List<String> args) async {
 
   // parse
   arg.ArgResults parserResult = parser.parse(args);
-//  print("# d #${parserResult["header"]}");
-//  print("# c #${parserResult["continue"]}");
-//  print("# r #${parserResult["retry"]}");
-//  print("# a #${parserResult["action"]}");
-//  print("# o #${parserResult["output"]}");
-//  print("# d #${parserResult["data"]}");
-//  print("# r #${parserResult.rest}");
-
   bool verbose = parserResult["verbose"];
   String output = parserResult["output"];
   String addr = parserResult.rest[0];
@@ -62,4 +54,5 @@ main(List<String> args) async {
     print("${ret}");
   }
 
+  client.close();
 }

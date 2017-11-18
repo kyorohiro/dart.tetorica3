@@ -9,6 +9,7 @@ class HttpClient {
   tet.SocketOnBadCertificate _onBadCertificate;
   bool _reuseQuery;
   bool _verbose = false;
+  tet.HttpClient client = null;
 
   HttpClient(this._socketBuilder,{
     bool verbose: false,
@@ -32,17 +33,18 @@ class HttpClient {
         }) async {
     _log("address:${address}, port:${port}, actopn:${action}, path:${pathAndOption}");
 
-    tet.HttpClient client = new tet.HttpClient(_socketBuilder,verbose: _verbose);
+    client = new tet.HttpClient(_socketBuilder,verbose: _verbose);
 
     await client.connect(address, port, useSecure:useSecure, onBadCertificate: _onBadCertificate);
 
     tet.HttpClientResponse res = await client.requestAndResponse(action,pathAndOption, data, header:header, isLoadBody:isLoadBody);
 
     await res.body.waitByLoadCompleted();
-    client.close();
+
     
     //
     if (_redirectStatusCode.contains(res.info.line.statusCode) && redirect > 0) {
+      close();
       for(tet.HttpResponseHeaderField head in res.info.headerField) {
         print("HEAD = ${head.fieldName} : ${head.fieldValue}");
       }
@@ -73,6 +75,11 @@ class HttpClient {
     }
   }
 
+  void close() {
+    if(client != null) {
+      client.close();
+    }
+  }
   void _log(String message) {
     if (_verbose) {
       print("++${message}");
