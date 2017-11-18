@@ -90,13 +90,13 @@ class HttpClient {
   Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
     ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
-    ParserByteBuffer ret = new ParserByteBuffer();
-
+//    ParserBuffer ret = new ParserByteBuffer();
+    ParserBuffer ret = new ParserListBuffer();
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked" ) {
       // content-length
       new Future(()async {
         int contentLength = message.contentLength;
-        int length = 10*1024;
+        int length = 2*1024;
         int index = 0;
         while(contentLength > 0) {
           if(length > contentLength) {

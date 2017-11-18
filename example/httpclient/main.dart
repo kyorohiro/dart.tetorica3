@@ -62,11 +62,8 @@ main(List<String> args) async {
     tet.Data data = await builder.createHetimaData(output);
     int writeLength = 0;
     int index = 0;
-    /*
-    List<int> buff = await reader.getAllBytes();
-    await data.write(buff, writeLength);
-    print("# ${buff.length}");
-    */
+    //
+    //
     while(!(reader.loadCompleted && writeLength >= reader.currentSize)) {
       List<int> buffer = await reader.getAndUnusedBuffer();
       await data.write(buffer, writeLength);
@@ -74,8 +71,6 @@ main(List<String> args) async {
       print("writeed ${writeLength} ${buffer.length} ${reader.currentSize}");
     }
   }
-
-
 
   client.close();
   print("closed");
