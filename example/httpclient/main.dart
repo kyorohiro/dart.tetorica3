@@ -18,16 +18,19 @@ main(List<String> args) async {
   parser.addOption("data", abbr: "d");
   parser.addOption("output", abbr: "o");
   parser.addOption("action", abbr: "a", defaultsTo: "GET");
+  parser.addFlag("verbose", abbr: "v", defaultsTo: false);
+
   // parse
   arg.ArgResults parserResult = parser.parse(args);
-  print("# d #${parserResult["header"]}");
-  print("# c #${parserResult["continue"]}");
-  print("# r #${parserResult["retry"]}");
-  print("# a #${parserResult["action"]}");
-  print("# o #${parserResult["output"]}");
-  print("# d #${parserResult["data"]}");
-  print("# r #${parserResult.rest}");
+//  print("# d #${parserResult["header"]}");
+//  print("# c #${parserResult["continue"]}");
+//  print("# r #${parserResult["retry"]}");
+//  print("# a #${parserResult["action"]}");
+//  print("# o #${parserResult["output"]}");
+//  print("# d #${parserResult["data"]}");
+//  print("# r #${parserResult.rest}");
 
+  bool verbose = parserResult["verbose"];
   String addr = parserResult.rest[0];
   String action = parserResult["action"];
   tet.HttpUrl httpUrl = await tet.HttpUrl.decodeUrl(addr);
@@ -42,14 +45,15 @@ main(List<String> args) async {
 
 
   tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
-  HttpClient client = new HttpClient(socketBuilder,verbose: true, onBadCertificate: (tet.X509Certificate i){return true;});
+  HttpClient client = new HttpClient(socketBuilder,verbose: false, onBadCertificate: (tet.X509Certificate i){return true;});
   tet.HttpClientResponse response = await client.doAction(
       host, port, action, pathWithQuery, data,
       useSecure: useSecure);
 
-  print("# LEN : ${response.info.contentLength}");
-  for(tet.HttpResponseHeaderField f in response.info.headerField ) {
-    print("# HEA : " + f.fieldName + " " + f.fieldValue + "");
+  if(verbose) {
+    for (tet.HttpResponseHeaderField f in response.info.headerField) {
+      print("[v:header]" + f.fieldName + " " + f.fieldValue + "");
+    }
   }
   tet.ParserReader reader = response.body;
   String ret = await reader.getAllString();

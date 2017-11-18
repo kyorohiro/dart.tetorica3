@@ -16,7 +16,7 @@ class TetSocketDartIo extends SocketBase {
     _isSecure = isSecureSocket;
   }
 
-  TetSocketDartIo.fromSocket(io.Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify, ParserBuffer buffer:null}):super(buffer:buffer)  {
+  TetSocketDartIo.fromSocket(io.Socket socket, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, ParserBuffer buffer:null}):super(buffer:buffer)  {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;

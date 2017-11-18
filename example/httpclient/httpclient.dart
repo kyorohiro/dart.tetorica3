@@ -1,11 +1,3 @@
-/*
-import 'dart:convert' as convert;
-import 'package:tetorica/data.dart';
-import 'package:tetorica/parser.dart';
-import 'dart:typed_data' as data;
-import 'package:tetorica/net/tmp/rfctable.dart';
-*/
-
 import 'dart:async';
 import 'package:tetorica/net.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
@@ -27,7 +19,7 @@ class HttpClient {
     _reuseQuery = reuseQuery;
     _onBadCertificate = onBadCertificate;
     _redirectStatusCode = new List<int>.from(redirectStatusCode);
-    _verbose = verbose = true;
+    _verbose = verbose;
   }
 
   Future<tet.HttpClientResponse> doAction(String address, int port, String action, String pathAndOption,
