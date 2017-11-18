@@ -22,7 +22,7 @@ class HttpClient {
   Future<HttpClient> connect(String _host, int _port ,{bool useSecure:false, SocketOnBadCertificate onBadCertificate:null}) async {
     host = _host;
     port = _port;
-    socket = (useSecure?_socketBuilder.createSecureClient():_socketBuilder.createClient());
+    socket = (useSecure?_socketBuilder.createSecureClient(buffer:new ParserListBuffer()):_socketBuilder.createClient(buffer:new ParserListBuffer()));
     if (socket == null) {
       throw {};
     }
@@ -54,8 +54,8 @@ class HttpClient {
     headerTmp["Host"] = host;// + ":" + port.toString();
     //headerTmp["Connection"] = "Close";
     //Host: www.google.com
-    headerTmp["User-Agent"] = "eurl/test";
-    headerTmp["Accept"] = "*/*";
+    //headerTmp["User-Agent"] = "eurl/test";
+    //headerTmp["Accept"] = "*/*";
     if (header != null) {
       for (String key in header.keys) {
         headerTmp[key] = header[key];
@@ -90,9 +90,10 @@ class HttpClient {
   Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
     ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
-    if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked" ) {
-      ParserByteBuffer ret = new ParserByteBuffer();
+    ParserByteBuffer ret = new ParserByteBuffer();
 
+    if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked" ) {
+      // content-length
       new Future(()async {
         int contentLength = message.contentLength;
         int length = 10*1024;
@@ -107,7 +108,27 @@ class HttpClient {
       });
       return ret;
     } else {
-      return new ChunkParserReader(reader).start();
+      // chunk
+      EasyParser parser = new EasyParser(reader);
+      new Future(()async {
+        try {
+          while (true) {
+            int size = await HetiHttpResponse.decodeChunkedSize(parser);
+            List<int> v = await parser.buffer.getBytes(parser.index, size);
+            parser.index += v.length;
+            reader.unusedBuffer(parser.index - 1);
+            ret.addBytes(v, index: 0, length: v.length);
+            if (v.length == 0) {
+              break;
+            }
+            await HetiHttpResponse.decodeCrlf(parser);
+          }
+        } catch(e) {
+        } finally {
+          ret.loadCompleted = true;
+        }
+      });
+      return ret;
     }
   }
 
