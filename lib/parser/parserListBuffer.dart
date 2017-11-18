@@ -34,13 +34,24 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
       return [];
     }
     if(!cached(index, length)) {
+      await waitByBuffered(index, length);
+    }
+    int len = currentSize - index;
+    len = (len > length ? length : len);
+    if(out == null) {
+      out = new data.Uint8List(len >= 0 ? len : 0);
+    }
+    for (int i = 0; i < len; i++) {
+      out[i] = this[index + i];
     }
     return out;
   }
 
   int operator [](int index) {
-    int s = 0;
-    int e = 0;
+    if(index < _clearedBuffer) {
+      return 0;
+    }
+    int s = _clearedBuffer;
     for(List<int> buffer in buffers) {
       if(index >=s  && s+buffer.length >index) {
         return buffer[index-s];
@@ -52,9 +63,27 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   void clear() {
     _length = 0;
+    _clearedBuffer = 0;
+    buffers.clear();
   }
 
-  void unusedBuffer(int len, {reuse: true}) {}
+  void unusedBuffer(int len, {reuse: true}) {
+    if(len <_clearedBuffer) {
+      return;
+    }
+    int tmpLen = len -_clearedBuffer;
+    while(buffers.length > 0) {
+      List<int> buffer = buffers.first;
+      print("### ${buffer.length} ${tmpLen}");
+      if(buffer.length <= tmpLen) {
+        buffers.removeAt(0);
+        tmpLen -= buffer.length;
+        _clearedBuffer += buffer.length;
+      } else {
+        break;
+      }
+    }
+  }
 
   int get currentSize => _length;
 
@@ -122,10 +151,3 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
   String toText() => convert.UTF8.decode(toList());
 }
 
-/*
-class GetByteFutureInfo {
-  int completerResultLength = 0;
-  int index = 0;
-  Completer<int> completer = null;
-}
-*/
