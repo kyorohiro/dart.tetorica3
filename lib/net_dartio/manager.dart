@@ -8,12 +8,12 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
     _verbose = verbose;
   }
 
-  Socket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, isSecure: false}) {
-    return new TetSocketDartIo(verbose: _verbose,mode:mode);
+  Socket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, ParserBuffer buffer:null}) {
+    return new TetSocketDartIo(verbose: _verbose,mode:mode, buffer:buffer);
   }
 
-  Socket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
-    return new TetSocketDartIo(verbose: _verbose,mode:mode, isSecureSocket: true);
+  Socket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, ParserBuffer buffer:null}) {
+    return new TetSocketDartIo(verbose: _verbose,mode:mode, isSecureSocket: true, buffer:buffer);
   }
 
   Future<ServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) async {

@@ -31,9 +31,7 @@ class EasyParser {
   }
 
   int pop() {
-    int ret = stack.last;
-    stack.remove(ret);
-    return ret;
+    return stack.removeLast();
   }
 
   int last() {

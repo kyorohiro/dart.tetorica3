@@ -27,7 +27,7 @@ class HttpClient {
     _reuseQuery = reuseQuery;
     _onBadCertificate = onBadCertificate;
     _redirectStatusCode = new List<int>.from(redirectStatusCode);
-    _verbose = verbose;
+    _verbose = verbose = true;
   }
 
   Future<tet.HttpClientResponse> doAction(String address, int port, String action, String pathAndOption,
@@ -51,13 +51,9 @@ class HttpClient {
     
     //
     if (_redirectStatusCode.contains(res.info.line.statusCode) && redirect > 0) {
-      //
-      //
       for(tet.HttpResponseHeaderField head in res.info.headerField) {
         print("HEAD = ${head.fieldName} : ${head.fieldValue}");
       }
-      //
-      //
       tet.HttpResponseHeaderField locationField = res.info.find("Location");
       String scheme;
       if(useSecure) {
@@ -71,10 +67,10 @@ class HttpClient {
       if(optionIndex > 0) {
         option = pathAndOption.substring(optionIndex);
       }
-      pathAndOption = "${hurl.path}${option}";
+      pathAndOption = hurl.pathWithQuery;//"${hurl.path}${option}";
       _log("status code:${res.info.line.statusCode}");
       _log("Location:${locationField.fieldValue}");
-      _log("scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
+      _log("${hurl.pathWithQuery} optionIndex: ${optionIndex},scheme:${hurl.scheme}, address:${hurl.host}, port:${hurl.port}, actopn:${action}, path:${pathAndOption}");
       useSecure = (hurl.scheme == "https"?true:false);
       return doAction(hurl.host, hurl.port, action, pathAndOption, data,
           header: header,

@@ -2,7 +2,7 @@ part of hetimanet_http;
 
 class ChunkParserReader extends ParserReaderBase {
   bool _started = false;
-  ParserBuffer _buffer = new ParserBuffer();
+  ParserByteBuffer _buffer = new ParserByteBuffer();
   ParserReader _base = null;
 
   ChunkParserReader(ParserReader builder) {

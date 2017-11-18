@@ -27,7 +27,9 @@ abstract class ParserReader {
 
 }
 
-typedef bool ParserAppenderOnAddBytes(List<int> v);
+abstract class ParserBuffer implements ParserReader, ParserAppender {
+}
+//typedef bool ParserAppenderOnAddBytes(List<int> v);
 abstract class ParserAppender {
   void updatedBytes();
   void addByte(int v,{bool autoUpdate = true});

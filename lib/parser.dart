@@ -10,7 +10,7 @@ part 'parser/parserReader.dart';
 part 'parser/parserReaderMeta.dart';
 part 'parser/byteorder.dart';
 part 'parser/easyparser.dart';
-part 'parser/parserBuffer.dart';
+part 'parser/parserByteBuffer.dart';
 part 'parser/parserListBuffer.dart';
 
 

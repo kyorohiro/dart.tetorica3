@@ -9,7 +9,7 @@ import 'package:tetorica/http.dart' as hetima;
 
 void main() {
   unit.test("ChunkedBuilderAdapter_a", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 3);
     a.start();
@@ -20,7 +20,7 @@ void main() {
   });
 
   unit.test("ChunkedBuilderAdapter_b", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n1234567890");
@@ -31,7 +31,7 @@ void main() {
   });
 
   unit.test("ChunkedBuilderAdapter_c", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n12345678");
@@ -44,7 +44,7 @@ void main() {
   });
 
   unit.test("ChunkedBuilderAdapter_d", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc10\r\n12345678");
@@ -57,7 +57,7 @@ void main() {
   });
 
   unit.test("ChunkedBuilderAdapter_f", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 13);
     new Future.delayed(new Duration(milliseconds: 500), () {
@@ -75,7 +75,7 @@ void main() {
 
 
   unit.test("ChunkedBuilderAdapter_g", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     hetima.ChunkParserReader a = new hetima.ChunkParserReader(builder);
     Future r = a.getBytes(0, 13);
     new Future.delayed(new Duration(milliseconds: 500), () {

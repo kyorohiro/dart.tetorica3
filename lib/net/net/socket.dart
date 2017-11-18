@@ -33,14 +33,23 @@ abstract class Socket {
   bool get isClosed;
   bool get isSecure;
   Future<Socket> close();
-  Future<Socket> clearBuffer();
-  heti.ParserBuffer get buffer;
+  //Future<Socket> clearBuffer();
+  heti.ParserByteBuffer get buffer;
   Stream<List<int>> get onReceive;
   Stream<Socket> get onClose;
 }
 
 abstract class SocketBase extends Socket{
   bool isClosed = false;
+  SocketBase({heti.ParserBuffer buffer:null}) {
+    if(buffer == null) {
+     this._buffer = new heti.ParserByteBuffer();
+    } else {
+      //new heti.ParserListBuffer();
+      this._buffer = buffer;
+    }
+  }
+
   Future<Socket> close() async {
     _buffer.loadCompleted = true;
     isClosed = true;
@@ -49,11 +58,11 @@ abstract class SocketBase extends Socket{
   }
 
   Future<Socket> clearBuffer() async {
-    _buffer.unusedBuffer(_buffer.currentSize,reuse:false);
-    _buffer.clear();
+    _buffer.unusedBuffer(_buffer.currentSize);
+    //_buffer.clear();
     return this;
   }
-  heti.ParserBuffer _buffer = new heti.ParserBuffer();
+  heti.ParserBuffer _buffer;// = new heti.ParserByteBuffer();
   heti.ParserBuffer get buffer => _buffer;
 
   StreamController<Socket> _closeStreamController = new StreamController.broadcast();

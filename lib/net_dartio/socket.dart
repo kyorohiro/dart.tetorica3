@@ -10,13 +10,13 @@ class TetSocketDartIo extends SocketBase {
   bool _isSecure = false;
   bool get isSecure => _isSecure;
 
-  TetSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecureSocket: false}) {
+  TetSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecureSocket: false, ParserBuffer buffer:null}):super(buffer:buffer) {
     _verbose = verbose;
     _mode = mode;
     _isSecure = isSecureSocket;
   }
 
-  TetSocketDartIo.fromSocket(io.Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
+  TetSocketDartIo.fromSocket(io.Socket socket, {verbose: true, TetSocketMode mode:TetSocketMode.bufferAndNotify, ParserBuffer buffer:null}):super(buffer:buffer)  {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;

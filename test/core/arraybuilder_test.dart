@@ -9,14 +9,14 @@ void main() {
 //  hetima.HetiTest test = new hetima.HetiTest("tt");
 
   unit.test("arraybuilder: init", () {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     unit.expect(0, builder.currentSize);
     unit.expect(0, builder.toList().length);
     unit.expect("", builder.toText());
   });
 
   unit.test("arraybuilder: senario", () {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     builder.appendString("abc");
     unit.expect("abc", builder.toText());
     unit.expect(3, builder.toList().length);
@@ -126,7 +126,7 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: [2]", () async {
-    hetima.ParserBuffer builder = new hetima.ParserBuffer();
+    hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
     unit.expect(0, builder.currentSize);
 
     bool isOK1 = false;
@@ -170,7 +170,7 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: [2]", () async {
-     hetima.ParserBuffer builder = new hetima.ParserBuffer();
+     hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
      builder.getBytes(2, 3).then((List<int > v) {
        unit.expect(v.length, 2);
        unit.expect(3, v[0]);

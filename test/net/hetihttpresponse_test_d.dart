@@ -8,7 +8,7 @@ import 'package:tetorica/http.dart' as hetima;
 
 void main() {
   unit.test("001",() async{
-      hetima.ParserBuffer builder = new hetima.ParserBuffer();
+      hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-100");
@@ -19,7 +19,7 @@ void main() {
   });
 
   unit.test("002",() async {
-      hetima.ParserBuffer builder = new hetima.ParserBuffer();
+      hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
       Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-");

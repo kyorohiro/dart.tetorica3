@@ -68,7 +68,7 @@ class HetiHttpServerPlus {
     HttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
     if (fieldRangeHeader != null && statusCode == null) {
       data.Uint8List buff = new data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
-      ParserBuffer builder = new ParserBuffer.fromList(buff);
+      ParserByteBuffer builder = new ParserByteBuffer.fromList(buff);
       //builder.fin();
       builder.loadCompleted = true;
       HetiHttpResponse.decodeRequestRangeValue(new EasyParser(builder)).then((HetiHttpRequestRange range) {
@@ -81,7 +81,7 @@ class HetiHttpServerPlus {
 
 
   void _startResponseRangeFile(Socket socket, Data file, Map<String,String> header, int start, int end) {
-    ParserBuffer response = new ParserBuffer();
+    ParserByteBuffer response = new ParserByteBuffer();
     file.getLength().then((int length) {
       if (end == -1 || end > length - 1) {
         end = length - 1;
@@ -102,7 +102,7 @@ class HetiHttpServerPlus {
   }
 
   void _startResponseFile(Socket socket, int statuCode, Map<String,String> header, Data file) {
-    ParserBuffer response = new ParserBuffer();
+    ParserByteBuffer response = new ParserByteBuffer();
     if(statuCode == null) {
       statuCode = 200;
     }

@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-class ParserListBuffer extends ParserReaderBase implements ParserAppender, ParserReader {
+class ParserListBuffer extends ParserReaderBase implements ParserAppender, ParserReader, ParserBuffer {
   int _length = 0;
   int _clearedBuffer = 0;
   List<GetByteFutureInfo> mGetByteFutreList = new List();

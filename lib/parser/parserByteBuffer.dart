@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserReader {
+class ParserByteBuffer extends ParserReaderBase implements ParserAppender, ParserReader, ParserBuffer {
   int _max = 1024;
   MemoryBuffer _buffer8;
   int _length = 0;
@@ -11,13 +11,13 @@ class ParserBuffer extends ParserReaderBase implements ParserAppender, ParserRea
   int get clearedBuffer => _buffer8.bufferIndex;
 
   bool logon = false;
-  ParserBuffer({bufferSize: 1024}) {
+  ParserByteBuffer({bufferSize: 1024}) {
     this.logon = logon;
     _max = bufferSize;
     _buffer8 = new MemoryBuffer(_max); //new data.Uint8List(_max);
   }
 
-  ParserBuffer.fromList(List<int> buffer, [isFin = false]) {
+  ParserByteBuffer.fromList(List<int> buffer, [isFin = false]) {
     _buffer8 = new MemoryBuffer.fromList(buffer);
     _length = buffer.length;
     if (isFin == true) {

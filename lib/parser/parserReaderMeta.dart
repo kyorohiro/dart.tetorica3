@@ -39,7 +39,7 @@ class ParserReaderWithIndex extends ParserReaderBase {
   }
 
   Future<int> waitByBuffered(int index, int length) async {
-    return await _base.waitByBuffered(index + _start, length);
+    return (await _base.waitByBuffered(index + _start, length) - _start);
   }
 
   bool get loadCompleted => _base.loadCompleted;

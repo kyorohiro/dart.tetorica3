@@ -43,7 +43,7 @@ class HttpClient {
       result.body = await getBodyAsReader(head);
     } else {
       result.info = head;
-      result.body = new ParserBuffer();
+      result.body = new ParserByteBuffer();
       result.body.loadCompleted = true;
     }
     return result;
@@ -53,7 +53,9 @@ class HttpClient {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host;// + ":" + port.toString();
     //headerTmp["Connection"] = "Close";
-
+    //Host: www.google.com
+    headerTmp["User-Agent"] = "eurl/test";
+    headerTmp["Accept"] = "*/*";
     if (header != null) {
       for (String key in header.keys) {
         headerTmp[key] = header[key];
@@ -62,7 +64,7 @@ class HttpClient {
     if(body != null && body.length > 0) {
       headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
     }
-    ParserBuffer builder = new ParserBuffer();
+    ParserByteBuffer builder = new ParserByteBuffer();
     builder.appendString(action + " " + path + " " + "HTTP/1.1" + "\r\n");
     for (String key in headerTmp.keys) {
       builder.appendString("" + key + ": " + headerTmp[key] + "\r\n");
@@ -87,10 +89,10 @@ class HttpClient {
 
   Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
-    ParserReader reader;
-    if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
-      ParserBuffer ret = new ParserBuffer();
-      ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
+    ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
+    if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked" ) {
+      ParserByteBuffer ret = new ParserByteBuffer();
+
       new Future(()async {
         int contentLength = message.contentLength;
         int length = 10*1024;
