@@ -1,13 +1,18 @@
 import 'package:tetorica/data.dart' as tet;
 import 'package:tetorica/parser.dart' as tet;
 import 'package:tetorica/net.dart' as tet;
-import 'package:tetorica/net_dartio.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
 
 import 'package:args/args.dart' as arg;
 import 'dart:convert' as conv;
 import 'httpclient.dart';
 
+//
+import 'package:tetorica/dartio_net.dart' as tetio;
+import 'package:tetorica/dartio_data.dart' as tetio;
+
+
+//import 'package:tetorica/dart'
 main(List<String> args) async {
   //
   // args
@@ -37,7 +42,7 @@ main(List<String> args) async {
   }
 
 
-  tet.TetSocketBuilder socketBuilder = new tet.TetSocketBuilderDartIO();
+  tet.TetSocketBuilder socketBuilder = new tetio.TetSocketBuilderDartIO();
   HttpClient client = new HttpClient(socketBuilder,verbose: false, onBadCertificate: (tet.X509Certificate i){return true;});
   tet.HttpClientResponse response = await client.doAction(
       host, port, action, pathWithQuery, data,
@@ -52,7 +57,26 @@ main(List<String> args) async {
   if(output == "") {
     String ret = await reader.getAllString();
     print("${ret}");
-  }
+  } else {
+    tetio.HetimaDataDartIOBuilder builder = new tetio.HetimaDataDartIOBuilder();
+    tet.Data data = await builder.createHetimaData(output);
+    int writeLength = 0;
+    int index = 0;
+
+    List<int> buff = await reader.getAllBytes();
+    await data.write(buff, writeLength);
+    print("# ${buff.length}");
+    /*
+      while(!(reader.loadCompleted && writeLength >= reader.currentSize)) {
+        List<int> buffer = await reader.getAndUnusedBuffer();
+        await data.write(buffer, writeLength);
+        writeLength += buffer.length;
+        print("writeed ${writeLength} ${buffer.length} ${reader.currentSize}");
+      }*/
+    }
+
+
 
   client.close();
+  print("closed");
 }

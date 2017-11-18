@@ -74,7 +74,6 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
     int tmpLen = len -_clearedBuffer;
     while(buffers.length > 0) {
       List<int> buffer = buffers.first;
-      //print("### ${buffer.length} ${tmpLen}");
       if(buffer.length <= tmpLen) {
         buffers.removeAt(0);
         tmpLen -= buffer.length;
@@ -83,6 +82,15 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
         break;
       }
     }
+  }
+
+  List<int> getAndUnusedBuffer() {
+    if(buffers.length <=0) {
+      return [];
+    }
+    List<int> ret = buffers.removeAt(0);;
+    _clearedBuffer += ret.length;
+    return ret;
   }
 
   int get currentSize => _length;

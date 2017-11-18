@@ -34,6 +34,11 @@ class ParserReaderWithIndex extends ParserReaderBase {
   Completer<bool> get loadCompletedCompleter => _base.loadCompletedCompleter;
 
 
+  List<int> getAndUnusedBuffer() {
+    throw "unsupported";
+//    return _base.getAndUnusedBuffer();
+  }
+
   Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
     return await _base.getBytes(index + _start, length);
   }

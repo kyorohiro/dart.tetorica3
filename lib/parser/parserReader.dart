@@ -12,7 +12,7 @@ abstract class ParserReader {
   int get currentSize;
   int operator [](int index);
   void unusedBuffer(int len);
-
+  List<int> getAndUnusedBuffer();
   //
   // complete check
   Completer<bool> get loadCompletedCompleter;

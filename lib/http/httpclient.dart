@@ -97,12 +97,14 @@ class HttpClient {
       new Future(()async {
         int contentLength = message.contentLength;
         int length = 10*1024;
+        int index = 0;
         while(contentLength > 0) {
           if(length > contentLength) {
             length = contentLength;
           }
-          ret.addBytes(await reader.getBytes(0, length));
+          ret.addBytes(await reader.getBytes(index, length));
           contentLength-=length;
+          index +=length;
         }
         ret.loadCompleted = true;
       });

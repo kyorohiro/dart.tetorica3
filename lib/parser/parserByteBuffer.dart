@@ -76,6 +76,17 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     _buffer8.unusedBuffer(len, reuse: reuse);
   }
 
+  List<int> getAndUnusedBuffer() {
+    int size = currentSize - _buffer8.bufferIndex;
+    if(size > 1024*2) {
+      size = 1024*2;
+    }
+    print("${size} ${currentSize} ${_buffer8.bufferIndex}");
+    List<int> ret = _buffer8.sublist(_buffer8.bufferIndex, _buffer8.bufferIndex+size);
+    unusedBuffer(_buffer8.bufferIndex);
+    return ret;
+  }
+
   int get currentSize => _length;
 
   Future<int> getLength() async => _length;
