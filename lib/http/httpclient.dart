@@ -117,7 +117,7 @@ class HttpClient {
           while (true) {
             int size = await HetiHttpResponse.decodeChunkedSize(parser);
             List<int> v = await parser.buffer.getBytes(parser.index, size);
-            parser.index += v.length;
+            parser.resetIndex(v.length);
             reader.unusedBuffer(parser.index - 1);
             ret.addBytes(v, index: 0, length: v.length);
             if (v.length == 0) {

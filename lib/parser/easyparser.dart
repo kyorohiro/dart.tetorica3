@@ -1,7 +1,7 @@
 part of hetimaparsr;
 
 class EasyParser {
-  int index = 0;
+  int _index = 0;
   List<int> stack = new List();
   ParserReader _buffer = null;
   ParserReader get buffer => _buffer;
@@ -17,27 +17,25 @@ class EasyParser {
 
   EasyParser toClone() {
     EasyParser parser = new EasyParser(new ParserReaderWithIndex(_buffer, 0), cacheSize: _cache.bufferSize);
-    parser.index = index;
+    parser._index = index;
     parser.stack = new List.from(stack);
     return parser;
   }
 
   void push() {stack.add(index);}
-  void back() {index = stack.last;}
+  void back() {_index = stack.last;}
   int pop() => stack.removeLast();
   int last()=>stack.last;
 
   //
   // [TODO]
-  void resetIndex(int _index) {
-    index = _index;
+  void resetIndex(int __index) {
+    _index = __index;
   }
 
   //
   // [TODO]
-  int getInedx() {
-    return index;
-  }
+  int get index => _index;
 
   Future<List<int>> getPeek(int length) {
     return _buffer.getBytes(index, length);
@@ -48,13 +46,13 @@ class EasyParser {
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += length;
+    _index += length;
     return i;
   }
 
   Future<List<int>> nextBuffer(int length) async {
     List<int> v = await _buffer.getBytes(index, length);
-    index += v.length;
+    _index += v.length;
     return v;
   }
 
@@ -106,7 +104,7 @@ class EasyParser {
         }
       }
     }
-    index +=encoded.length;
+    _index +=encoded.length;
     return value;
   }
 
@@ -121,7 +119,7 @@ class EasyParser {
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += length;
+    _index += length;
     return _utfDecoder.convert(va, 0, length);
   }
 
@@ -130,7 +128,7 @@ class EasyParser {
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += 8;
+    _index += 8;
     return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
@@ -139,7 +137,7 @@ class EasyParser {
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += 4;
+    _index += 4;
     return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
@@ -148,7 +146,7 @@ class EasyParser {
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += 2;
+    _index += 2;
     return ByteOrder.parseShort(_buffer, 0, byteorder);
   }
 
@@ -157,7 +155,7 @@ class EasyParser {
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index += 1;
+    _index += 1;
     return _buffer[i];
   }
 
@@ -169,7 +167,7 @@ class EasyParser {
         throw new EasyParseError();
       }
       if (matcher.match(v[0])) {
-        index++;
+        _index++;
         completer.complete(v[0]);
       } else {
         throw new EasyParseError();
@@ -191,7 +189,7 @@ class EasyParser {
         if (find == false) {
           completer.completeError(new EasyParseError());
         }
-        index++;
+        _index++;
       }
       completer.complete(va);
     });
@@ -208,7 +206,7 @@ class EasyParser {
           completer.complete(ret);
         } else if (keepWhenMatchIsTrue == matcher.match(va[0])) {
           ret.add(va[0]);
-          index++;
+          _index++;
           return p();
         } else if (_buffer.loadCompleted) {
           completer.complete(ret);

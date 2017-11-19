@@ -101,7 +101,7 @@ class UncharacterCommand extends RegexCommand {
         for (int i = 0; i < length; i++) {
           if (v[i] != without[i]) {
             vm._currentTask._nextCommandLocation += 1;
-            parser.resetIndex(parser.getInedx() + 1);
+            parser.resetIndex(parser.index + 1);
             c.complete([v[0]]);
             return;
           }
@@ -110,7 +110,7 @@ class UncharacterCommand extends RegexCommand {
       } else {
         // todo
         vm._currentTask._nextCommandLocation += 1;
-        parser.resetIndex(parser.getInedx() + 1);
+        parser.resetIndex(parser.index + 1);
         c.complete([v[0]]);
         return;
       }
