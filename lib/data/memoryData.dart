@@ -56,18 +56,16 @@ class MemoryData extends Data {
     return comp.future;
   }
 
-  Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
-    Completer<ReadResult> comp = new Completer();
+  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null}) async {
     int end = offset + length;
     if (end > _dataBuffer.length) {
       end = _dataBuffer.length;
     }
     if (offset >= end) {
-      comp.complete(new ReadResult([]));
+      return [];
     } else {
-      comp.complete(new ReadResult(_dataBuffer.sublist(offset, end)));
+      return _dataBuffer.sublist(offset, end);
     }
-    return comp.future;
   }
 
   void beToReadOnly() {

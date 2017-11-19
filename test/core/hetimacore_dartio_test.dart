@@ -19,8 +19,8 @@ void main() {
         HetimaDataDartIO io = new HetimaDataDartIO("./test/core/test.data");
         int l = await io.getLength();
         unit.expect(6, l);
-        ReadResult r = await io.read(0, l);
-        String m = UTF8.decode(r.buffer);
+        List<int> buffer = await io.read(0, l);
+        String m = UTF8.decode(buffer);
         unit.expect(m, "abcdef");
         io.close();
       }
@@ -40,8 +40,8 @@ void main() {
         HetimaDataDartIO io = new HetimaDataDartIO("./test/core/test.data");
         int l = await io.getLength();
         unit.expect(9, l);
-        ReadResult r = await io.read(0, l);
-        String m = UTF8.decode(r.buffer);
+        List<int> buffer = await io.read(0, l);
+        String m = UTF8.decode(buffer);
         unit.expect(m, "abcghqdef");
         io.close();
       }

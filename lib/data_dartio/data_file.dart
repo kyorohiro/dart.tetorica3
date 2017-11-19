@@ -21,13 +21,18 @@ class HetimaDataDartIO extends Data {
   Future<int> getLength() => _randomFile.length();
 
   @override
-  Future<ReadResult> read(int offset, int length, {List<int> tmp: null}) async {
+  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null}) async {
+    bool useTmp = true;
     if (tmp == null) {
       tmp = new data.Uint8List(length);
+      useTmp = false;
     }
     await _randomFile.setPosition(offset);
     int l = await _randomFile.readInto(tmp, 0, length);
-    return new ReadResult(tmp, index:0, length: l);
+    if(l == length) {
+      return tmp;
+    }
+    return (tmp as data.Uint8List).buffer.asUint8List(offset, l);
   }
 
   @override
