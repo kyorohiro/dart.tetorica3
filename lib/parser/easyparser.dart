@@ -84,35 +84,42 @@ class EasyParser {
   //
   // next
   //
-  Future<String> nextString(String value,{bool checkUpperLowerCase:false}) async {
+  Future<String> nextString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
     int i = await _buffer.waitByBuffered(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
-    if(!checkUpperLowerCase) {
-      for(int j=0;j<encoded.length;j++) {
-        if(_buffer[j+i] != encoded[j]){
+    for(int j=0;j<encoded.length;j++) {
+      if(_buffer[j+i] != encoded[j]){
+        throw (logon == false ? _myException : new Exception());
+      }
+    }
+    _index +=encoded.length;
+    return value;
+  }
+
+  Future<String> nextStringWithUpperLowerCase(String value) async {
+    List<int> encoded = convert.UTF8.encode(value);
+    int i = await _buffer.waitByBuffered(index, encoded.length);
+    if (i + encoded.length > _buffer.currentSize) {
+      throw (logon == false ? _myException : new Exception());
+    }
+    for (int j = 0; j < encoded.length; j++) {
+      var v = encoded[j];
+      if (65 <= v && v <= 90) {
+        if (_buffer[j + i] != encoded[j] && _buffer[j + i] != encoded[j]+32) {
           throw (logon == false ? _myException : new Exception());
         }
       }
-    } else {
-      for (int j = 0; j < encoded.length; j++) {
-        var v = encoded[j];
-        if (65 <= v && v <= 90) {
-          if (_buffer[j + i] != encoded[j] && _buffer[j + i] != encoded[j]+32) {
-            throw (logon == false ? _myException : new Exception());
-          }
+      else if (97 <= v && v <= 122) {
+        if (_buffer[j + i] != encoded[j] && _buffer[j + i] != encoded[j]-32) {
+          throw (logon == false ? _myException : new Exception());
         }
-        else if (97 <= v && v <= 122) {
-          if (_buffer[j + i] != encoded[j] && _buffer[j + i] != encoded[j]-32) {
-            throw (logon == false ? _myException : new Exception());
-          }
-        }
-        else {
-          if(_buffer[j+i] != encoded[j]){
-            throw (logon == false ? _myException : new Exception());
-          }
+      }
+      else {
+        if(_buffer[j+i] != encoded[j]){
+          throw (logon == false ? _myException : new Exception());
         }
       }
     }
@@ -120,7 +127,10 @@ class EasyParser {
     return value;
   }
 
-  Future<String> readSignWithLength(int length) async {
+  //
+  // READ
+  //
+  Future<String> readStringWithByteLength(int length) async {
     List<int> va = null;
     int i = index;
     if (_cache.rawbuffer8.length > length) {
@@ -135,9 +145,7 @@ class EasyParser {
     return _utfDecoder.convert(va, 0, length);
   }
 
-  //
-  // READ
-  //
+
   Future<int> readLong(ByteOrderType byteorder) async {
     int i = await _buffer.waitByBuffered(index, 8);
     if (i + 8 > _buffer.currentSize) {
@@ -174,6 +182,9 @@ class EasyParser {
     return _buffer[i];
   }
 
+  //
+  //
+  //
   Future<int> nextBytePattern(EasyParserMatcher matcher) {
     Completer completer = new Completer();
     matcher.init();
