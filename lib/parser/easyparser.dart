@@ -32,7 +32,6 @@ class EasyParser {
   int last()=>_stack.last;
 
 
-
   Future<List<int>> getPeek(int length) {
     return _buffer.getBytes(index, length);
   }
@@ -46,14 +45,15 @@ class EasyParser {
     return i;
   }
 
-  Future<List<int>> nextBuffer(int length) async {
+  Future<List<int>> readBuffer(int length) async {
     List<int> v = await _buffer.getBytes(index, length);
     _index += v.length;
     return v;
   }
 
-//
-// todo write test
+  //
+  // check todo write test
+  //
   Future<bool> checkString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
     int i = await _buffer.waitByBuffered(index, encoded.length);
@@ -68,6 +68,22 @@ class EasyParser {
     return true;
   }
 
+  Future<bool> checkBytes(List<int> encoded) async {
+    int i = await _buffer.waitByBuffered(index, encoded.length);
+    if (i + encoded.length > _buffer.currentSize) {
+      return false;
+    }
+    for(int j=0;j<encoded.length;j++) {
+      if(_buffer[j+i] != encoded[j]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  //
+  // next
+  //
   Future<String> nextString(String value,{bool checkUpperLowerCase:false}) async {
     List<int> encoded = convert.UTF8.encode(value);
     int i = await _buffer.waitByBuffered(index, encoded.length);
@@ -119,6 +135,9 @@ class EasyParser {
     return _utfDecoder.convert(va, 0, length);
   }
 
+  //
+  // READ
+  //
   Future<int> readLong(ByteOrderType byteorder) async {
     int i = await _buffer.waitByBuffered(index, 8);
     if (i + 8 > _buffer.currentSize) {

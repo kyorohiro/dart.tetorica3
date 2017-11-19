@@ -9,7 +9,7 @@ void main() {
       ParserByteBuffer b = new ParserByteBuffer();
       b.addBytes([1, 2, 3, 4, 5]);
       EasyParser parser = new EasyParser(b);
-      List<int> bb = await parser.nextBuffer(3);
+      List<int> bb = await parser.readBuffer(3);
       unit.expect(bb, [1, 2, 3]);
     }
   });
@@ -79,9 +79,9 @@ void main() {
       ParserByteBuffer b = new ParserByteBuffer();
       b.addBytes([1,2,3,4,5,6]);
       EasyParser parser = new EasyParser(b);
-      List<int> b1 = await parser.nextBuffer(3);
+      List<int> b1 = await parser.readBuffer(3);
       unit.expect(b1, [1,2,3]);
-      List<int> b2 = await parser.nextBuffer(3);
+      List<int> b2 = await parser.readBuffer(3);
       unit.expect(b2, [4,5,6]);
     }
   });

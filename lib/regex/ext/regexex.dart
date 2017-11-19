@@ -90,7 +90,7 @@ class UncharacterCommand extends RegexCommand {
     async.Completer<List<int>> c = new async.Completer();
     int length = without.length;
     parser.push();
-    parser.nextBuffer(length).then((List<int> v) {
+    parser.readBuffer(length).then((List<int> v) {
       parser.back();
       parser.pop();
       if (v.length == 0) {
