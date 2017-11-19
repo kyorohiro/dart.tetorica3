@@ -1,76 +1,85 @@
 part of hetimadata;
 
-
+//
+// todo test
+//
 class MemoryData extends Data {
   bool get writable => true;
   bool get readable => true;
+  int _length = 0;
+  int _expandSize = 1024;
 
-  MemoryData([List<int> buffer=null]) {
+  MemoryData({data.Uint8List buffer=null, int cacheSize:1024, int expandSize:1024}) {
     if(buffer != null) {
-      _dataBuffer = new List.from(buffer);
+      _dataBuffer = buffer;
     } else {
-      _dataBuffer = [];
+      _dataBuffer = new data.Uint8List(cacheSize);
     }
+    _expandSize = expandSize;
   }
 
   String toDebug() {
     return "${_dataBuffer}";
   }
 
-  List<int> getBuffer(int start, int length) {
-    int end = start + length;
-    if (end > _dataBuffer.length) {
-      end = _dataBuffer.length;
+  Future<int> getLength() async {
+    return _dataBuffer.length;
+  }
+
+  void _expand(int length) {
+    if(_dataBuffer.length > length) {
+      return;
     }
-    return _dataBuffer.sublist(start, end);
+    data.Uint8List next = new data.Uint8List(length);
+    for(int i=0,len=_dataBuffer.length;i<len;i++) {
+      next[i] = _dataBuffer[i];
+    }
+    _dataBuffer = next;
   }
 
-  Future<int> getLength() {
-    Completer<int> comp = new Completer();
-    comp.complete(_dataBuffer.length);
-    return comp.future;
-  }
-
-  Future<DataWriter> write(Object buffer, int start, [int length=null]) {
-    Completer<DataWriter> comp = new Completer();
-    if (buffer is List<int>) {
-      if (_dataBuffer.length < start) {
-        _dataBuffer.addAll(new List.filled(start - _dataBuffer.length, 0));
-      }
-
-      if (length == null) {
-        length = buffer.length;
-      }
-      for (int i = 0; i < length; i++) {
-        if (start + i < _dataBuffer.length) {
-          _dataBuffer[start + i] = buffer[i];
-        } else {
-          _dataBuffer.add(buffer[i]);
-        }
-      }
-      comp.complete(this);
+  void _tryExpand(int length) {
+    if(_dataBuffer.length > length) {
+      return;
+    } else if(_dataBuffer.length + _expandSize >length){
+      _expand(_dataBuffer.length + _expandSize);
     } else {
-      // TODO
+      _expand(length + _expandSize);
+    }
+  }
+
+  Future<DataWriter> write(Object buffer, int start, [int length=null]) async {
+    if (!(buffer is List<int>)) {
       throw new UnsupportedError("");
     }
-    return comp.future;
+    List<int> buff = (buffer as List<int>);
+    if (length == null) {
+      length = buff.length;
+    }
+    _tryExpand(start+length);
+    for (int i = 0; i < length; i++) {
+        _dataBuffer[start + i] = buff[i];
+    }
+    _length += length;
+    return this;
   }
 
-  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null}) async {
+  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null, int tmpStart:0}) async {
     int end = offset + length;
     if (end > _dataBuffer.length) {
       end = _dataBuffer.length;
     }
     if (offset >= end) {
       return [];
-    } else {
-      return _dataBuffer.sublist(offset, end);
     }
+    if(tmp == null) {
+      return _dataBuffer.buffer.asUint8List(offset, end-offset);
+    } else {
+      for (int i = 0; i < length; i++) {
+        tmp[i] = _dataBuffer[offset+i+tmpStart];
+      }
+    }
+
   }
 
-  void beToReadOnly() {
-    //
-  }
-
-  List<int> _dataBuffer = null;
+  data.Uint8List _dataBuffer = null;
 }

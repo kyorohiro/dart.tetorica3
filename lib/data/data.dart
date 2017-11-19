@@ -10,7 +10,6 @@ abstract class Data implements DataReader, DataWriter {
   Future<int> getLength();
   Future<DataWriter> write(Object buffer, int start,[int length=null]);
   Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null});
-  void beToReadOnly();
 }
 
 abstract class DataWriter {
