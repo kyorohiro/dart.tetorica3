@@ -22,21 +22,10 @@ class EasyParser {
     return parser;
   }
 
-  void push() {
-    stack.add(index);
-  }
-
-  void back() {
-    index = stack.last;
-  }
-
-  int pop() {
-    return stack.removeLast();
-  }
-
-  int last() {
-    return stack.last;
-  }
+  void push() {stack.add(index);}
+  void back() {index = stack.last;}
+  int pop() => stack.removeLast();
+  int last()=>stack.last;
 
   //
   // [TODO]
@@ -87,7 +76,6 @@ class EasyParser {
 
   Future<String> nextString(String value,{bool checkUpperLowerCase:false}) async {
     List<int> encoded = convert.UTF8.encode(value);
-//    print("${encoded}");
     int i = await _buffer.waitByBuffered(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
