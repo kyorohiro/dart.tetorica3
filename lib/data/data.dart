@@ -11,6 +11,7 @@ abstract class Data implements DataReader, DataWriter {
   Future<DataWriter> write(Object buffer, int start, {int length=null});
   Future<List<int>> getBytes(int offset, int length);
   Future<int> read(int offset, int length, data.Uint8List out, {int outOffset:0});
+  Future<Data> close();
 }
 
 abstract class DataWriter {
@@ -23,5 +24,4 @@ abstract class DataWriter {
 abstract class DataReader {
   Future<int> getLength();
   Future<List<int>> getBytes(int offset, int length);
-  Future<DataReader> close();
 }

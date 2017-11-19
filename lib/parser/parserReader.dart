@@ -1,6 +1,6 @@
 part of hetimaparsr;
 
-abstract class ParserReader {
+abstract class ParserReader implements DataReader {
 
   //
   // async

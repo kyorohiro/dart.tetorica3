@@ -53,7 +53,7 @@ class HetimaDataDartIO extends Data {
     return this;
   }
 
-  Future<DataReader> close() async {
+  Future<Data> close() async {
     await _randomFile.close();
     return this;
   }
