@@ -31,8 +31,8 @@ class MemoryData extends Data {
     return comp.future;
   }
 
-  Future<WriteResult> write(Object buffer, int start, [int length=null]) {
-    Completer<WriteResult> comp = new Completer();
+  Future<DataWriter> write(Object buffer, int start, [int length=null]) {
+    Completer<DataWriter> comp = new Completer();
     if (buffer is List<int>) {
       if (_dataBuffer.length < start) {
         _dataBuffer.addAll(new List.filled(start - _dataBuffer.length, 0));
@@ -48,7 +48,7 @@ class MemoryData extends Data {
           _dataBuffer.add(buffer[i]);
         }
       }
-      comp.complete(new WriteResult());
+      comp.complete(this);
     } else {
       // TODO
       throw new UnsupportedError("");

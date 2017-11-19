@@ -31,7 +31,7 @@ class HetimaDataDartIO extends Data {
   }
 
   @override
-  Future<WriteResult> write(Object buffer, int start, [int length=null]) async {
+  Future<DataWriter> write(Object buffer, int start, [int length=null]) async {
     if (_readOnly == false) {
       if(length == null) {
         length = (buffer as List).length;
@@ -39,7 +39,7 @@ class HetimaDataDartIO extends Data {
       await _randomFile.setPosition(start);
       await _randomFile.writeFrom(buffer, 0, length);
     }
-    return new WriteResult();
+    return this;
   }
 
   Future<int> truncate(int fileSize) async {
