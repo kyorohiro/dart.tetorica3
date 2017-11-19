@@ -90,47 +90,11 @@ class HttpClient {
   Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {
     HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
     ParserReader reader = new ParserReaderWithIndex(socket.buffer, message.index);
-//    ParserBuffer ret = new ParserByteBuffer();
-    ParserBuffer ret = new ParserListBuffer();
+    ParserBuffer ret = new ParserListBuffer();// ParserBuffer ret = new ParserByteBuffer();
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked" ) {
-      // content-length
-      new Future(()async {
-        int contentLength = message.contentLength;
-        int length = 2*1024;
-        int index = 0;
-        while(contentLength > 0) {
-          if(length > contentLength) {
-            length = contentLength;
-          }
-          ret.addBytes(await reader.getBytes(index, length));
-          contentLength-=length;
-          index +=length;
-        }
-        ret.loadCompleted = true;
-      });
-      return ret;
+      return encodeBufferAtContentLength(message, reader);
     } else {
-      // chunk
-      EasyParser parser = new EasyParser(reader);
-      new Future(()async {
-        try {
-          while (true) {
-            int size = await HetiHttpResponse.decodeChunkedSize(parser);
-            List<int> v = await parser.buffer.getBytes(parser.index, size);
-            parser.resetIndex(v.length);
-            reader.unusedBuffer(parser.index - 1);
-            ret.addBytes(v, index: 0, length: v.length);
-            if (v.length == 0) {
-              break;
-            }
-            await HetiHttpResponse.decodeCrlf(parser);
-          }
-        } catch(e) {
-        } finally {
-          ret.loadCompleted = true;
-        }
-      });
-      return ret;
+      return encodeBufferAtChunked(message, reader);
     }
   }
 
@@ -138,6 +102,48 @@ class HttpClient {
     if (socket != null) {
       socket.close();
     }
+  }
+
+  //
+  //
+  //
+  Future<ParserReader> encodeBufferAtContentLength(HttpClientHead message, ParserReader reader) async {
+    ParserBuffer ret = new ParserListBuffer();
+    int contentLength = message.contentLength;
+    int length = 2*1024;
+    int index = 0;
+    while(contentLength > 0) {
+      if(length > contentLength) {
+        length = contentLength;
+      }
+      ret.addBytes(await reader.getBytes(index, length));
+      contentLength-=length;
+      index +=length;
+    }
+    ret.loadCompleted = true;
+    return ret;
+  }
+
+  Future<ParserReader> encodeBufferAtChunked(HttpClientHead message, ParserReader reader) async {
+    ParserBuffer ret = new ParserListBuffer();
+    EasyParser parser = new EasyParser(reader);
+    try {
+      while (true) {
+        int size = await HetiHttpResponse.decodeChunkedSize(parser);
+        List<int> v = await parser.buffer.getBytes(parser.index, size);
+        parser.resetIndex(v.length);
+        reader.unusedBuffer(parser.index - 1);
+        ret.addBytes(v, index: 0, length: v.length);
+        if (v.length == 0) {
+          break;
+        }
+        await HetiHttpResponse.decodeCrlf(parser);
+      }
+    } catch(e) {
+    } finally {
+      ret.loadCompleted = true;
+    }
+    return ret;
   }
 
   void log(String message) {
