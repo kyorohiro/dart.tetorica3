@@ -16,10 +16,12 @@ abstract class Data implements DataReader, DataWriter {
 abstract class DataWriter {
   Future<int> getLength();
   Future<DataWriter> write(Object o, int start, {int length=null});
+  Future<int> truncate(int fileSize);
+  Future<DataWriter> flush();
 }
 
 abstract class DataReader {
   Future<int> getLength();
   Future<List<int>> getBytes(int offset, int length);
+  Future<DataReader> close();
 }
-

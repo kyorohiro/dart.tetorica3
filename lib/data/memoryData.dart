@@ -46,6 +46,14 @@ class MemoryData extends Data {
       _expand(length + _expandSize);
     }
   }
+  Future<DataWriter> flush() async =>this;
+  Future<DataReader> close() async =>this;
+  Future<int> truncate(int fileSize) async {
+    if(_length > fileSize) {
+      _length = fileSize;
+    }
+    return _length;
+  }
 
   Future<DataWriter> write(Object buffer, int start, {int length:null}) async {
     if (!(buffer is List<int>)) {

@@ -48,8 +48,14 @@ class HetimaDataDartIO extends Data {
     return 0;
   }
 
-  Future close() async {
+  Future<DataWriter> flush() async {
+    _randomFile.flush();
+    return this;
+  }
+
+  Future<DataReader> close() async {
     await _randomFile.close();
+    return this;
   }
 
   static Future<List<String>> getFiles(String path) async {
