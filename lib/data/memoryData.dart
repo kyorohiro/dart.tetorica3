@@ -71,14 +71,15 @@ class MemoryData extends Data {
     if (offset >= end) {
       return [];
     }
-    if(tmp == null) {
-      return _dataBuffer.buffer.asUint8List(offset, end-offset);
-    } else {
-      for (int i = 0; i < length; i++) {
-        tmp[i] = _dataBuffer[offset+i+tmpStart];
-      }
-    }
 
+    if(tmp == null) {
+      for (int i = 0; i < length; i++) {
+        tmp[i] = _dataBuffer[offset + i + tmpStart];
+      }
+    } else {
+      tmp = _dataBuffer;
+    }
+    return _dataBuffer.buffer.asUint8List(offset, end-offset);
   }
 
   data.Uint8List _dataBuffer = null;
