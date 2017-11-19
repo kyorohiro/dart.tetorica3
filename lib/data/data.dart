@@ -1,7 +1,7 @@
 part of hetimadata;
 
 abstract class DataBuilder {
-  Future<Data> createHetimaData(String path);
+  Future<Data> createData(String path);
 }
 
 abstract class Data implements DataReader, DataWriter {

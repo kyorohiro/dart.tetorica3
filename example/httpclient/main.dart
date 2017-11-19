@@ -59,7 +59,7 @@ main(List<String> args) async {
     print("${ret}");
   } else {
     tetio.HetimaDataDartIOBuilder builder = new tetio.HetimaDataDartIOBuilder();
-    tet.Data data = await builder.createHetimaData(output);
+    tet.Data data = await builder.createData(output);
     int writeLength = 0;
     int index = 0;
     //

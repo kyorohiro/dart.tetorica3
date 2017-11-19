@@ -74,7 +74,7 @@ class HetimaDataDartIO extends Data {
 }
 
 class HetimaDataDartIOBuilder extends DataBuilder {
-  Future<Data> createHetimaData(String path) async {
+  Future<Data> createData(String path) async {
     return new HetimaDataDartIO(path);
   }
 }
