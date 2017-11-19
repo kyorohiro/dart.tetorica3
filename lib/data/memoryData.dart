@@ -47,7 +47,7 @@ class MemoryData extends Data {
     }
   }
 
-  Future<DataWriter> write(Object buffer, int start, [int length=null]) async {
+  Future<DataWriter> write(Object buffer, int start, {int length:null}) async {
     if (!(buffer is List<int>)) {
       throw new UnsupportedError("");
     }
@@ -63,21 +63,30 @@ class MemoryData extends Data {
     return this;
   }
 
-  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null, int tmpStart:0}) async {
+  Future<int> read(int offset, int length, data.Uint8List out, {int outOffset:0}) async {
+    int end = offset + length;
+    if (end > _dataBuffer.length) {
+      end = _dataBuffer.length;
+    }
+    if (offset >= end) {
+      return 0;
+    }
+
+    int len = end-offset;
+    for(int i=0;i<len;i++) {
+      out[i+outOffset] = _dataBuffer[i+offset];
+    }
+
+    return len;
+  }
+
+  Future<List<int>> getBytes(int offset, int length) async {
     int end = offset + length;
     if (end > _dataBuffer.length) {
       end = _dataBuffer.length;
     }
     if (offset >= end) {
       return [];
-    }
-
-    if(tmp == null) {
-      for (int i = 0; i < length; i++) {
-        tmp[i] = _dataBuffer[offset + i + tmpStart];
-      }
-    } else {
-      tmp = _dataBuffer;
     }
     return _dataBuffer.buffer.asUint8List(offset, end-offset);
   }

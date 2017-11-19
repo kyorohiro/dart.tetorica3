@@ -13,30 +13,26 @@ class HetimaDataDartIO extends Data {
   }
 
   @override
-  void beToReadOnly() {
-    _readOnly = true;
-  }
-
-  @override
   Future<int> getLength() => _randomFile.length();
 
   @override
-  Future<List<int>> read(int offset, int length, {data.Uint8List tmp: null}) async {
-    bool useTmp = true;
-    if (tmp == null) {
-      tmp = new data.Uint8List(length);
-      useTmp = false;
-    }
+  Future<List<int>> getBytes(int offset, int length) async {
+    data.Uint8List tmp = new data.Uint8List(length);
     await _randomFile.setPosition(offset);
     int l = await _randomFile.readInto(tmp, 0, length);
     if(l == length) {
       return tmp;
     }
-    return (tmp as data.Uint8List).buffer.asUint8List(offset, l);
+    return tmp.buffer.asUint8List(offset, l);
+  }
+
+  Future<int> read(int offset, int length, data.Uint8List out, {int outOffset:0}) async {
+    await _randomFile.setPosition(offset);
+    return await _randomFile.readInto(out, outOffset, outOffset+length);
   }
 
   @override
-  Future<DataWriter> write(Object buffer, int start, [int length=null]) async {
+  Future<DataWriter> write(Object buffer, int start, {int length=null}) async {
     if (_readOnly == false) {
       if(length == null) {
         length = (buffer as List).length;

@@ -128,7 +128,7 @@ class HetiHttpServerPlus {
         end = (index + length);
       }
       //print("####### ${start} ${end}");
-      file.read(start, end-start).then((List<int> buffer) {
+      file.getBytes(start, end-start).then((List<int> buffer) {
         socket.send(buffer);
         if (end >= (index + length)) {
           socket.close();
