@@ -136,7 +136,7 @@ class EasyParser {
   //
   // return length
   //
-  Future<int> checkBytesFromBytes(List<int> encoded) async {
+  Future<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
     return checkBytesFromMatcher((int target){
       for (int i = 0; i < encoded.length; i++) {
         if (target == encoded[i]) {
@@ -144,10 +144,18 @@ class EasyParser {
         }
       }
       return false;
-    });
+    },expectedMatcherResult:expectedMatcherResult);
   }
 
-  Future<int> checkBytesFromMatcher(EasyParserMatchFunc matcher) async {
+  Future<int> checkBytesFromMatchBytes(List<int> encoded) async {
+    return checkBytesFromBytes(encoded, expectedMatcherResult:true);
+  }
+
+  Future<int> checkBytesFromUnmatchBytes(List<int> encoded) async {
+    return checkBytesFromBytes(encoded, expectedMatcherResult:false);
+  }
+
+  Future<int> checkBytesFromMatcher(EasyParserMatchFunc matcher, {bool expectedMatcherResult:true}) async {
     int nextByte = 0;
     int length = 0;
     while(true) ROOT:{
@@ -157,7 +165,7 @@ class EasyParser {
         nextByte = (await _buffer.getBytes(index+length, 1))[0];
       }
 
-      if(false == matcher(nextByte)) {
+      if(expectedMatcherResult != matcher(nextByte)) {
         break;
       } else {
         length += 1;
@@ -167,8 +175,8 @@ class EasyParser {
   }
 
   //
-  Future<List<int>> matchBytesFromBytes(List<int> encoded) async {
-    int len = await checkBytesFromBytes(encoded);
+  Future<List<int>> matchBytesFromBytes(List<int> encoded, {bool expectedMatcherResult:true}) async {
+    int len = await checkBytesFromBytes(encoded, expectedMatcherResult:expectedMatcherResult);
     data.Uint8List ret = new data.Uint8List(len);
     for(int i=0;i<len;i++) {
       ret[i] = _buffer[i+index];
@@ -232,30 +240,6 @@ class EasyParser {
     return _buffer[i];
   }
 
-  //
-  //
-  //
-  /*
-  Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
-    Completer completer = new Completer();
-    matcher.init();
-    _buffer.getBytes(index, length).then((List<int> va) {
-      if (va.length < length) {
-        completer.completeError(new EasyParseError());
-      }
-      for (int v in va) {
-        bool find = false;
-        find = matcher.match(v);
-        if (find == false) {
-          completer.completeError(new EasyParseError());
-        }
-        _index++;
-      }
-      completer.complete(va);
-    });
-    return completer.future;
-  }
-*/
   Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
     Completer completer = new Completer();
     matcher.init();
