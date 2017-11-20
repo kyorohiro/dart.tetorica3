@@ -73,7 +73,7 @@ class EasyParser {
   }
 
   //
-  // next
+  // NEXT return length
   //
   Future<String> nextString(String value) async {
     await nextBytes(convert.UTF8.encode(value));
@@ -134,7 +134,7 @@ class EasyParser {
   }
 
   //
-  // return length
+  // CHECK return length
   //
   Future<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
     return checkBytesFromMatcher((int target){
@@ -178,6 +178,8 @@ class EasyParser {
   }
 
   //
+  // MATCH
+  //
   Future<List<int>> matchBytesFromBytes(List<int> encoded, {bool expectedMatcherResult:true}) async {
     int len = await checkBytesFromBytes(encoded, expectedMatcherResult:expectedMatcherResult);
     data.Uint8List ret = new data.Uint8List(len);
@@ -187,6 +189,7 @@ class EasyParser {
     _index += len;
     return ret;
   }
+
   Future<List<int>> matchBytesFromMatche(EasyParserMatchFunc func, {bool expectedMatcherResult:true}) async {
     int len = await checkBytesFromMatcher(func, expectedMatcherResult:expectedMatcherResult);
     data.Uint8List ret = new data.Uint8List(len);
