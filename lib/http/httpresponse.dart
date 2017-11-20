@@ -55,10 +55,10 @@ class HetiHttpResponse {
     int major = 0;
     int minor = 0;
     await parser.nextString("HTTP" + "/");
-    int v1 = await parser.matchBytesFromBytes(RfcTable.DIGIT);
+    int v1 = await parser.nextByteFromBytes(RfcTable.DIGIT);
     major = v1 - 48;
     await parser.nextString(".");
-    int v2 = await parser.matchBytesFromBytes(RfcTable.DIGIT);
+    int v2 = await parser.nextByteFromBytes(RfcTable.DIGIT);
     minor = v2 - 48;
     return ("HTTP/${major}.${minor}");
   }
@@ -67,7 +67,7 @@ class HetiHttpResponse {
   // Status Code
   // DIGIT DIGIT DIGIT
   static Future<String> decodeStatusCode(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternWithLength(new EasyParserIncludeMatcher(RfcTable.DIGIT), 3);
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.DIGIT);
     int ret = 100 * (v[0] - 48) + 10 * (v[1] - 48) + (v[2] - 48);
     return "${ret}";
   }

@@ -1,5 +1,6 @@
 part of hetimaparsr;
 
+typedef bool EasyParserMatchFunc(int target);
 class EasyParser {
   bool logon = false;
 
@@ -114,25 +115,8 @@ class EasyParser {
     _index +=encoded.length;
     return value;
   }
-/*
+
   Future<int> nextByteFromBytes(List<int> encoded) async {
-    int nextByte = 0;
-    if(_buffer.currentSize > index) {
-      nextByte = _buffer[index];
-    } else {
-      nextByte = (await _buffer.getBytes(index, 1))[0];
-    }
-
-    for(int i=0;i<encoded.length;i++) {
-      if(nextByte == encoded[i]) {
-        _index += 1;
-        return nextByte;
-      }
-    }
-    throw (logon == false ? _myException : new Exception());
-  }*/
-
-  Future<int> matchBytesFromBytes(List<int> encoded) async {
     int nextByte = 0;
     if(_buffer.currentSize > index) {
       nextByte = _buffer[index];
@@ -149,6 +133,49 @@ class EasyParser {
     throw (logon == false ? _myException : new Exception());
   }
 
+  //
+  // return length
+  //
+  Future<int> checkBytesFromBytes(List<int> encoded) async {
+    return checkBytesFromMatcher((int target){
+      for (int i = 0; i < encoded.length; i++) {
+        if (target == encoded[i]) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  Future<int> checkBytesFromMatcher(EasyParserMatchFunc matcher) async {
+    int nextByte = 0;
+    int length = 0;
+    while(true) ROOT:{
+      if (_buffer.currentSize > index) {
+        nextByte = _buffer[index+length];
+      } else {
+        nextByte = (await _buffer.getBytes(index+length, 1))[0];
+      }
+
+      if(false == matcher(nextByte)) {
+        break;
+      } else {
+        length += 1;
+      }
+    }
+    return length;
+  }
+
+  //
+  Future<List<int>> matchBytesFromBytes(List<int> encoded) async {
+    int len = await checkBytesFromBytes(encoded);
+    data.Uint8List ret = new data.Uint8List(len);
+    for(int i=0;i<len;i++) {
+      ret[i] = _buffer[i+index];
+    }
+    _index += len;
+    return ret;
+  }
 
   //
   // READ
@@ -209,23 +236,6 @@ class EasyParser {
   //
   //
   /*
-  Future<int> nextBytePattern(EasyParserMatcher matcher) {
-    Completer completer = new Completer();
-    matcher.init();
-    _buffer.getBytes(index, 1).then((List<int> v) {
-      if (v.length < 1) {
-        throw new EasyParseError();
-      }
-      if (matcher.match(v[0])) {
-        _index++;
-        completer.complete(v[0]);
-      } else {
-        throw new EasyParseError();
-      }
-    });
-    return completer.future;
-  }*/
-
   Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
     Completer completer = new Completer();
     matcher.init();
@@ -245,7 +255,7 @@ class EasyParser {
     });
     return completer.future;
   }
-
+*/
   Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
     Completer completer = new Completer();
     matcher.init();
