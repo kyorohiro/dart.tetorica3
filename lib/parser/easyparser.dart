@@ -114,6 +114,41 @@ class EasyParser {
     _index +=encoded.length;
     return value;
   }
+/*
+  Future<int> nextByteFromBytes(List<int> encoded) async {
+    int nextByte = 0;
+    if(_buffer.currentSize > index) {
+      nextByte = _buffer[index];
+    } else {
+      nextByte = (await _buffer.getBytes(index, 1))[0];
+    }
+
+    for(int i=0;i<encoded.length;i++) {
+      if(nextByte == encoded[i]) {
+        _index += 1;
+        return nextByte;
+      }
+    }
+    throw (logon == false ? _myException : new Exception());
+  }*/
+
+  Future<int> matchBytesFromBytes(List<int> encoded) async {
+    int nextByte = 0;
+    if(_buffer.currentSize > index) {
+      nextByte = _buffer[index];
+    } else {
+      nextByte = (await _buffer.getBytes(index, 1))[0];
+    }
+
+    for(int i=0;i<encoded.length;i++) {
+      if(nextByte == encoded[i]) {
+        _index += 1;
+        return nextByte;
+      }
+    }
+    throw (logon == false ? _myException : new Exception());
+  }
+
 
   //
   // READ
@@ -173,6 +208,7 @@ class EasyParser {
   //
   //
   //
+  /*
   Future<int> nextBytePattern(EasyParserMatcher matcher) {
     Completer completer = new Completer();
     matcher.init();
@@ -188,7 +224,7 @@ class EasyParser {
       }
     });
     return completer.future;
-  }
+  }*/
 
   Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
     Completer completer = new Completer();

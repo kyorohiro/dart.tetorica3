@@ -55,10 +55,10 @@ class HetiHttpResponse {
     int major = 0;
     int minor = 0;
     await parser.nextString("HTTP" + "/");
-    int v1 = await parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    int v1 = await parser.matchBytesFromBytes(RfcTable.DIGIT);
     major = v1 - 48;
     await parser.nextString(".");
-    int v2 = await parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    int v2 = await parser.matchBytesFromBytes(RfcTable.DIGIT);
     minor = v2 - 48;
     return ("HTTP/${major}.${minor}");
   }
@@ -135,7 +135,7 @@ class HetiHttpResponse {
   }
 
   static decodeChunkExtension(EasyParser parser) async {
-    if (await parser.checkString(";")) {
+     if (await parser.checkString(";")) {
       while (false == await parser.checkString("\r\n")) {
         parser.jumpBuffer(1);
       }
