@@ -81,7 +81,8 @@ class BdecoderAsync {
 
   Future<int> decodeNumber(EasyParser parser) async {
     await parser.nextString("i");
-    List<int> numList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
+    //List<int> numList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
+    List<int> numList = await parser.matchBytesFromBytes(DIGIT);
     int num = intList2int(numList);
     await parser.nextString("e");
     return num;
@@ -93,7 +94,8 @@ class BdecoderAsync {
   }
 
   Future<List<int>> decodeBytes(EasyParser parser) async {
-    List<int> lengthList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
+    //List<int> lengthList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
+    List<int> lengthList = await parser.matchBytesFromBytes(DIGIT);
     if (lengthList.length == 0) {
       throw tmpError.update("byte:length=0");
     }

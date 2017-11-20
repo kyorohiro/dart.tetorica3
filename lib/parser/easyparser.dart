@@ -251,71 +251,8 @@ class EasyParser {
     _index += 1;
     return _buffer[i];
   }
-
-  Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
-    Completer completer = new Completer();
-    matcher.init();
-    List<int> ret = new List<int>();
-    Future<Object> p() {
-      return _buffer.getBytes(index, 1).then((List<int> va) {
-        if (va.length < 1) {
-          completer.complete(ret);
-        } else if (keepWhenMatchIsTrue == matcher.match(va[0])) {
-          ret.add(va[0]);
-          _index++;
-          return p();
-        } else if (_buffer.loadCompleted) {
-          completer.complete(ret);
-        } else {
-          completer.complete(ret);
-        }
-      });
-    }
-    p();
-    return completer.future;
-  }
-
 }
 
-abstract class EasyParserMatcher {
-  void init() {
-    ;
-  }
-
-  bool match(int target);
-  bool matchAll() {
-    return true;
-  }
-}
-
-//
-// http response
-//
-class EasyParserIncludeMatcher extends EasyParserMatcher {
-  List<int> include = null;
-  EasyParserIncludeMatcher(List<int> i) {
-    include = i;
-  }
-
-  bool match(int target) {
-    return include.contains(target);
-  }
-}
-class EasyParserStringMatcher extends EasyParserMatcher {
-  List<int> include = null;
-  int index = 0;
-  EasyParserStringMatcher(String v) {
-    include = convert.UTF8.encode(v);
-  }
-
-  void init() {
-    index = 0;
-  }
-
-  bool match(int target) {
-    return include.contains(target);
-  }
-}
 
 class EasyParseError extends Error {
   EasyParseError();
