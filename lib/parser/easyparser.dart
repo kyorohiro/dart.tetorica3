@@ -55,17 +55,7 @@ class EasyParser {
   // check todo write test
   //
   Future<bool> checkString(String value) async {
-    List<int> encoded = convert.UTF8.encode(value);
-    int i = await _buffer.waitByBuffered(index, encoded.length);
-    if (i + encoded.length > _buffer.currentSize) {
-      return false;
-    }
-    for(int j=0;j<encoded.length;j++) {
-      if(_buffer[j+i] != encoded[j]){
-        return false;
-      }
-    }
-    return true;
+    return checkBytes(convert.UTF8.encode(value));
   }
 
   Future<bool> checkBytes(List<int> encoded) async {
@@ -90,14 +80,8 @@ class EasyParser {
   }
 
   Future<List<int>> nextBytes(List<int> encoded) async {
-    int i = await _buffer.waitByBuffered(index, encoded.length);
-    if (i + encoded.length > _buffer.currentSize) {
+    if(false == await checkBytes(encoded)){
       throw (logon == false ? _myException : new Exception());
-    }
-    for(int j=0;j<encoded.length;j++) {
-      if(_buffer[j+i] != encoded[j]){
-        throw (logon == false ? _myException : new Exception());
-      }
     }
     _index +=encoded.length;
     return encoded;
