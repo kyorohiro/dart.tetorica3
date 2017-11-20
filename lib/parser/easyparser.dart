@@ -164,7 +164,6 @@ class EasyParser {
       } else {
         nextByte = (await _buffer.getBytes(index+length, 1))[0];
       }
-
       if(expectedMatcherResult != matcher(nextByte)) {
         break;
       } else {
@@ -262,6 +261,7 @@ class EasyParser {
     p();
     return completer.future;
   }
+
 }
 
 abstract class EasyParserMatcher {

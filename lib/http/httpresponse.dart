@@ -90,12 +90,14 @@ class HetiHttpResponse {
   }
 
   static Future<String> decodeOWS(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
+//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
   static Future<String> decodeSP(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.SP));
+//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
