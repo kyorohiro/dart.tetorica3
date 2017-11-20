@@ -73,7 +73,24 @@ class HetiHttpResponse {
   }
 
   static Future<String> decodeReasonPhrase(EasyParser parser) async {
-    List<int> vv = await parser.nextBytePatternByUnmatch(new TextMatcher());
+      // List<int> vv = await parser.nextBytePatternByUnmatch(new TextMatcher());
+      // reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
+      List<int> vv = await parser.matchBytesFromMatche((int target) {
+          //  VCHAR = 0x21-0x7E
+          //  obs-text = %x80-FF
+          //  SP = 0x30
+          //  HTAB = 0x09
+          if (0x21 <= target && target <= 0x7E) {
+            return true;
+          }
+          if (0x80 <= target && target <= 0xFF) {
+            return true;
+          }
+          if (target == 0x20 || target == 0x09) {
+            return true;
+          }
+          return false;
+        },expectedMatcherResult: true);
     return convert.UTF8.decode(vv);
   }
 
@@ -166,13 +183,15 @@ class HetiHttpResponse {
 
   // metod = token = 1*tchar
   static Future<String> decodeMethod(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
+    //List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.TCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
   // CHAR_STRING
   static Future<String> decodeRequestTarget(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
+   // List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.VCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
@@ -183,13 +202,16 @@ class HetiHttpResponse {
   static Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) async {
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
     await parser.nextString("bytes=");
-    List<int> startAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+//    List<int> startAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    List<int> startAsList =  await parser.matchBytesFromBytes(RfcTable.DIGIT,expectedMatcherResult: true);
+
     ret.start = 0;
     for (int d in startAsList) {
       ret.start = (d - 48) + ret.start * 10;
     }
     await parser.nextString("-");
-    List<int> endAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    //List<int> endAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    List<int> endAsList = await parser.matchBytesFromBytes(RfcTable.DIGIT,expectedMatcherResult: true);
     if (endAsList.length == 0) {
       ret.end = -1;
     } else {
@@ -207,7 +229,7 @@ class HetiHttpRequestRange {
   int start = 0;
   int end = 0;
 }
-
+/*
 // reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
 class TextMatcher extends EasyParserMatcher {
   @override
@@ -228,6 +250,7 @@ class TextMatcher extends EasyParserMatcher {
     return false;
   }
 }
+*/
 
 class FieldValueMatcher extends EasyParserMatcher {
   @override

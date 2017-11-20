@@ -162,7 +162,11 @@ class EasyParser {
       if (_buffer.currentSize > index) {
         nextByte = _buffer[index+length];
       } else {
-        nextByte = (await _buffer.getBytes(index+length, 1))[0];
+        List<int> tmp = (await _buffer.getBytes(index+length, 1));
+        if(tmp.length == 0) {
+          return 0;
+        }
+        nextByte = tmp[0];
       }
       if(expectedMatcherResult != matcher(nextByte)) {
         break;
@@ -176,6 +180,15 @@ class EasyParser {
   //
   Future<List<int>> matchBytesFromBytes(List<int> encoded, {bool expectedMatcherResult:true}) async {
     int len = await checkBytesFromBytes(encoded, expectedMatcherResult:expectedMatcherResult);
+    data.Uint8List ret = new data.Uint8List(len);
+    for(int i=0;i<len;i++) {
+      ret[i] = _buffer[i+index];
+    }
+    _index += len;
+    return ret;
+  }
+  Future<List<int>> matchBytesFromMatche(EasyParserMatchFunc func, {bool expectedMatcherResult:true}) async {
+    int len = await checkBytesFromMatcher(func, expectedMatcherResult:expectedMatcherResult);
     data.Uint8List ret = new data.Uint8List(len);
     for(int i=0;i<len;i++) {
       ret[i] = _buffer[i+index];
