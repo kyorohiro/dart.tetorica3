@@ -40,12 +40,20 @@ class HetiHttpResponse {
   }
 
   static Future<String> decodeFieldName(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
+//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
+    List<int> v = await parser.matchBytesFromBytes(RfcTable.TCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
   static Future<String> decodeFieldValue(EasyParser parser) async {
-    List<int> v = await parser.nextBytePatternByUnmatch(new FieldValueMatcher());
+    //List<int> v = await parser.nextBytePatternByUnmatch(new FieldValueMatcher());
+    List<int> v = await parser.matchBytesFromMatche((int target) {
+        if (target == 0x0D || target == 0x0A) {
+          return false;
+        } else {
+          return true;
+        }
+      },expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
@@ -250,7 +258,6 @@ class TextMatcher extends EasyParserMatcher {
     return false;
   }
 }
-*/
 
 class FieldValueMatcher extends EasyParserMatcher {
   @override
@@ -262,7 +269,7 @@ class FieldValueMatcher extends EasyParserMatcher {
     }
   }
 }
-
+*/
 // reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
 class HetiHttpResponseStatusLine {
   String version = "";
