@@ -90,7 +90,6 @@ class HetiHttpResponse {
   }
 
   static Future<String> decodeOWS(EasyParser parser) async {
-//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
     List<int> v = await parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
@@ -125,7 +124,8 @@ class HetiHttpResponse {
 
   //
   static Future<int> decodeChunkedSize(EasyParser parser) async {
-    List<int> n = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG));
+    //List<int> n = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG));
+    List<int> n = await parser.matchBytesFromBytes(RfcTable.HEXDIG,expectedMatcherResult: true);
     if (n.length == 0) {
       throw new EasyParseError();
     }
