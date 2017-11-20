@@ -237,39 +237,7 @@ class HetiHttpRequestRange {
   int start = 0;
   int end = 0;
 }
-/*
-// reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
-class TextMatcher extends EasyParserMatcher {
-  @override
-  bool match(int target) {
-    //  VCHAR = 0x21-0x7E
-    //  obs-text = %x80-FF
-    //  SP = 0x30
-    //  HTAB = 0x09
-    if (0x21 <= target && target <= 0x7E) {
-      return true;
-    }
-    if (0x80 <= target && target <= 0xFF) {
-      return true;
-    }
-    if (target == 0x20 || target == 0x09) {
-      return true;
-    }
-    return false;
-  }
-}
 
-class FieldValueMatcher extends EasyParserMatcher {
-  @override
-  bool match(int target) {
-    if (target == 0x0D || target == 0x0A) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-}
-*/
 // reason-phrase  = *( HTAB / SP / VCHAR / obs-text )
 class HetiHttpResponseStatusLine {
   String version = "";
