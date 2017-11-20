@@ -85,7 +85,11 @@ class EasyParser {
   // next
   //
   Future<String> nextString(String value) async {
-    List<int> encoded = convert.UTF8.encode(value);
+    await nextBytes(convert.UTF8.encode(value));
+    return value;
+  }
+
+  Future<List<int>> nextBytes(List<int> encoded) async {
     int i = await _buffer.waitByBuffered(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
@@ -96,7 +100,7 @@ class EasyParser {
       }
     }
     _index +=encoded.length;
-    return value;
+    return encoded;
   }
 
   Future<String> nextStringWithUpperLowerCase(String value) async {
