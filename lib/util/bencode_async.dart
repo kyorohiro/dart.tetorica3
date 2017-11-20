@@ -101,7 +101,7 @@ class BdecoderAsync {
     }
     int length = intList2int(lengthList);
     await parser.nextString(":");
-    List<int> value = await parser.readBuffer(length);
+    List<int> value = await parser.getBytes(length);
     if (value.length == length) {
       return value;
     } else {

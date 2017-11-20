@@ -46,11 +46,6 @@ class EasyParser {
     return i;
   }
 
-  Future<List<int>> readBuffer(int length) async {
-    List<int> v = await _buffer.getBytes(index, length);
-    _index += v.length;
-    return v;
-  }
 
   //
   // NEXT return length
@@ -200,7 +195,13 @@ class EasyParser {
   //
   // READ
   //
-  Future<String> readStringWithByteLength(int length) async {
+  Future<List<int>> getBytes(int length) async {
+    List<int> v = await _buffer.getBytes(index, length);
+    _index += v.length;
+    return v;
+  }
+
+  Future<String> getStringWithByteLength(int length) async {
     List<int> va = null;
     int i = index;
     if (_cache.rawbuffer8.length > length) {
