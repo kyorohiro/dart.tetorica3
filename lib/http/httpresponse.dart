@@ -162,8 +162,8 @@ class HetiHttpResponse {
   }
 
   static decodeChunkExtension(EasyParser parser) async {
-     if (await parser.checkString(";")) {
-      while (false == await parser.checkString("\r\n")) {
+     if (0 != await parser.checkString(";")) {
+      while (0 == await parser.checkString("\r\n")) {
         parser.jumpBuffer(1);
       }
     }

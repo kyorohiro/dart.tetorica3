@@ -53,26 +53,6 @@ class EasyParser {
   }
 
   //
-  // check todo write test
-  //
-  Future<bool> checkString(String value) async {
-    return checkBytes(convert.UTF8.encode(value));
-  }
-
-  Future<bool> checkBytes(List<int> encoded) async {
-    int i = await _buffer.waitByBuffered(index, encoded.length);
-    if (i + encoded.length > _buffer.currentSize) {
-      return false;
-    }
-    for(int j=0;j<encoded.length;j++) {
-      if(_buffer[j+i] != encoded[j]){
-        return false;
-      }
-    }
-    return true;
-  }
-
-  //
   // NEXT return length
   //
   Future<String> nextString(String value) async {
@@ -81,7 +61,7 @@ class EasyParser {
   }
 
   Future<List<int>> nextBytes(List<int> encoded) async {
-    if(false == await checkBytes(encoded)){
+    if(0 == await checkBytes(encoded)){
       throw (logon == false ? _myException : new Exception());
     }
     _index +=encoded.length;
@@ -136,6 +116,23 @@ class EasyParser {
   //
   // CHECK return length
   //
+  Future<int> checkString(String value) async {
+    return checkBytes(convert.UTF8.encode(value));
+  }
+
+  Future<int> checkBytes(List<int> encoded) async {
+    int i = await _buffer.waitByBuffered(index, encoded.length);
+    if (i + encoded.length > _buffer.currentSize) {
+      return 0;
+    }
+    for(int j=0;j<encoded.length;j++) {
+      if(_buffer[j+i] != encoded[j]){
+        return 0;
+      }
+    }
+    return encoded.length;
+  }
+
   Future<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
     return checkBytesFromMatcher((int target){
       for (int i = 0; i < encoded.length; i++) {
