@@ -34,8 +34,7 @@ class EasyParser {
   void back() {_index = _stack.last;}
   int pop() => _stack.removeLast();
   int last()=>_stack.last;
-
-
+  
   Future<List<int>> getPeek(int length) {
     return _buffer.getBytes(index, length);
   }
