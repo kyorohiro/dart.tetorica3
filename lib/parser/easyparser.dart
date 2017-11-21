@@ -226,11 +226,18 @@ class EasyParser {
     return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> readInt(ByteOrderType byteorder) async {
+  //
+  FutureOr<int> readInt(ByteOrderType byteorder) {
     int i = index;
     if(_buffer.currentSize < index+4) {
-      i = await _buffer.waitByBuffered(index, 4);
+      i = _readIntF(byteorder);
     }
+    _index += 4;
+    return ByteOrder.parseInt(_buffer, 0, byteorder);
+  }
+
+  FutureOr<int> _readIntF(ByteOrderType byteorder) async {
+    int i = await _buffer.waitByBuffered(index, 4);
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -238,11 +245,18 @@ class EasyParser {
     return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> readShort(ByteOrderType byteorder) async {
+  //
+  FutureOr<int> readShort(ByteOrderType byteorder) {
     int i = index;
     if(_buffer.currentSize < index+2) {
-      i = await _buffer.waitByBuffered(index, 2);
+      i = _readShortF(byteorder);
     }
+    _index += 2;
+    return ByteOrder.parseShort(_buffer, 0, byteorder);
+  }
+
+  FutureOr<int> _readShortF(ByteOrderType byteorder) async {
+    int i = await _buffer.waitByBuffered(index, 2);
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -250,11 +264,19 @@ class EasyParser {
     return ByteOrder.parseShort(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> readByte() async {
+  //
+  //
+  FutureOr<int> readByte() {
     int i = index;
     if(_buffer.currentSize < index+1) {
-      i = await _buffer.waitByBuffered(index, 1);
+      return _readByteF();
     }
+    _index += 1;
+    return _buffer[i];
+  }
+
+  Future<int> _readByteF() async {
+    int i = await _buffer.waitByBuffered(index, 1);
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
