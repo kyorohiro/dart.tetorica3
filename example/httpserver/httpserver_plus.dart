@@ -8,7 +8,7 @@ import 'package:tetorica/net/tmp/rfctable.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
 
 class HetiHttpServerPlus {
-  String localIP = "0.0.0.0";
+  String bindIP = "0.0.0.0";
   int basePort = 18085;
   int _localPort = 18085;
   int numOfRetry = 5;
@@ -22,7 +22,7 @@ class HetiHttpServerPlus {
   StreamController<HetiHttpServerPlusResponseItem> _onResponse = new StreamController();
   Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
-  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder) {
+  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder, {this.basePort:18085, this.bindIP:"0.0.0.0", this.numOfRetry:1}) {
     _socketBuilder = socketBuilder;
   }
 
@@ -34,8 +34,11 @@ class HetiHttpServerPlus {
     _server = null;
   }
 
-  Future<HetiHttpServerPlus> startServer() async {
-    _localPort = basePort;
+  Future<HetiHttpServerPlus> startServer({int basePort:null, String bindIP:null, int numOfRetry:null}) async {
+    this.basePort = (basePort == null?this.basePort:basePort);
+    this.bindIP = (bindIP == null?this.bindIP:bindIP);
+    this.numOfRetry = (numOfRetry == null?this.numOfRetry:numOfRetry);
+    _localPort = this.basePort;
     if (_server != null) {
       throw("server null");//completer.completeError({});
     }
@@ -144,11 +147,10 @@ class HetiHttpServerPlus {
 
 
   Future<tet.HetiHttpServer> _retryBind() async {
-    Completer<tet.HetiHttpServer> completer = new Completer();
     int portMax = _localPort + numOfRetry;
     do {
       try {
-        tet.HetiHttpServer server = await tet.HetiHttpServer.bind(_socketBuilder, localIP, _localPort);
+        tet.HetiHttpServer server = await tet.HetiHttpServer.bind(_socketBuilder, bindIP, _localPort);
         return server;
       } catch(e) {
         _localPort++;

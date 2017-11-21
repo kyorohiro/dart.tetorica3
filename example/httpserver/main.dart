@@ -18,10 +18,10 @@ main(List<String> args) async {
 
   arg.ArgResults parserResult = parser.parse(args);
   int port = int.parse(parserResult["port"]);
-  String host = parserResult["bind"];
+  String bindIP = parserResult["bind"];
 
   tet.TetSocketBuilder builder = new tetio.TetSocketBuilderDartIO();
-  app.HetiHttpServerPlus sv = new app.HetiHttpServerPlus(builder);
+  app.HetiHttpServerPlus sv = new app.HetiHttpServerPlus(builder,basePort: port, bindIP: bindIP);
   await sv.startServer();
   sv.onResponse.listen((app.HetiHttpServerPlusResponseItem res) {
     sv.response(res.req, new tet.MemoryData(buffer: conv.UTF8.encode("Hello, World!!")),contentType:"text/html");
