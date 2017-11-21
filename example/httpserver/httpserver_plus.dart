@@ -1,4 +1,11 @@
-part of hetimanet_http;
+import 'dart:convert' as convert;
+import 'dart:async';
+import 'package:tetorica/data.dart' as tet;
+import 'package:tetorica/parser.dart' as tet;
+import 'package:tetorica/net.dart' as tet;
+import 'dart:typed_data' as data;
+import 'package:tetorica/net/tmp/rfctable.dart' as tet;
+import 'package:tetorica/http.dart' as tet;
 
 class HetiHttpStartServerResult {
 
@@ -11,15 +18,15 @@ class HetiHttpServerPlus {
   int numOfRetry = 5;
   int get localPort => _localPort;
 
-  HetiHttpServer _server = null;
-  TetSocketBuilder _socketBuilder = null;
+  tet.HetiHttpServer _server = null;
+  tet.TetSocketBuilder _socketBuilder = null;
 
   StreamController<String> _controllerUpdateLocalServer = new StreamController.broadcast();
   Stream<String> get onUpdateLocalServer => _controllerUpdateLocalServer.stream;
   StreamController<HetiHttpServerPlusResponseItem> _onResponse = new StreamController();
   Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
-  HetiHttpServerPlus(TetSocketBuilder socketBuilder) {
+  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder) {
     _socketBuilder = socketBuilder;
   }
 
@@ -40,7 +47,7 @@ class HetiHttpServerPlus {
       return completer.future;
     }
 
-    _retryBind().then((HetiHttpServer server) {
+    _retryBind().then((tet.HetiHttpServer server) {
       _controllerUpdateLocalServer.add("${_localPort}");
       _server = server;
       completer.complete(new HetiHttpStartServerResult());
@@ -52,7 +59,7 @@ class HetiHttpServerPlus {
     return completer.future;
   }
 
-  void _hundleRequest(HetiHttpServerRequest req) {
+  void _hundleRequest(tet.HetiHttpServerRequest req) {
    // print("${req.info.line.requestTarget}");
     if (req.info.line.requestTarget.length < 0) {
       req.socket.close();
@@ -62,16 +69,15 @@ class HetiHttpServerPlus {
   }
 
 
-  void response(HetiHttpServerRequest req, Data file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
+  void response(tet.HetiHttpServerRequest req, tet.Data file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
     if(headerList == null) {headerList = {};}
     headerList["Content-Type"] = contentType;
-    HttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
+    tet.HttpResponseHeaderField fieldRangeHeader = req.info.find(tet.RfcTable.HEADER_FIELD_RANGE);
     if (fieldRangeHeader != null && statusCode == null) {
       data.Uint8List buff = new data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
-      ParserByteBuffer builder = new ParserByteBuffer.fromList(buff);
-      //builder.fin();
+      tet.ParserByteBuffer builder = new tet.ParserByteBuffer.fromList(buff);
       builder.loadCompleted = true;
-      HetiHttpResponse.decodeRequestRangeValue(new EasyParser(builder)).then((HetiHttpRequestRange range) {
+      tet.HetiHttpResponse.decodeRequestRangeValue(new tet.EasyParser(builder)).then((tet.HetiHttpRequestRange range) {
         _startResponseRangeFile(req.socket, file, headerList, range.start, range.end);
       });
     } else {
@@ -80,8 +86,8 @@ class HetiHttpServerPlus {
   }
 
 
-  void _startResponseRangeFile(Socket socket, Data file, Map<String,String> header, int start, int end) {
-    ParserByteBuffer response = new ParserByteBuffer();
+  void _startResponseRangeFile(tet.Socket socket, tet.Data file, Map<String,String> header, int start, int end) {
+    tet.ParserByteBuffer response = new tet.ParserByteBuffer();
     file.getLength().then((int length) {
       if (end == -1 || end > length - 1) {
         end = length - 1;
@@ -101,56 +107,61 @@ class HetiHttpServerPlus {
     });
   }
 
-  void _startResponseFile(Socket socket, int statuCode, Map<String,String> header, Data file) {
-    ParserByteBuffer response = new ParserByteBuffer();
+  Future<HetiHttpServerPlus> _startResponseFile(tet.Socket socket, int statuCode, Map<String,String> header, tet.Data file) async {
+    tet.ParserByteBuffer response = new tet.ParserByteBuffer();
     if(statuCode == null) {
       statuCode = 200;
     }
-    file.getLength().then((int length) {
-      response.appendString("HTTP/1.1 ${statuCode} OK\r\n");
-      response.appendString("Connection: close\r\n");
-      response.appendString("Content-Length: ${length}\r\n");
-      for(String key in header.keys) {
-        response.appendString("${key}: ${header[key]}\r\n");
-      }
-      response.appendString("\r\n");
-      socket.send(response.toList());
-      _startResponseBuffer(socket, file, 0, length);
-       socket.close();
-    });
+    int length = await file.getLength();
+    response.appendString("HTTP/1.1 ${statuCode} OK\r\n");
+    response.appendString("Connection: close\r\n");
+    response.appendString("Content-Length: ${length}\r\n");
+    for(String key in header.keys) {
+      response.appendString("${key}: ${header[key]}\r\n");
+    }
+    response.appendString("\r\n");
+    socket.send(response.toList());
+    await _startResponseBuffer(socket, file, 0, length);
+    socket.close();
+
+    return this;
   }
 
-  void _startResponseBuffer(Socket socket, Data file, int index, int length) {
+  Future<HetiHttpServerPlus> _startResponseBuffer(tet.Socket socket, tet.Data file, int index, int length) async {
     int start = index;
-    responseTask() {
-      int end = start + 256 * 1024;
-      if (end > (index + length)) {
-        end = (index + length);
-      }
-      //print("####### ${start} ${end}");
-      file.getBytes(start, end-start).then((List<int> buffer) {
+    try {
+      do {
+        int end = start + 256 * 1024;
+        if (end > (index + length)) {
+          end = (index + length);
+        }
+        //
+        //
+        List<int> buffer = await file.getBytes(start, end - start);
+        print("### buffer ${buffer}");
         socket.send(buffer);
         if (end >= (index + length)) {
           socket.close();
+          break;
         } else {
           start = end;
-          responseTask();
+          continue;
         }
-      }).catchError((e) {
+      } while (true);
+    } catch (e) {
+      try {
         socket.close();
-      }).catchError((e) {
-
-      });
+      } catch (e) {}
     }
-    responseTask();
+    return this;
   }
 
 
-  Future<HetiHttpServer> _retryBind() {
-    Completer<HetiHttpServer> completer = new Completer();
+  Future<tet.HetiHttpServer> _retryBind() {
+    Completer<tet.HetiHttpServer> completer = new Completer();
     int portMax = _localPort + numOfRetry;
     bindFunc() {
-      HetiHttpServer.bind(_socketBuilder, localIP, _localPort).then((HetiHttpServer server) {
+      tet.HetiHttpServer.bind(_socketBuilder, localIP, _localPort).then((tet.HetiHttpServer server) {
         completer.complete(server);
       }).catchError((e) {
         _localPort++;
@@ -168,13 +179,13 @@ class HetiHttpServerPlus {
 }
 
 class HetiHttpServerPlusResponseItem {
-  HetiHttpServerRequest req;
+  tet.HetiHttpServerRequest req;
 
-  HetiHttpServerPlusResponseItem(HetiHttpServerRequest req) {
+  HetiHttpServerPlusResponseItem(tet.HetiHttpServerRequest req) {
     this.req = req;
   }
 
-  Socket get socket => req.socket;
+  tet.Socket get socket => req.socket;
   String get targetLine => req.info.line.requestTarget;
   String get path {
     int index = targetLine.indexOf("?");

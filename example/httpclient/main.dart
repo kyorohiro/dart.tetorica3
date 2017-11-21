@@ -12,10 +12,10 @@ import 'package:tetorica/dartio_net.dart' as tetio;
 import 'package:tetorica/dartio_data.dart' as tetio;
 
 
-//import 'package:tetorica/dart'
 main(List<String> args) async {
   //
   // args
+  //
   arg.ArgParser parser = new arg.ArgParser();
 //  parser.addFlag("retry", abbr: "r");
 //  parser.addFlag("continue", abbr: "c");
@@ -25,7 +25,6 @@ main(List<String> args) async {
   parser.addOption("action", abbr: "a", defaultsTo: "GET");
   parser.addFlag("verbose", abbr: "v", defaultsTo: false);
 
-  // parse
   arg.ArgResults parserResult = parser.parse(args);
   bool verbose = parserResult["verbose"];
   String output = parserResult["output"];
