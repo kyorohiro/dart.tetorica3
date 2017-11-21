@@ -126,7 +126,6 @@ class HetiHttpServerPlus {
         //
         //
         List<int> buffer = await file.getBytes(start, end - start);
-        print("### buffer ${buffer}");
         socket.send(buffer);
         if (end >= (index + length)) {
           socket.close();
