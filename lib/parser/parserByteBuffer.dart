@@ -43,10 +43,22 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   }
 
-  Future<List<int>> getBytes(int index, int length) async {//, {List<int> out:null}) async {
-    //if(out != null && out.length < length) {
-    //  throw new Exception();
-    //}
+  Future<int> readBytes(int index, int length, List<int> buffer) async {
+    if(length == 0) {
+      return 0;
+    }
+    if(!cached(index, length)) {
+      await waitByBuffered(index, length);
+    }
+    int len = currentSize - index;
+    len = (len > length ? length : len);
+    for (int i = 0; i < len; i++) {
+      buffer[i] = _buffer8[index + i];
+    }
+    return len;
+  }
+
+  Future<List<int>> getBytes(int index, int length) async {
     if(length == 0) {
       return [];
     }
@@ -55,9 +67,8 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     int len = currentSize - index;
     len = (len > length ? length : len);
-    //if(out == null) {
+
     List<int> out = new data.Uint8List(len >= 0 ? len : 0);
-    //}
     for (int i = 0; i < len; i++) {
       out[i] = _buffer8[index + i];
     }

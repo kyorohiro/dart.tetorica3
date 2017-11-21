@@ -26,6 +26,22 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   }
 
+  Future<int> readBytes(int index, int length, List<int> buffer) async {
+    if(length == 0) {
+      return 0;
+    }
+    if(!cached(index, length)) {
+      await waitByBuffered(index, length);
+    }
+    int len = currentSize - index;
+    len = (len > length ? length : len);
+
+    for (int i = 0; i < len; i++) {
+      buffer[i] = this[index + i];
+    }
+    return len;
+  }
+
   Future<List<int>> getBytes(int index, int length) async {//, {List<int> out:null}) async {
     //if(out != null && out.length < length) {
     //  throw new Exception();
