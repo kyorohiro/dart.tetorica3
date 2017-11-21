@@ -3,7 +3,7 @@ part of hetimaparsr;
 class ParserListBuffer extends ParserReaderBase implements ParserAppender, ParserReader, ParserBuffer {
   int _length = 0;
   int _clearedBuffer = 0;
-  List<GetByteFutureInfo> mGetByteFutreList = new List();
+  List<WaitByBufferedItem> mGetByteFutreList = new List();
   int get clearedBuffer =>  _clearedBuffer;
   List<List<int>> buffers = [];
 
@@ -14,7 +14,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   FutureOr<int> waitByBuffered(int index, int length) {
     if (false == cached(index, length)) {
-      GetByteFutureInfo info = new GetByteFutureInfo();
+      WaitByBufferedItem info = new WaitByBufferedItem();
       info.completerResultLength = length;
       info.index = index;
       info.completer = new Completer();
@@ -54,6 +54,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     return len;
   }
+
   //
   //
   FutureOr<List<int>> getBytes(int index, int length) {
@@ -82,9 +83,9 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     return out;
   }
-  //
-  //
 
+  //
+  //
   int operator [](int index) {
     if(index < _clearedBuffer) {
       return 0;
@@ -144,7 +145,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   void updatedBytes() {
     var removeList = null;
-    for (GetByteFutureInfo f in mGetByteFutreList) {
+    for (WaitByBufferedItem f in mGetByteFutreList) {
       if (true == cached(f.index, f.completerResultLength)) {
         f.completer.complete(f.index);
         if (removeList == null) {
@@ -154,7 +155,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
       }
     }
     if (removeList != null) {
-      for (GetByteFutureInfo f in removeList) {
+      for (WaitByBufferedItem f in removeList) {
         mGetByteFutreList.remove(f);
       }
     }

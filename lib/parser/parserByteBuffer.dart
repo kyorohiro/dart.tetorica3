@@ -6,7 +6,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
   int _length = 0;
 
   MemoryBuffer get rawbuffer8 => _buffer8;
-  List<GetByteFutureInfo> mGetByteFutreList = new List();
+  List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
 
   int get clearedBuffer => _buffer8.bufferIndex;
 
@@ -30,11 +30,11 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   FutureOr<int> waitByBuffered(int index, int length) {
     if (false == cached(index, length)) {
-      GetByteFutureInfo info = new GetByteFutureInfo();
+      WaitByBufferedItem info = new WaitByBufferedItem();
       info.completerResultLength = length;
       info.index = index;
       info.completer = new Completer();
-      mGetByteFutreList.add(info);
+      mWaitByBufferedItemList.add(info);
       return info.completer.future;
     } else {
       return index;
@@ -128,7 +128,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
   void set loadCompleted(bool v) {
     super.loadCompleted = true;
     updatedBytes();
-    mGetByteFutreList.clear();
+    mWaitByBufferedItemList.clear();
   }
 
 
@@ -144,7 +144,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   void updatedBytes() {
     var removeList = null;
-    for (GetByteFutureInfo f in mGetByteFutreList) {
+    for (WaitByBufferedItem f in mWaitByBufferedItemList) {
       if (true == cached(f.index, f.completerResultLength)) {
         f.completer.complete(f.index);
         if (removeList == null) {
@@ -154,8 +154,8 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
       }
     }
     if (removeList != null) {
-      for (GetByteFutureInfo f in removeList) {
-        mGetByteFutreList.remove(f);
+      for (WaitByBufferedItem f in removeList) {
+        mWaitByBufferedItemList.remove(f);
       }
     }
   }
@@ -201,7 +201,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
   String toText() => convert.UTF8.decode(toList());
 }
 
-class GetByteFutureInfo {
+class WaitByBufferedItem {
   int completerResultLength = 0;
   int index = 0;
   Completer<int> completer = null;
