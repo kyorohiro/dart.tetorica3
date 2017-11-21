@@ -39,12 +39,12 @@ class ParserReaderWithIndex extends ParserReaderBase {
 //    return _base.getAndUnusedBuffer();
   }
 
-  Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
-    return await _base.getBytes(index + _start, length);
+  FutureOr<List<int>> getBytes(int index, int length, {List<int> out: null}){
+    return _base.getBytes(index + _start, length);
   }
 
-  Future<int> readBytes(int index, int length, List<int> buffer) async {
-    return await _base.readBytes(index + _start, length, buffer);
+  FutureOr<int> readBytes(int index, int length, List<int> buffer) {
+    return _base.readBytes(index + _start, length, buffer);
   }
 
   FutureOr<int> waitByBuffered(int index, int length) {
