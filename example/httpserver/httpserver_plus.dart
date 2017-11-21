@@ -7,10 +7,6 @@ import 'dart:typed_data' as data;
 import 'package:tetorica/net/tmp/rfctable.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
 
-class HetiHttpStartServerResult {
-
-}
-
 class HetiHttpServerPlus {
   String localIP = "0.0.0.0";
   int basePort = 18085;
@@ -38,25 +34,18 @@ class HetiHttpServerPlus {
     _server = null;
   }
 
-  Future<HetiHttpStartServerResult> startServer() {
+  Future<HetiHttpServerPlus> startServer() async {
     //print("startServer");
     _localPort = basePort;
-    Completer<HetiHttpStartServerResult> completer = new Completer();
     if (_server != null) {
-      completer.completeError({});
-      return completer.future;
+      throw("server null");//completer.completeError({});
     }
 
-    _retryBind().then((tet.HetiHttpServer server) {
-      _controllerUpdateLocalServer.add("${_localPort}");
-      _server = server;
-      completer.complete(new HetiHttpStartServerResult());
-      server.onNewRequest().listen(_hundleRequest);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-
-    return completer.future;
+    tet.HetiHttpServer server = await _retryBind();
+    _controllerUpdateLocalServer.add("${_localPort}");
+    _server = server;
+    server.onNewRequest().listen(_hundleRequest);
+    return this;
   }
 
   void _hundleRequest(tet.HetiHttpServerRequest req) {

@@ -22,7 +22,7 @@ main(List<String> args) async {
 
   tet.TetSocketBuilder builder = new tetio.TetSocketBuilderDartIO();
   app.HetiHttpServerPlus sv = new app.HetiHttpServerPlus(builder);
-  app.HetiHttpStartServerResult ret = await sv.startServer();
+  await sv.startServer();
   sv.onResponse.listen((app.HetiHttpServerPlusResponseItem res) {
     sv.response(res.req, new tet.MemoryData(buffer: conv.UTF8.encode("Hello, World!!")),contentType:"text/html");
   });
