@@ -10,11 +10,9 @@ class HetiHttpResponse {
   // head := line headfield
   //
   static Future<HttpClientHead> decodeHttpHead(EasyParser parser) async {
-    HetiHttpResponseStatusLine line = await decodeStatusline(parser);
-    List<HttpResponseHeaderField> httpfields = await decodeHeaderFields(parser);
     HttpClientHead result = new HttpClientHead();
-    result.line = line;
-    result.headerField = httpfields;
+    result.line = await decodeStatusline(parser);
+    result.headerField =  await decodeHeaderFields(parser);
     result.index = parser.index;
     return result;
   }
