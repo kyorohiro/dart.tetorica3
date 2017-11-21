@@ -86,25 +86,24 @@ class HetiHttpServerPlus {
   }
 
 
-  void _startResponseRangeFile(tet.Socket socket, tet.Data file, Map<String,String> header, int start, int end) {
+  Future<HetiHttpServerPlus> _startResponseRangeFile(tet.Socket socket, tet.Data file, Map<String,String> header, int start, int end) async {
     tet.ParserByteBuffer response = new tet.ParserByteBuffer();
-    file.getLength().then((int length) {
-      if (end == -1 || end > length - 1) {
-        end = length - 1;
-      }
-      int contentLength = end - start + 1;
-      response.appendString("HTTP/1.1 206 Partial Content\r\n");
-      response.appendString("Connection: close\r\n");
-      response.appendString("Content-Length: ${contentLength}\r\n");
-      response.appendString("Content-Range: bytes ${start}-${end}/${length}\r\n");
-      for(String key in header.keys) {
-        response.appendString("${key}: ${header[key]}\r\n");
-      }
-      response.appendString("\r\n");
-      //print(response.toText());
-      socket.send(response.toList());
-       _startResponseBuffer(socket, file, start, contentLength);
-    });
+    int length = await file.getLength();
+    if (end == -1 || end > length - 1) {
+      end = length - 1;
+    }
+    int contentLength = end - start + 1;
+    response.appendString("HTTP/1.1 206 Partial Content\r\n");
+    response.appendString("Connection: close\r\n");
+    response.appendString("Content-Length: ${contentLength}\r\n");
+    response.appendString("Content-Range: bytes ${start}-${end}/${length}\r\n");
+    for(String key in header.keys) {
+      response.appendString("${key}: ${header[key]}\r\n");
+    }
+    response.appendString("\r\n");
+    //print(response.toText());
+    socket.send(response.toList());
+    await _startResponseBuffer(socket, file, start, contentLength);
   }
 
   Future<HetiHttpServerPlus> _startResponseFile(tet.Socket socket, int statuCode, Map<String,String> header, tet.Data file) async {
