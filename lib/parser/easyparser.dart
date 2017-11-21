@@ -197,11 +197,22 @@ class EasyParser {
   //
   // READ
   //
-  FutureOr<List<int>> getBytes(int length) async {
-    List<int> v = await _buffer.getBytes(index, length);
+  FutureOr<List<int>> getBytes(int length) {
+    FutureOr<List<int>> v = _buffer.getBytes(index, length);
+    if(v is FutureOr<List<int>>) {
+      return _getBytes_00(v);
+    } else {
+      _index += (v as List<int>).length;
+      return v;
+    }
+  }
+
+  FutureOr<List<int>> _getBytes_00(FutureOr<List<int>> vf) async {
+    List<int> v = await vf;
     _index += v.length;
     return v;
   }
+  //
 
   FutureOr<String> getStringWithByteLength(int length) async {
     int i = index;
