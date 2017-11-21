@@ -26,13 +26,26 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   }
 
-  Future<int> readBytes(int index, int length, List<int> buffer) async {
+  //
+  //
+  FutureOr<int> readBytes(int index, int length, List<int> buffer) {
     if(length == 0) {
       return 0;
     }
     if(!cached(index, length)) {
+      return _readBytes_00(index, length, buffer);
+    }
+    return _readBytes_01(index, length, buffer);
+  }
+
+  Future<int> _readBytes_00(int index, int length, List<int> buffer) async {
+    if(!cached(index, length)) {
       await waitByBuffered(index, length);
     }
+    return _readBytes_01(index, length, buffer);
+  }
+
+  int _readBytes_01(int index, int length, List<int> buffer) {
     int len = currentSize - index;
     len = (len > length ? length : len);
 
@@ -41,28 +54,36 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     return len;
   }
-
-  Future<List<int>> getBytes(int index, int length) async {//, {List<int> out:null}) async {
-    //if(out != null && out.length < length) {
-    //  throw new Exception();
-    //}
-    //else
+  //
+  //
+  FutureOr<List<int>> getBytes(int index, int length) {
     if(length == 0) {
       return [];
     }
     if(!cached(index, length)) {
+      return _getBytes_00(index, length);
+    }
+    return _getBytes_01(index, length);
+  }
+
+  FutureOr<List<int>> _getBytes_00(int index, int length) async {
+    if(!cached(index, length)) {
       await waitByBuffered(index, length);
     }
+    return _getBytes_01(index, length);
+  }
+
+  List<int> _getBytes_01(int index, int length) {
     int len = currentSize - index;
     len = (len > length ? length : len);
-    //if(out == null) {
     List<int> out = new data.Uint8List(len >= 0 ? len : 0);
-    //}
     for (int i = 0; i < len; i++) {
       out[i] = this[index + i];
     }
     return out;
   }
+  //
+  //
 
   int operator [](int index) {
     if(index < _clearedBuffer) {
