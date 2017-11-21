@@ -34,7 +34,7 @@ class HttpServer {
     server._port = port;
     serverSocket.onAccept().listen((Socket socket) async {
       EasyParser parser = new EasyParser(socket.buffer);
-      HetiHttpRequestMessageWithoutBody body = await HetiHttpResponse.decodeRequestMessage(parser);
+      HetiHttpRequestHead body = await HetiHttpResponse.decodeRequestMessage(parser);
       HttpServerRequest request = new HttpServerRequest();
       request.socket = socket;
       request.info = body;
@@ -51,5 +51,5 @@ class HttpServer {
 class HttpServerRequest
 {
   Socket socket;
-  HetiHttpRequestMessageWithoutBody info;
+  HetiHttpRequestHead info;
 }

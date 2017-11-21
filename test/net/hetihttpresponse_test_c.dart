@@ -20,7 +20,7 @@ void main() {
   unit.test("request message",() async{
       hetima.ParserByteBuffer builder = new hetima.ParserByteBuffer();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
-      Future<hetima.HetiHttpRequestMessageWithoutBody> ret = hetima.HetiHttpResponse.decodeRequestMessage(parser);
+      Future<hetima.HetiHttpRequestHead> ret = hetima.HetiHttpResponse.decodeRequestMessage(parser);
       builder.appendString("GET /xxx/yy/zz HTTP/1.1\r\n");
       builder.appendString("aaa: bb\r\n");
       builder.appendString("ccc: ddd\r\n");

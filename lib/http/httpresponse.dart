@@ -187,8 +187,8 @@ class HetiHttpResponse {
     return result;
   }
 
-  static Future<HetiHttpRequestMessageWithoutBody> decodeRequestMessage(EasyParser parser) async {
-    HetiHttpRequestMessageWithoutBody result = new HetiHttpRequestMessageWithoutBody();
+  static Future<HetiHttpRequestHead> decodeRequestMessage(EasyParser parser) async {
+    HetiHttpRequestHead result = new HetiHttpRequestHead();
     result.line = await decodeRequestLine(parser);
     result.headerField = await decodeHeaderFields(parser);
     result.index = parser.index;
@@ -262,7 +262,7 @@ class HetiRequestLine {
   String httpVersion = "";
 }
 
-class HetiHttpRequestMessageWithoutBody {
+class HetiHttpRequestHead {
   int index = 0;
   HetiRequestLine line = new HetiRequestLine();
   List<HttpResponseHeaderField> headerField = new List();
