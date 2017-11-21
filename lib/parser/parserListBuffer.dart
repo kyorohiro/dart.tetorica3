@@ -12,7 +12,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
   bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
 
 
-  Future<int> waitByBuffered(int index, int length) async {
+  FutureOr<int> waitByBuffered(int index, int length) async {
     if (false == cached(index, length)) {
       GetByteFutureInfo info = new GetByteFutureInfo();
       info.completerResultLength = length;
