@@ -5,10 +5,11 @@ class HttpServer {
 
   StreamController _controllerOnNewRequest = new StreamController.broadcast();
   String _bindIP;
-  int _port;
   String get bindIP => _bindIP;
+  int _port;
   int get port => _port;
   ServerSocket _serverSocket = null;
+
   HttpServer._internal(ServerSocket s) {
     _serverSocket = s;
   }
