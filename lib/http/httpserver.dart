@@ -1,14 +1,14 @@
 part of hetimanet_http;
 
 
-class HetiHttpServer {
+class HttpServer {
 
   StreamController _controllerOnNewRequest = new StreamController.broadcast();
 //  HetimaSocketBuilder _builder;
   String host;
   int port;
   ServerSocket _serverSocket = null;
-  HetiHttpServer._internal(ServerSocket s) {
+  HttpServer._internal(ServerSocket s) {
     _serverSocket = s;
   }
 
@@ -21,14 +21,14 @@ class HetiHttpServer {
     }
   }
 
-  static Future<HetiHttpServer> bind(TetSocketBuilder builder, String address, int port) {
-    Completer<HetiHttpServer> completer = new Completer();
+  static Future<HttpServer> bind(SocketBuilder builder, String address, int port) {
+    Completer<HttpServer> completer = new Completer();
     builder.startServer(address, port).then((ServerSocket serverSocket){
       if(serverSocket == null) {
         completer.completeError({});
         return;
       }
-      HetiHttpServer server = new HetiHttpServer._internal(serverSocket);
+      HttpServer server = new HttpServer._internal(serverSocket);
       completer.complete(server);
       serverSocket.onAccept().listen((Socket socket){
         EasyParser parser = new EasyParser(socket.buffer);

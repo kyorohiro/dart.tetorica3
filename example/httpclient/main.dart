@@ -42,7 +42,7 @@ main(List<String> args) async {
   }
 
 
-  tet.TetSocketBuilder socketBuilder = new tetio.TetSocketBuilderDartIO();
+  tet.SocketBuilder socketBuilder = new tetio.TetSocketBuilderDartIO();
   HttpClient client = new HttpClient(socketBuilder,verbose: false, onBadCertificate: (tet.X509Certificate i){return true;});
   tet.HttpClientResponse response = await client.doAction(
       host, port, action, pathWithQuery, data,

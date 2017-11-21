@@ -1,6 +1,6 @@
 part of hetimanet_dartio;
 
-class TetSocketBuilderDartIO extends TetSocketBuilder {
+class TetSocketBuilderDartIO extends SocketBuilder {
   bool _verbose = false;
   bool get verbose => _verbose;
 

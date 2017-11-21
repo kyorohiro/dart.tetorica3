@@ -3,7 +3,7 @@ import 'package:tetorica/net.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
 
 class HttpClient {
-  tet.TetSocketBuilder _socketBuilder;
+  tet.SocketBuilder _socketBuilder;
 
   List<int> _redirectStatusCode;
   tet.SocketOnBadCertificate _onBadCertificate;

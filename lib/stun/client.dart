@@ -16,7 +16,7 @@ enum StunNatType { openInternet, blockUdp, symmetricUdpFirewall, symmetricUdp, f
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
 class StunClient {
-  net.TetSocketBuilder builder;
+  net.SocketBuilder builder;
 
   String clientAddress;
   int clientPort;

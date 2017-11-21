@@ -1,7 +1,7 @@
 part of hetimanet_stun;
 
 class StunServer {
-  net.TetSocketBuilder builder;
+  net.SocketBuilder builder;
   String primaryIP;
   int primaryPort;
 

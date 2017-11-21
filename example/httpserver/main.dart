@@ -20,7 +20,7 @@ main(List<String> args) async {
   int port = int.parse(parserResult["port"]);
   String bindIP = parserResult["bind"];
 
-  tet.TetSocketBuilder builder = new tetio.TetSocketBuilderDartIO();
+  tet.SocketBuilder builder = new tetio.TetSocketBuilderDartIO();
   app.HetiHttpServerPlus sv = new app.HetiHttpServerPlus(builder,basePort: port, bindIP: bindIP);
   await sv.startServer();
   sv.onResponse.listen((app.HetiHttpServerPlusResponseItem res) {

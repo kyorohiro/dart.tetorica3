@@ -7,14 +7,14 @@ class HttpClientResponse {
 
 
 class HttpClient {
-  TetSocketBuilder _socketBuilder;
+  SocketBuilder _socketBuilder;
   Socket socket = null;
   String host;
   int port;
 
   bool _verbose = false;
 
-  HttpClient(TetSocketBuilder socketBuilder, {DataBuilder dataBuilder: null, bool verbose: false}) {
+  HttpClient(SocketBuilder socketBuilder, {DataBuilder dataBuilder: null, bool verbose: false}) {
     _socketBuilder = socketBuilder;
     _verbose = verbose;
   }

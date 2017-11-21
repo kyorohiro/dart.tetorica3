@@ -7,7 +7,7 @@ enum TetSocketMode {
   notifyOnly
 }
 
-abstract class TetSocketBuilder {
+abstract class SocketBuilder {
   Socket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, heti.ParserBuffer buffer:null});
   Socket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, heti.ParserBuffer buffer:null});
   TetUdpSocket createUdpClient();

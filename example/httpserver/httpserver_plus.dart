@@ -17,15 +17,15 @@ class HetiHttpServerPlus {
   int _numOfRetry = 5;
   int get numOfRetry => _numOfRetry;
 
-  tet.HetiHttpServer _server = null;
-  tet.TetSocketBuilder _socketBuilder = null;
+  tet.HttpServer _server = null;
+  tet.SocketBuilder _socketBuilder = null;
 
   StreamController<String> _controllerUpdateLocalServer = new StreamController.broadcast();
   Stream<String> get onUpdateLocalServer => _controllerUpdateLocalServer.stream;
   StreamController<HetiHttpServerPlusResponseItem> _onResponse = new StreamController();
   Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
-  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder, {int basePort:18085, String bindIP:"0.0.0.0", int numOfRetry:1}) {
+  HetiHttpServerPlus(tet.SocketBuilder socketBuilder, {int basePort:18085, String bindIP:"0.0.0.0", int numOfRetry:1}) {
     this._numOfRetry = numOfRetry;
     this._basePort = basePort;
     this._bindIP = bindIP;
@@ -49,7 +49,7 @@ class HetiHttpServerPlus {
       throw("server null");//completer.completeError({});
     }
 
-    tet.HetiHttpServer server = await _retryBind();
+    tet.HttpServer server = await _retryBind();
     _controllerUpdateLocalServer.add("${_localPort}");
     _server = server;
     server.onNewRequest().listen(_hundleRequest);
@@ -152,11 +152,11 @@ class HetiHttpServerPlus {
   }
 
 
-  Future<tet.HetiHttpServer> _retryBind() async {
+  Future<tet.HttpServer> _retryBind() async {
     int portMax = _localPort + _numOfRetry;
     do {
       try {
-        tet.HetiHttpServer server = await tet.HetiHttpServer.bind(_socketBuilder, bindIP, _localPort);
+        tet.HttpServer server = await tet.HttpServer.bind(_socketBuilder, bindIP, _localPort);
         return server;
       } catch(e) {
         _localPort++;
