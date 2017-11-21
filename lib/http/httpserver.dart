@@ -21,41 +21,29 @@ class HttpServer {
     }
   }
 
-  static Future<HttpServer> bind(SocketBuilder builder, String address, int port) {
-    Completer<HttpServer> completer = new Completer();
-    builder.startServer(address, port).then((ServerSocket serverSocket){
-      if(serverSocket == null) {
-        completer.completeError({});
-        return;
-      }
-      HttpServer server = new HttpServer._internal(serverSocket);
-      completer.complete(server);
-      serverSocket.onAccept().listen((Socket socket){
-        EasyParser parser = new EasyParser(socket.buffer);
-        HetiHttpResponse.decodeRequestMessage(parser).then((HetiHttpRequestMessageWithoutBody body){
-          HetiHttpServerRequest request = new HetiHttpServerRequest();
-          request.socket = socket;
-          request.info = body;
-          server._controllerOnNewRequest.add(request);
-          parser.buffer.getBytes(0, body.index).then((List v) {
-            //print(convert.UTF8.decode(v));
-          }).catchError((e){
-            ;
-          });
-        });
-      });
-    }).catchError((e){
-      completer.completeError(e);
+  static Future<HttpServer> bind(SocketBuilder builder, String address, int port) async {
+    ServerSocket serverSocket = await builder.startServer(address, port);
+    if (serverSocket == null) {
+      throw "failed binding ${address}:${port}";
+    }
+    HttpServer server = new HttpServer._internal(serverSocket);
+    serverSocket.onAccept().listen((Socket socket) async {
+      EasyParser parser = new EasyParser(socket.buffer);
+      HetiHttpRequestMessageWithoutBody body = await HetiHttpResponse.decodeRequestMessage(parser);
+      HttpServerRequest request = new HttpServerRequest();
+      request.socket = socket;
+      request.info = body;
+      server._controllerOnNewRequest.add(request);
     });
-    return completer.future;
+    return server;
   }
 
-  Stream<HetiHttpServerRequest> onNewRequest() {
+  Stream<HttpServerRequest> onNewRequest() {
     return _controllerOnNewRequest.stream;
   }
 }
 
-class HetiHttpServerRequest
+class HttpServerRequest
 {
   Socket socket;
   HetiHttpRequestMessageWithoutBody info;

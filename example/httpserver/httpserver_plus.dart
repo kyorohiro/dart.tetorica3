@@ -56,7 +56,7 @@ class HetiHttpServerPlus {
     return this;
   }
 
-  void _hundleRequest(tet.HetiHttpServerRequest req) {
+  void _hundleRequest(tet.HttpServerRequest req) {
    // print("${req.info.line.requestTarget}");
     if (req.info.line.requestTarget.length < 0) {
       req.socket.close();
@@ -66,7 +66,7 @@ class HetiHttpServerPlus {
   }
 
 
-  void response(tet.HetiHttpServerRequest req, tet.Data file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
+  void response(tet.HttpServerRequest req, tet.Data file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
     if(headerList == null) {headerList = {};}
     headerList["Content-Type"] = contentType;
     tet.HttpResponseHeaderField fieldRangeHeader = req.info.find(tet.RfcTable.HEADER_FIELD_RANGE);
@@ -172,9 +172,9 @@ class HetiHttpServerPlus {
 }
 
 class HetiHttpServerPlusResponseItem {
-  tet.HetiHttpServerRequest req;
+  tet.HttpServerRequest req;
 
-  HetiHttpServerPlusResponseItem(tet.HetiHttpServerRequest req) {
+  HetiHttpServerPlusResponseItem(tet.HttpServerRequest req) {
     this.req = req;
   }
 
