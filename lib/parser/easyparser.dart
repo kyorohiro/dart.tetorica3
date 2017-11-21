@@ -17,6 +17,9 @@ class EasyParser {
 
   EasyParser(ParserReader builder, {this.logon: false, int cacheSize: 256}) {
     _buffer = builder;
+    if(cacheSize < 256) {
+      cacheSize = 256;
+    }
     _cache = new MemoryBuffer(cacheSize);
   }
 
@@ -202,13 +205,8 @@ class EasyParser {
   }
 
   Future<String> getStringWithByteLength(int length) async {
-    List<int> va = null;
     int i = index;
-    if (_cache.rawbuffer8.length > length) {
-      va = await _buffer.getBytes(index, length, out: _cache.rawbuffer8);
-    } else {
-      va = await _buffer.getBytes(index, length);
-    }
+    List<int> va = await getBytes(length);
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -218,7 +216,10 @@ class EasyParser {
 
 
   Future<int> readLong(ByteOrderType byteorder) async {
-    int i = await _buffer.waitByBuffered(index, 8);
+    int i = index;
+    if(_buffer.currentSize < index+8) {
+      i = await _buffer.waitByBuffered(index, 8);
+    }
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -227,7 +228,10 @@ class EasyParser {
   }
 
   Future<int> readInt(ByteOrderType byteorder) async {
-    int i = await _buffer.waitByBuffered(index, 4);
+    int i = index;
+    if(_buffer.currentSize < index+4) {
+      i = await _buffer.waitByBuffered(index, 4);
+    }
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -236,7 +240,10 @@ class EasyParser {
   }
 
   Future<int> readShort(ByteOrderType byteorder) async {
-    int i = await _buffer.waitByBuffered(index, 2);
+    int i = index;
+    if(_buffer.currentSize < index+2) {
+      i = await _buffer.waitByBuffered(index, 2);
+    }
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -245,7 +252,10 @@ class EasyParser {
   }
 
   Future<int> readByte() async {
-    int i = await _buffer.waitByBuffered(index, 1);
+    int i = index;
+    if(_buffer.currentSize < index+1) {
+      i = await _buffer.waitByBuffered(index, 1);
+    }
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
