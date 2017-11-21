@@ -10,7 +10,7 @@ import 'net/tmp/rfctable.dart';
 
 part 'http/httpclient.dart';
 //part '../example/httpclient/httpclient.dart';
-part 'http/httpresponse.dart';
+part 'http/httpparser.dart';
 
 part 'http/httpserver.dart';
 //part 'http/oauthclient.dart';
