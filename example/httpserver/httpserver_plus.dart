@@ -35,7 +35,6 @@ class HetiHttpServerPlus {
   }
 
   Future<HetiHttpServerPlus> startServer() async {
-    //print("startServer");
     _localPort = basePort;
     if (_server != null) {
       throw("server null");//completer.completeError({});
