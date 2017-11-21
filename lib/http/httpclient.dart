@@ -84,7 +84,7 @@ class HttpClient {
 
   Future<HttpClientHead> getHead() async {
     EasyParser parser = new EasyParser(socket.buffer);
-    return HetiHttpResponse.decodeHttpMessage(parser);
+    return HetiHttpResponse.decodeHttpHead(parser);
   }
 
   Future<ParserReader> getBodyAsReader(HttpClientHead message, {isLoadBody:true}) async {

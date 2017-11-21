@@ -5,16 +5,23 @@ class HetiHttpResponse {
   static List<int> PATH = convert.UTF8.encode(RfcTable.RFC3986_PCHAR_AS_STRING + "/");
   static List<int> QUERY = convert.UTF8.encode(RfcTable.RFC3986_RESERVED_AS_STRING + RfcTable.RFC3986_UNRESERVED_AS_STRING);
 
-  static Future<HttpClientHead> decodeHttpMessage(EasyParser parser) async {
-    HttpClientHead result = new HttpClientHead();
+
+  //
+  // head := line headfield
+  //
+  static Future<HttpClientHead> decodeHttpHead(EasyParser parser) async {
     HetiHttpResponseStatusLine line = await decodeStatusline(parser);
     List<HttpResponseHeaderField> httpfields = await decodeHeaderFields(parser);
+    HttpClientHead result = new HttpClientHead();
     result.line = line;
     result.headerField = httpfields;
     result.index = parser.index;
     return result;
   }
 
+  //
+  // headerfields := *(headerfiled crlf)
+  //
   static Future<List<HttpResponseHeaderField>> decodeHeaderFields(EasyParser parser) async {
     List<HttpResponseHeaderField> result = new List();
     while (true) {
@@ -29,6 +36,9 @@ class HetiHttpResponse {
     return result;
   }
 
+  //
+  // headfield := name ":" (OWS) value crlf
+  //
   static Future<HttpResponseHeaderField> decodeHeaderField(EasyParser parser) async {
     HttpResponseHeaderField result = new HttpResponseHeaderField();
     result.fieldName = await decodeFieldName(parser);
@@ -40,13 +50,11 @@ class HetiHttpResponse {
   }
 
   static Future<String> decodeFieldName(EasyParser parser) async {
-//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
     List<int> v = await parser.matchBytesFromBytes(RfcTable.TCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
   static Future<String> decodeFieldValue(EasyParser parser) async {
-    //List<int> v = await parser.nextBytePatternByUnmatch(new FieldValueMatcher());
     List<int> v = await parser.matchBytesFromMatche((int target) {
         if (target == 0x0D || target == 0x0A) {
           return false;
