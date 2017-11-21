@@ -17,8 +17,8 @@ main(List<String> args) async {
   //
   // args
   arg.ArgParser parser = new arg.ArgParser();
-  parser.addFlag("retry", abbr: "r");
-  parser.addFlag("continue", abbr: "c");
+//  parser.addFlag("retry", abbr: "r");
+//  parser.addFlag("continue", abbr: "c");
   parser.addOption("header", abbr: "h", allowMultiple: true);
   parser.addOption("data", abbr: "d");
   parser.addOption("output", abbr: "o", defaultsTo: "");
@@ -29,8 +29,9 @@ main(List<String> args) async {
   arg.ArgResults parserResult = parser.parse(args);
   bool verbose = parserResult["verbose"];
   String output = parserResult["output"];
-  String addr = parserResult.rest[0];
   String action = parserResult["action"];
+  String addr = parserResult.rest[0];
+
   tet.HttpUrl httpUrl = await tet.HttpUrl.decodeUrl(addr);
   String host = httpUrl.host;
   bool useSecure = (httpUrl.scheme == "http"?false:true);
