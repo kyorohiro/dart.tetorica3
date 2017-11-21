@@ -143,23 +143,22 @@ class HetiHttpServerPlus {
   }
 
 
-  Future<tet.HetiHttpServer> _retryBind() {
+  Future<tet.HetiHttpServer> _retryBind() async {
     Completer<tet.HetiHttpServer> completer = new Completer();
     int portMax = _localPort + numOfRetry;
-    bindFunc() {
-      tet.HetiHttpServer.bind(_socketBuilder, localIP, _localPort).then((tet.HetiHttpServer server) {
-        completer.complete(server);
-      }).catchError((e) {
+    do {
+      try {
+        tet.HetiHttpServer server = await tet.HetiHttpServer.bind(_socketBuilder, localIP, _localPort);
+        return server;
+      } catch(e) {
         _localPort++;
         if (_localPort < portMax) {
-          bindFunc();
+          continue;
         } else {
-          completer.completeError(e);
+          throw e;
         }
-      });
-    }
-    bindFunc();
-    return completer.future;
+      }
+    } while(true);
   }
 
 }
