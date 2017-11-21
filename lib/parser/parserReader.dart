@@ -6,7 +6,7 @@ abstract class ParserReader implements DataReader {
   FutureOr<int> waitByBuffered(int index, int length);
   FutureOr<List<int>> getBytes(
       int index, int length); //, {List<int> out: null});
-  Future<int> readBytes(int index, int length, List<int> buffer);
+  FutureOr<int> readBytes(int index, int length, List<int> buffer);
   Future<int> getLength();
 
   // buffer

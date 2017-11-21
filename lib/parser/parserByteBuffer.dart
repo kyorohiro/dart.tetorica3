@@ -41,13 +41,24 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
   }
 
-  Future<int> readBytes(int index, int length, List<int> buffer) async {
+  FutureOr<int> readBytes(int index, int length, List<int> buffer) {
     if(length == 0) {
       return 0;
     }
     if(!cached(index, length)) {
+      return _readBytes_00(index, length, buffer);
+    }
+    return _readBytes_01(index, length, buffer);
+  }
+
+  Future<int> _readBytes_00(int index, int length, List<int> buffer) async {
+    if(!cached(index, length)) {
       await waitByBuffered(index, length);
     }
+    return _readBytes_01(index, length, buffer);
+  }
+
+  int _readBytes_01(int index, int length, List<int> buffer)  {
     int len = currentSize - index;
     len = (len > length ? length : len);
     for (int i = 0; i < len; i++) {
@@ -55,7 +66,6 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     return len;
   }
-
   //
   //
   FutureOr<List<int>> getBytes(int index, int length) {
