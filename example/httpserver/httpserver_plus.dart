@@ -8,11 +8,14 @@ import 'package:tetorica/net/tmp/rfctable.dart' as tet;
 import 'package:tetorica/http.dart' as tet;
 
 class HetiHttpServerPlus {
-  String bindIP = "0.0.0.0";
-  int basePort = 18085;
+  String _bindIP = "0.0.0.0";
+  String get bindIP => _bindIP;
+  int _basePort = 18085;
+  int get basePort => _basePort;
   int _localPort = 18085;
-  int numOfRetry = 5;
   int get localPort => _localPort;
+  int _numOfRetry = 5;
+  int get numOfRetry => _numOfRetry;
 
   tet.HetiHttpServer _server = null;
   tet.TetSocketBuilder _socketBuilder = null;
@@ -22,8 +25,11 @@ class HetiHttpServerPlus {
   StreamController<HetiHttpServerPlusResponseItem> _onResponse = new StreamController();
   Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
-  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder, {this.basePort:18085, this.bindIP:"0.0.0.0", this.numOfRetry:1}) {
-    _socketBuilder = socketBuilder;
+  HetiHttpServerPlus(tet.TetSocketBuilder socketBuilder, {int basePort:18085, String bindIP:"0.0.0.0", int numOfRetry:1}) {
+    this._numOfRetry = numOfRetry;
+    this._basePort = basePort;
+    this._bindIP = bindIP;
+    this._socketBuilder = socketBuilder;
   }
 
   void stopServer() {
@@ -35,10 +41,10 @@ class HetiHttpServerPlus {
   }
 
   Future<HetiHttpServerPlus> startServer({int basePort:null, String bindIP:null, int numOfRetry:null}) async {
-    this.basePort = (basePort == null?this.basePort:basePort);
-    this.bindIP = (bindIP == null?this.bindIP:bindIP);
-    this.numOfRetry = (numOfRetry == null?this.numOfRetry:numOfRetry);
-    _localPort = this.basePort;
+    this._basePort  = (basePort == null? this._basePort :basePort);
+    this._bindIP = (bindIP == null?this._bindIP:bindIP);
+    this._numOfRetry = (numOfRetry == null?this._numOfRetry:numOfRetry);
+    _localPort =  this._basePort;
     if (_server != null) {
       throw("server null");//completer.completeError({});
     }
@@ -147,7 +153,7 @@ class HetiHttpServerPlus {
 
 
   Future<tet.HetiHttpServer> _retryBind() async {
-    int portMax = _localPort + numOfRetry;
+    int portMax = _localPort + _numOfRetry;
     do {
       try {
         tet.HetiHttpServer server = await tet.HetiHttpServer.bind(_socketBuilder, bindIP, _localPort);
