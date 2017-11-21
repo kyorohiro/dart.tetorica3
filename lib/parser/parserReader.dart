@@ -1,11 +1,11 @@
 part of hetimaparsr;
 
 abstract class ParserReader implements DataReader {
-
   //
   // async
   FutureOr<int> waitByBuffered(int index, int length);
-  Future<List<int>> getBytes(int index, int length);//, {List<int> out: null});
+  FutureOr<List<int>> getBytes(
+      int index, int length); //, {List<int> out: null});
   Future<int> readBytes(int index, int length, List<int> buffer);
   Future<int> getLength();
 
@@ -25,27 +25,25 @@ abstract class ParserReader implements DataReader {
   // helper
   Future<List<int>> getAllBytes({bool allowMalformed: true});
   Future<String> getAllString({bool allowMalformed: true});
-
 }
 
-abstract class ParserBuffer implements ParserReader, ParserAppender {
-}
+abstract class ParserBuffer implements ParserReader, ParserAppender {}
+
 //typedef bool ParserAppenderOnAddBytes(List<int> v);
 abstract class ParserAppender {
   void updatedBytes();
-  void addByte(int v,{bool autoUpdate = true});
-  void addBytes(List<int> buffer, {int index = 0, int length = -1, bool autoUpdate = true});
+  void addByte(int v, {bool autoUpdate = true});
+  void addBytes(List<int> buffer,
+      {int index = 0, int length = -1, bool autoUpdate = true});
   //void setOnAddBytes(ParserAppenderOnAddBytes onAddBytes);
- // void addDummyBytes(int length);
+  // void addDummyBytes(int length);
 }
 
-
 abstract class ParserReaderBase extends ParserReader {
-
   //
   // need override
   FutureOr<int> waitByBuffered(int index, int length);
-  Future<List<int>> getBytes(int index, int length);
+  FutureOr<List<int>> getBytes(int index, int length);
   Future<int> getLength();
 
   // buffer
@@ -70,10 +68,11 @@ abstract class ParserReaderBase extends ParserReader {
     await loadCompletedCompleter.future;
     return this;
   }
+
   //
   //
   Future<List<int>> getAllBytes({bool allowMalformed: true}) async {
-    if(_loadCompleted == false) {
+    if (_loadCompleted == false) {
       await loadCompletedCompleter.future;
     }
     int length = await getLength();
@@ -81,11 +80,10 @@ abstract class ParserReaderBase extends ParserReader {
   }
 
   Future<String> getAllString({bool allowMalformed: true}) async {
-    return convert.UTF8.decode(await getAllBytes(), allowMalformed: allowMalformed);
+    return convert.UTF8
+        .decode(await getAllBytes(), allowMalformed: allowMalformed);
   }
-
 
   bool _loadCompleted = false;
   Completer<bool> _loadCompletedCompleter = new Completer();
-
 }
