@@ -198,19 +198,25 @@ class EasyParser {
   // READ
   //
   FutureOr<List<int>> getBytes(int length) {
-    FutureOr<List<int>> v = _buffer.getBytes(index, length);
-    if(v is FutureOr<List<int>>) {
-      return _getBytes_00(v);
+    if(_buffer.currentSize < index+length) {
+      return getBytesSync(length);
     } else {
-      _index += (v as List<int>).length;
-      return v;
+      return getBytesAsync(length);
     }
   }
 
-  FutureOr<List<int>> _getBytes_00(FutureOr<List<int>> vf) async {
-    List<int> v = await vf;
-    _index += v.length;
-    return v;
+  List<int> getBytesSync(int length) {
+    List<int> out = new data.Uint8List(length >= 0 ? length : 0);
+    for (int i = 0; i < length; i++) {
+      out[i] = _buffer[index + i];
+    }
+    _index += out.length;
+    return out;
+  }
+
+  Future<List<int>> getBytesAsync(int length) async {
+    int newLength = await _buffer.waitByBuffered(index, length);
+    return getBytesSync(newLength);
   }
   //
 

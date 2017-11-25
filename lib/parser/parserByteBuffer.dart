@@ -30,7 +30,7 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
 
   FutureOr<int> waitByBuffered(int index, int length) {
     if (true == cached(index, length)) {
-      return index;
+      return length;
     } else {
       WaitByBufferedItem info = new WaitByBufferedItem();
       info.completerResultLength = length;
@@ -149,7 +149,6 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
         int len = f.completerResultLength;
         if(this.loadCompleted==true && _length < f.index+f.completerResultLength){
           len = _length -f.index;
-          f.completerResultLength;
         }
         f.completer.complete(len);
         if (removeList == null) {

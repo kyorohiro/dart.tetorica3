@@ -3,27 +3,26 @@ part of hetimaparsr;
 class ParserListBuffer extends ParserReaderBase implements ParserAppender, ParserReader, ParserBuffer {
   int _length = 0;
   int _clearedBuffer = 0;
-  List<WaitByBufferedItem> mGetByteFutreList = new List();
+  List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
   int get clearedBuffer =>  _clearedBuffer;
   List<List<int>> buffers = [];
 
   ParserListBuffer() {}
 
-  bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
+  bool cached(int index, int length) => (this.loadCompleted == true || index + length <= _length);
 
 
   FutureOr<int> waitByBuffered(int index, int length) {
-    if (false == cached(index, length)) {
+    if (true == cached(index, length)) {
+      return length;
+    } else {
       WaitByBufferedItem info = new WaitByBufferedItem();
       info.completerResultLength = length;
       info.index = index;
       info.completer = new Completer();
-      mGetByteFutreList.add(info);
+      mWaitByBufferedItemList.add(info);
       return info.completer.future;
-    } else {
-      return index;
     }
-
   }
 
   //
@@ -140,14 +139,18 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
   void set loadCompleted(bool v) {
     super.loadCompleted = true;
     updatedBytes();
-    mGetByteFutreList.clear();
+    mWaitByBufferedItemList.clear();
   }
 
   void updatedBytes() {
     var removeList = null;
-    for (WaitByBufferedItem f in mGetByteFutreList) {
+    for (WaitByBufferedItem f in mWaitByBufferedItemList) {
       if (true == cached(f.index, f.completerResultLength)) {
-        f.completer.complete(f.index);
+        int len = f.completerResultLength;
+        if(this.loadCompleted==true && _length < f.index+f.completerResultLength){
+          len = _length -f.index;
+        }
+        f.completer.complete(len);
         if (removeList == null) {
           removeList = [];
         }
@@ -156,7 +159,7 @@ class ParserListBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
     if (removeList != null) {
       for (WaitByBufferedItem f in removeList) {
-        mGetByteFutreList.remove(f);
+        mWaitByBufferedItemList.remove(f);
       }
     }
   }
