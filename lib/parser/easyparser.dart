@@ -283,12 +283,17 @@ class EasyParser {
   //
   FutureOr<int> readByte() {
     if(_buffer.currentSize < index+1) {
-      return _readByteF();
+      return readByteAsync();
+    } else {
+      return readByteSync();
     }
+  }
+
+  int readByteSync() {
     return _buffer[_index++];
   }
 
-  Future<int> _readByteF() async {
+  Future<int> readByteAsync() async {
     int i = await _buffer.waitByBuffered(index, 1);
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
