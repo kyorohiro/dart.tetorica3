@@ -26,18 +26,18 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     }
   }
 
-  bool cached(int index, int length) => (this.loadCompleted == true || index + length - 1 < _length);
+  bool cached(int index, int length) => (this.loadCompleted == true || index + length <= _length);
 
   FutureOr<int> waitByBuffered(int index, int length) {
-    if (false == cached(index, length)) {
+    if (true == cached(index, length)) {
+      return index;
+    } else {
       WaitByBufferedItem info = new WaitByBufferedItem();
       info.completerResultLength = length;
       info.index = index;
       info.completer = new Completer();
       mWaitByBufferedItemList.add(info);
       return info.completer.future;
-    } else {
-      return index;
     }
   }
 
@@ -146,7 +146,12 @@ class ParserByteBuffer extends ParserReaderBase implements ParserAppender, Parse
     var removeList = null;
     for (WaitByBufferedItem f in mWaitByBufferedItemList) {
       if (true == cached(f.index, f.completerResultLength)) {
-        f.completer.complete(f.index);
+        int len = f.completerResultLength;
+        if(this.loadCompleted==true && _length < f.index+f.completerResultLength){
+          len = _length -f.index;
+          f.completerResultLength;
+        }
+        f.completer.complete(len);
         if (removeList == null) {
           removeList = [];
         }
