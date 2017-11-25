@@ -42,7 +42,7 @@ abstract class ParserAppender {
 abstract class ParserReaderBase extends ParserReader {
   //
   // need override
-  FutureOr<int> waitByBuffered(int index, int length);
+  //FutureOr<int> waitByBuffered(int index, int length);
   FutureOr<List<int>> getBytes(int index, int length);
   Future<int> getLength();
 
@@ -86,4 +86,44 @@ abstract class ParserReaderBase extends ParserReader {
 
   bool _loadCompleted = false;
   Completer<bool> _loadCompletedCompleter = new Completer();
+  //
+  //
+  //
+  List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
+  bool cached(int index, int length) => (this.loadCompleted == true || index + length <= currentSize);
+
+  FutureOr<int> waitByBuffered(int index, int length) {
+    if (true == cached(index, length)) {
+      return length;
+    } else {
+      WaitByBufferedItem info = new WaitByBufferedItem();
+      info.completerResultLength = length;
+      info.index = index;
+      info.completer = new Completer();
+      mWaitByBufferedItemList.add(info);
+      return info.completer.future;
+    }
+  }
+
+  void updatedBytes() {
+    var removeList = null;
+    for (WaitByBufferedItem f in mWaitByBufferedItemList) {
+      if (true == cached(f.index, f.completerResultLength)) {
+        int len = f.completerResultLength;
+        if(this.loadCompleted==true && currentSize < f.index+f.completerResultLength){
+          len = currentSize -f.index;
+        }
+        f.completer.complete(len);
+        if (removeList == null) {
+          removeList = [];
+        }
+        removeList.add(f);
+      }
+    }
+    if (removeList != null) {
+      for (WaitByBufferedItem f in removeList) {
+        mWaitByBufferedItemList.remove(f);
+      }
+    }
+  }
 }
