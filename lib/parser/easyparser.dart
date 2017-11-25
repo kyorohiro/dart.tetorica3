@@ -228,19 +228,23 @@ class EasyParser {
   //
   FutureOr<int> readLong(ByteOrderType byteorder) async {
     if(_buffer.currentSize < index+8) {
-       return _readLongF(byteorder);
+       return readLongAsync(byteorder);
+    } else {
+      return readLongSync(byteorder);
     }
+  }
+
+  int readLongSync(ByteOrderType byteorder) {
     _index += 8;
     return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> _readLongF(ByteOrderType byteorder) async {
+  Future<int> readLongAsync(ByteOrderType byteorder) async {
     int i = await _buffer.waitByBuffered(index, 8);
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
-    _index += 8;
-    return ByteOrder.parseLong(_buffer, 0, byteorder);
+    return readLongSync(byteorder);
   }
 
   //
