@@ -262,19 +262,25 @@ class EasyParser {
   }
 
   //
+  //
   FutureOr<int> readShort(ByteOrderType byteorder) {
     if(_buffer.currentSize < index+2) {
-      return _readShortF(byteorder);
+      return readShortAsync(byteorder);
+    } else {
+      return readShortSync(byteorder);
+    }
+  }
+
+  FutureOr<int> readShortAsync(ByteOrderType byteorder) async {
+    int i = await _buffer.waitByBuffered(index, 2);
+    if (i + 2 > _buffer.currentSize) {
+      throw (logon == false ? _myException : new Exception());
     }
     _index += 2;
     return ByteOrder.parseShort(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> _readShortF(ByteOrderType byteorder) async {
-    int i = await _buffer.waitByBuffered(index, 2);
-    if (i + 2 > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+  FutureOr<int> readShortSync(ByteOrderType byteorder) {
     _index += 2;
     return ByteOrder.parseShort(_buffer, 0, byteorder);
   }
