@@ -244,21 +244,26 @@ class EasyParser {
   }
 
   //
+  //
   FutureOr<int> readInt(ByteOrderType byteorder) {
     if(_buffer.currentSize < index+4) {
-      return _readIntF(byteorder);
+      return readIntAsync(byteorder);
+    } else {
+      return readIntSync(byteorder);
     }
+  }
+
+  int readIntSync(ByteOrderType byteorder) {
     _index += 4;
     return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
-  FutureOr<int> _readIntF(ByteOrderType byteorder) async {
+  Future<int> readIntAsync(ByteOrderType byteorder) async {
     int i = await _buffer.waitByBuffered(index, 4);
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
-    _index += 4;
-    return ByteOrder.parseInt(_buffer, 0, byteorder);
+    return readIntSync(byteorder);
   }
 
   //
@@ -271,18 +276,18 @@ class EasyParser {
     }
   }
 
-  FutureOr<int> readShortAsync(ByteOrderType byteorder) async {
+  int readShortSync(ByteOrderType byteorder) {
+    _index += 2;
+    return ByteOrder.parseShort(_buffer, 0, byteorder);
+  }
+
+  Future<int> readShortAsync(ByteOrderType byteorder) async {
     int i = await _buffer.waitByBuffered(index, 2);
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
     _index += 2;
-    return ByteOrder.parseShort(_buffer, 0, byteorder);
-  }
-
-  FutureOr<int> readShortSync(ByteOrderType byteorder) {
-    _index += 2;
-    return ByteOrder.parseShort(_buffer, 0, byteorder);
+    return readShortSync(byteorder);
   }
 
   //
@@ -304,8 +309,7 @@ class EasyParser {
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
-    _index += 1;
-    return _buffer[i];
+    return  readByteSync();
   }
 }
 
