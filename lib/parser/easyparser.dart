@@ -108,6 +108,8 @@ class EasyParser {
     }
   }
 
+  //
+  //
   FutureOr<String> nextStringWithUpperLowerCase(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
     await waitByBuffered(index, encoded.length, checkLength: true);
