@@ -110,7 +110,7 @@ class EasyParser {
 
   //
   //
-  FutureOr<List<int>> nextStringWithUpperLowerCase(List<int> encoded ) async {
+  FutureOr<List<int>> nextStringWithUpperLowerCase(List<int> encoded ) {
     if(_buffer.currentSize >= index+encoded.length) {
       return nextStringWithUpperLowerCaseSync(encoded);
     } else {
