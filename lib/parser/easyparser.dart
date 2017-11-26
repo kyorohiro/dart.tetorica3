@@ -218,11 +218,22 @@ class EasyParser {
     int newLength = await _buffer.waitByBuffered(index, length);
     return getBytesSync(newLength);
   }
-  //
 
-  FutureOr<String> getStringWithByteLength(int length) async {
+  //
+  //
+  //
+  
+  FutureOr<String> getStringWithByteLength(int length) {
+    if(_buffer.currentSize < index+length) {
+      return getStringWithByteLengthAsync(length);
+    } else {
+      return getStringWithByteLengthSync(length);
+    }
+  }
+
+  Future<String> getStringWithByteLengthAsync(int length) async {
     int i = index;
-    List<int> va = await getBytes(length);
+    List<int> va = await getBytesAsync(length);
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
@@ -230,7 +241,11 @@ class EasyParser {
     return _utfDecoder.convert(va, 0, length);
   }
 
-
+  String getStringWithByteLengthSync(int length) {
+    List<int> va = getBytesSync(length);
+    _index += length;
+    return _utfDecoder.convert(va, 0, length);
+  }
   //
   FutureOr<int> readLong(ByteOrderType byteorder) async {
     if(_buffer.currentSize < index+8) {
