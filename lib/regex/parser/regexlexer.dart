@@ -3,9 +3,7 @@ part of hetimaregex;
 class RegexLexer {
 
   Future<List<RegexToken>> scan(List<int> text) async {
-    Completer completer = new Completer();
-    heti.EasyParser parser =
-        new heti.EasyParser(new heti.ParserByteBuffer.fromList(text, true));
+    heti.EasyParser parser = new heti.EasyParser(new heti.ParserByteBuffer.fromList(text, true));
 
     List<RegexToken> tokens = [];
       do {
@@ -36,6 +34,5 @@ class RegexLexer {
           return tokens;
         }
       }while(true);
-    return completer.future;
   }
 }
