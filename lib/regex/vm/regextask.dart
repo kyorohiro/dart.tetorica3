@@ -40,8 +40,8 @@ class RegexTask {
     }
   }
 
-  async.Future<List<int>> executeNextCommand(RegexVM vm) {
-    async.Completer<List<int>> completer = new async.Completer();
+  Future<List<int>> executeNextCommand(RegexVM vm) {
+    Completer<List<int>> completer = new Completer();
     if (_nextCommandLocation >= vm._commands.length) {
       completer.completeError(new Exception(""));
       return completer.future;
@@ -55,8 +55,8 @@ class RegexTask {
     return completer.future;
   }
 
-  async.Future<List<List<int>>> lookingAt(RegexVM vm) {
-    async.Completer<List<List<int>>> completer = new async.Completer();
+  Future<List<List<int>>> lookingAt(RegexVM vm) {
+    Completer<List<List<int>>> completer = new Completer();
     loop() {
       return executeNextCommand(vm).then((List<int> matchedData) {
         tryAddMemory(matchedData);

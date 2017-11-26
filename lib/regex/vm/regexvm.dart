@@ -54,13 +54,13 @@ class RegexVM {
     }
   }
 
-  async.Future<List<List<int>>> lookingAt(List<int> text) {
+  Future<List<List<int>>> lookingAt(List<int> text) {
     heti.EasyParser parser = new heti.EasyParser(new heti.ParserByteBuffer.fromList(text, true));
     return lookingAtFromEasyParser(parser);
   }
 
-  async.Future<List<List<int>>> lookingAtFromEasyParser(heti.EasyParser parser) {
-    async.Completer completer = new async.Completer();
+  Future<List<List<int>>> lookingAtFromEasyParser(heti.EasyParser parser) {
+    Completer completer = new Completer();
     _tasks.add(new RegexTask.fromCommnadPos(0, parser));
 
     loop() {

@@ -2,8 +2,8 @@ part of hetimaregex;
 
 
 class RegexParser {
-  async.Future<RegexVM> compile(String source) {
-    async.Completer<RegexVM> completer = new async.Completer();
+  Future<RegexVM> compile(String source) {
+    Completer<RegexVM> completer = new Completer();
     RegexLexer lexer = new RegexLexer();
 
     lexer.scan(conv.UTF8.encode(source)).then((List<RegexToken> tokens) {

@@ -1,12 +1,12 @@
 part of hetimaregex;
 
 abstract class RegexCommand {
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser);
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser);
 }
 
 class MemoryStartCommand extends RegexCommand {
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     RegexTask currentTask = vm._currentTask;
     int index = currentTask._nextMemoryId;
     currentTask._nextMemoryId++;
@@ -23,8 +23,8 @@ class MemoryStartCommand extends RegexCommand {
 }
 
 class MemoryStopCommand extends RegexCommand {
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     RegexTask currentTask = vm._currentTask;
     currentTask._currentMemoryTargetId.removeLast();
     currentTask._nextCommandLocation++;
@@ -42,8 +42,8 @@ class MatchCommandNotification extends Error {
 }
 
 class MatchCommand extends RegexCommand {
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     c.completeError(new MatchCommandNotification(""));
     return c.future;
   }
@@ -64,8 +64,8 @@ class JumpTaskCommand extends RegexCommand {
     _pos1 = pos1;
   }
 
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     RegexTask currentTask = vm._currentTask;
     if (currentTask == null) {
       throw new Exception("");
@@ -96,8 +96,8 @@ class SplitTaskCommand extends RegexCommand {
     _pos2 = pos2;
   }
 
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     RegexTask currentTask = vm._currentTask;
     if (currentTask == null) {
       throw new Exception("");
@@ -122,8 +122,8 @@ class CharCommand extends RegexCommand {
     _expect = new List.from(v);
   }
 
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     int length = _expect.length;
     parser.push();
     parser.getBytes(length).then((List<int> v) {

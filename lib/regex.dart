@@ -4,7 +4,7 @@ import 'data.dart' as heti;
 import 'util.dart' as heti;
 import 'parser.dart' as heti;
 
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:convert' as conv;
 
 part 'regex/vm/regexvm.dart';

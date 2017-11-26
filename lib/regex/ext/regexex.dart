@@ -2,8 +2,8 @@ part of hetimaregex;
 
 class AllCharCommand extends RegexCommand {
   @override
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     parser.readByte().then((int v) {
       vm._currentTask._nextCommandLocation += 1;
       c.complete([v]);
@@ -19,8 +19,8 @@ class AllCharCommand extends RegexCommand {
 
 class EmptyCommand extends RegexCommand {
   @override
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     vm._currentTask._nextCommandLocation += 1;
     c.complete([]);
     return c.future;
@@ -37,8 +37,8 @@ class MatchByteCommand extends RegexCommand {
   }
 
   @override
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     parser.readByte().then((int v) {
       for(int d in target) {
         if(d == v) {
@@ -62,8 +62,8 @@ class UnmatchByteCommand extends RegexCommand {
   }
 
   @override
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     parser.readByte().then((int v) {
       for(int d in target) {
         if(d == v) {
@@ -86,8 +86,8 @@ class UncharacterCommand extends RegexCommand {
   }
 
   @override
-  async.Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
+    Completer<List<int>> c = new Completer();
     int length = without.length;
     parser.push();
     parser.getBytes(length).then((List<int> v) {
