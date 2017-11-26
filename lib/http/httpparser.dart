@@ -163,7 +163,6 @@ class HetiHttpResponse {
 
   //
   static Future<int> decodeChunkedSize(EasyParser parser) async {
-    //List<int> n = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG));
     List<int> n = await parser.matchBytesFromBytes(RfcTable.HEXDIG,expectedMatcherResult: true);
     if (n.length == 0) {
       throw new EasyParseError();
@@ -205,14 +204,12 @@ class HetiHttpResponse {
 
   // metod = token = 1*tchar
   static Future<String> decodeMethod(EasyParser parser) async {
-    //List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
     List<int> v = await parser.matchBytesFromBytes(RfcTable.TCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
 
   // CHAR_STRING
   static Future<String> decodeRequestTarget(EasyParser parser) async {
-   // List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
     List<int> v = await parser.matchBytesFromBytes(RfcTable.VCHAR,expectedMatcherResult: true);
     return convert.UTF8.decode(v);
   }
@@ -224,7 +221,6 @@ class HetiHttpResponse {
   static Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) async {
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
     await parser.nextString("bytes=");
-//    List<int> startAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
     List<int> startAsList =  await parser.matchBytesFromBytes(RfcTable.DIGIT,expectedMatcherResult: true);
 
     ret.start = 0;
@@ -232,7 +228,6 @@ class HetiHttpResponse {
       ret.start = (d - 48) + ret.start * 10;
     }
     await parser.nextString("-");
-    //List<int> endAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
     List<int> endAsList = await parser.matchBytesFromBytes(RfcTable.DIGIT,expectedMatcherResult: true);
     if (endAsList.length == 0) {
       ret.end = -1;
@@ -277,7 +272,6 @@ class HetiHttpRequestHead {
 
   HttpResponseHeaderField find(String fieldName) {
     for (HttpResponseHeaderField field in headerField) {
-      //  print(""+field.fieldName.toLowerCase() +"== "+fieldName.toLowerCase());
       if (field != null && field.fieldName.toLowerCase() == fieldName.toLowerCase()) {
         return field;
       }
@@ -297,7 +291,6 @@ class HttpClientHead {
 
   HttpResponseHeaderField find(String fieldName) {
     for (HttpResponseHeaderField field in headerField) {
-      //  print(""+field.fieldName.toLowerCase() +"== "+fieldName.toLowerCase());
       if (field != null && field.fieldName.toLowerCase() == fieldName.toLowerCase()) {
         return field;
       }
