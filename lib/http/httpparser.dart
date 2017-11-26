@@ -120,15 +120,23 @@ class HetiHttpResponse {
     return result;
   }
 
-  static Future<String> decodeOWS(EasyParser parser) async {
-    List<int> v = await parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
-    return convert.UTF8.decode(v);
+  static FutureOr<HetiHttpResponseStatusLine> decodeStatuslineAsync (EasyParser parser) async {
+    HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
+    result.version = await decodeHttpVersion(parser);
+    await decodeSP(parser);
+    result.statusCode = int.parse(await decodeStatusCode(parser));
+    await decodeSP(parser);
+    result.statusPhrase = await decodeReasonPhrase(parser);
+    await decodeCrlf(parser);
+    return result;
   }
 
-  static Future<String> decodeSP(EasyParser parser) async {
-//    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
-    List<int> v = await parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
-    return convert.UTF8.decode(v);
+  static FutureOr<List<int>> decodeOWS(EasyParser parser) {
+    return parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
+  }
+
+  static FutureOr<List<int>> decodeSP(EasyParser parser) {
+    return parser.matchBytesFromBytes(RfcTable.OWS,expectedMatcherResult: true);
   }
 
   //

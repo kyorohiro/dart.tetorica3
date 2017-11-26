@@ -100,9 +100,9 @@ class EasyParser {
   }
 
   FutureOr<String> nextString(String value) {
-    FutureOr<String> retFOr = nextBytes(convert.UTF8.encode(value));
-    if(retFOr is Future<String>) {
-      return (retFOr as Future<String>).then((String v) {return v;});
+    FutureOr<List<int>> retFOr = nextBytes(convert.UTF8.encode(value));
+    if(retFOr is Future<List<int>>) {
+      return (retFOr as Future<List<int>>).then((List<int> v) {return value;});
     } else {
       return value;
     }

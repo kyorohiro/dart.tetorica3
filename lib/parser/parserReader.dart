@@ -91,6 +91,7 @@ abstract class ParserReaderBase extends ParserReader {
   //
   List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
 }
+
 abstract class ParserReaderBaseBase extends ParserReaderBase {
   //
   List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
