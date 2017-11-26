@@ -99,9 +99,13 @@ class EasyParser {
     return encoded;
   }
 
-  FutureOr<String> nextString(String value) async {
-    await nextBytes(convert.UTF8.encode(value));
-    return value;
+  FutureOr<String> nextString(String value) {
+    FutureOr<String> retFOr = nextBytes(convert.UTF8.encode(value));
+    if(retFOr is Future<String>) {
+      return (retFOr as Future<String>).then((String v) {return v;});
+    } else {
+      return value;
+    }
   }
 
   FutureOr<String> nextStringWithUpperLowerCase(String value) async {
