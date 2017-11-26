@@ -214,8 +214,11 @@ class EasyParser {
     return out;
   }
 
-  Future<List<int>> getBytesAsync(int length) async {
+  Future<List<int>> getBytesAsync(int length, {bool checkLength:false}) async {
     int newLength = await _buffer.waitByBuffered(index, length);
+    if (checkLength == true && index + length > _buffer.currentSize) {
+      throw (logon == false ? _myException : new Exception());
+    }
     return getBytesSync(newLength);
   }
 
@@ -232,11 +235,7 @@ class EasyParser {
   }
 
   Future<String> getStringWithByteLengthAsync(int length) async {
-    int i = index;
-    List<int> va = await getBytesAsync(length);
-    if (i + length > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+    List<int> va = await getBytesAsync(length, checkLength: true);
     _index += length;
     return _utfDecoder.convert(va, 0, length);
   }
