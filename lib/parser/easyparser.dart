@@ -206,50 +206,54 @@ class EasyParser {
   //
   // GET
   //
-  FutureOr<List<int>> getBytes(int length) {
+  FutureOr<List<int>> getBytes(int length, {moveOffset:true}) {
     if(_buffer.currentSize < index+length) {
-      return getBytesSync(length);
+      return getBytesSync(length, moveOffset:moveOffset);
     } else {
-      return getBytesAsync(length);
+      return getBytesAsync(length, moveOffset:moveOffset);
     }
   }
 
-  List<int> getBytesSync(int length) {
+  List<int> getBytesSync(int length, {moveOffset:true}) {
     List<int> out = new data.Uint8List(length >= 0 ? length : 0);
     for (int i = 0; i < length; i++) {
       out[i] = _buffer[index + i];
     }
-    _index += out.length;
+    if(moveOffset) {
+      _index += out.length;
+    }
     return out;
   }
 
-  Future<List<int>> getBytesAsync(int length, {bool checkLength:false}) async {
+  Future<List<int>> getBytesAsync(int length, {bool checkLength:false, moveOffset:true}) async {
     int newLength = await waitByBuffered(index, length, checkLength:checkLength);
-    return getBytesSync(newLength);
+    return getBytesSync(newLength, moveOffset:moveOffset);
   }
 
   //
   // READ
   //
-  FutureOr<int> readBytes(int length, List<int> out, {int offset:0, bool checkLength:false}) {
+  FutureOr<int> readBytes(int length, List<int> out, {int offset:0, bool checkLength:false, moveOffset:true}) {
     if(_buffer.currentSize < index+length) {
-      return readBytesSync(length, out, offset: offset);
+      return readBytesSync(length, out, offset:offset, moveOffset: moveOffset);
     } else {
-      return readBytesAsync(length,out, offset:offset, checkLength: checkLength);
+      return readBytesAsync(length,out, offset:offset, checkLength: checkLength, moveOffset: moveOffset);
     }
   }
 
-  int readBytesSync(int length, List<int> out, {int offset:0}) {
+  int readBytesSync(int length, List<int> out, {int offset:0, moveOffset:true}) {
     for (int i = 0; i < length; i++) {
       out[offset+i] = _buffer[index + i];
     }
-    _index += length;
+    if(moveOffset) {
+      _index += length;
+    }
     return length;
   }
 
-  Future<int> readBytesAsync(int length, List<int> out,{int offset:0, bool checkLength:false}) async {
+  Future<int> readBytesAsync(int length, List<int> out,{int offset:0, bool checkLength:false, moveOffset:true}) async {
     int newLength = await waitByBuffered(index, length, checkLength:checkLength);
-    return readBytesSync(newLength, out, offset: offset);
+    return readBytesSync(newLength, out, offset: offset, moveOffset: moveOffset);
   }
 
   //
