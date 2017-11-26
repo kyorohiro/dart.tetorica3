@@ -8,7 +8,13 @@ class RegexLexer {
     List<RegexToken> tokens = [];
       do {
         try {
-          int v = await parser.readByte();
+          FutureOr<int> vFOr = parser.readByte();
+          int v = 0;
+          if(vFOr is Future<int>) {
+            v = await (vFOr as Future<int>);
+          } else {
+            v = (vFOr as int);
+          }
           switch (v) {
             case 0x2a: // *
               tokens.add(new RegexToken.fromChar(v, RegexToken.star));
