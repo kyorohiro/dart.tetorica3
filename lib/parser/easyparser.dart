@@ -159,9 +159,7 @@ class EasyParser {
     return encoded.length;
   }
 
-  FutureOr<int> checkString(String value) async {
-    return checkBytes(convert.UTF8.encode(value));
-  }
+  FutureOr<int> checkString(String value) => checkBytes(convert.UTF8.encode(value));
 
   FutureOr<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
     return checkBytesFromMatcher((int target){
@@ -174,13 +172,10 @@ class EasyParser {
     },expectedMatcherResult:expectedMatcherResult);
   }
 
-  FutureOr<int> checkBytesFromMatchBytes(List<int> encoded) async {
-    return checkBytesFromBytes(encoded, expectedMatcherResult:true);
-  }
+  FutureOr<int> checkBytesFromMatchBytes(List<int> encoded) => checkBytesFromBytes(encoded, expectedMatcherResult:true);
 
-  FutureOr<int> checkBytesFromUnmatchBytes(List<int> encoded) async {
-    return checkBytesFromBytes(encoded, expectedMatcherResult:false);
-  }
+  FutureOr<int> checkBytesFromUnmatchBytes(List<int> encoded) async => checkBytesFromBytes(encoded, expectedMatcherResult:false);
+
 
   FutureOr<int> checkBytesFromMatcher(EasyParserMatchFunc matcher, {bool expectedMatcherResult:true}) async {
     int nextByte = 0;
