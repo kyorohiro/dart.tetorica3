@@ -35,8 +35,11 @@ class EasyParser {
   int pop() => _stack.removeLast();
   int last()=>_stack.last;
 
+
   FutureOr<List<int>> peekBytes(int length) => _buffer.getBytes(index, length);
 
+  //
+  //
   FutureOr<int> moveOffset(int moveBytes) async {
     if(_buffer.currentSize < index+moveBytes) {
       return moveOffsetAsync(moveBytes);
@@ -56,7 +59,10 @@ class EasyParser {
     return index;
   }
 
-  FutureOr<int> waitByBuffered(int index, int length, {bool checkLength:false}) async {
+
+  //
+  //
+  Future<int> waitByBuffered(int index, int length, {bool checkLength:false}) async {
     int ret = await _buffer.waitByBuffered(index, length);
     if(checkLength) {
       if (index + length > _buffer.currentSize) {
@@ -69,17 +75,17 @@ class EasyParser {
   //
   // NEXT return length
   //
-  FutureOr<String> nextString(String value) async {
-    await nextBytes(convert.UTF8.encode(value));
-    return value;
-  }
-
   FutureOr<List<int>> nextBytes(List<int> encoded) async {
     if(0 == await checkBytes(encoded)){
       throw (logon == false ? _myException : new Exception());
     }
     _index +=encoded.length;
     return encoded;
+  }
+
+  FutureOr<String> nextString(String value) async {
+    await nextBytes(convert.UTF8.encode(value));
+    return value;
   }
 
   FutureOr<String> nextStringWithUpperLowerCase(String value) async {
@@ -130,10 +136,6 @@ class EasyParser {
   //
   // CHECK return length
   //
-  FutureOr<int> checkString(String value) async {
-    return checkBytes(convert.UTF8.encode(value));
-  }
-
   FutureOr<int> checkBytes(List<int> encoded) async {
     await _buffer.waitByBuffered(index, encoded.length);
     if (index + encoded.length > _buffer.currentSize) {
@@ -145,6 +147,10 @@ class EasyParser {
       }
     }
     return encoded.length;
+  }
+
+  FutureOr<int> checkString(String value) async {
+    return checkBytes(convert.UTF8.encode(value));
   }
 
   FutureOr<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
