@@ -225,26 +225,26 @@ class EasyParser {
   //
   //
   //
-  
-  FutureOr<String> getStringWithByteLength(int length) {
-    if(_buffer.currentSize < index+length) {
-      return getStringWithByteLengthAsync(length);
+  FutureOr<String> readSign(int byteLength) {
+    if(_buffer.currentSize < index+byteLength) {
+      return readSignAsync(byteLength);
     } else {
-      return getStringWithByteLengthSync(length);
+      return readSignSync(byteLength);
     }
   }
 
-  Future<String> getStringWithByteLengthAsync(int length) async {
-    List<int> va = await getBytesAsync(length, checkLength: true);
-    _index += length;
-    return _utfDecoder.convert(va, 0, length);
+  Future<String> readSignAsync(int byteLength) async {
+    List<int> va = await getBytesAsync(byteLength, checkLength: true);
+    _index += byteLength;
+    return _utfDecoder.convert(va, 0, byteLength);
   }
 
-  String getStringWithByteLengthSync(int length) {
-    List<int> va = getBytesSync(length);
-    _index += length;
-    return _utfDecoder.convert(va, 0, length);
+  String readSignSync(int byteLength) {
+    List<int> va = getBytesSync(byteLength);
+    _index += byteLength;
+    return _utfDecoder.convert(va, 0, byteLength);
   }
+
   //
   FutureOr<int> readLong(ByteOrderType byteorder) async {
     if(_buffer.currentSize < index+8) {

@@ -29,7 +29,7 @@ void main() {
       ParserByteBuffer b = new ParserByteBuffer();
       b.appendString("abc");
       EasyParser parser = new EasyParser(b);
-      String bb = await parser.getStringWithByteLength(2);
+      String bb = await parser.readSign(2);
       unit.expect(bb, "ab");
     }
   });
