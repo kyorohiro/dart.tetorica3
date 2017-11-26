@@ -110,10 +110,20 @@ class EasyParser {
 
   //
   //
-  FutureOr<String> nextStringWithUpperLowerCase(String value) async {
-    List<int> encoded = convert.UTF8.encode(value);
-    await waitByBuffered(index, encoded.length, checkLength: true);
+  FutureOr<List<int>> nextStringWithUpperLowerCase(List<int> encoded ) async {
+    if(_buffer.currentSize >= index+encoded.length) {
+      return nextStringWithUpperLowerCaseSync(encoded);
+    } else {
+      return nextStringWithUpperLowerCaseAsync(encoded);
+    }
+  }
 
+  FutureOr<List<int>> nextStringWithUpperLowerCaseAsync(List<int> encoded ) async {
+    await waitByBuffered(index, encoded.length, checkLength: true);
+    return nextStringWithUpperLowerCaseSync(encoded);
+  }
+
+  List<int> nextStringWithUpperLowerCaseSync(List<int> encoded ) {
     for (int j = 0; j < encoded.length; j++) {
       var v = encoded[j];
       if (65 <= v && v <= 90) {
@@ -133,10 +143,12 @@ class EasyParser {
       }
     }
     _index +=encoded.length;
-    return value;
+    return encoded;
   }
 
-  FutureOr<int> nextByteFromBytes(List<int> encoded) async {
+  //
+  //
+  FutureOr<int> nextByteFromBytes(List<int> encoded) {
     if(_buffer.currentSize >= index+encoded.length) {
       return nextByteFromBytesSync(encoded);
     } else {
