@@ -10,7 +10,7 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
       return length;
     } else {
       WaitByBufferedItem info = new WaitByBufferedItem();
-      info.completerResultLength = length;
+      info.length = length;
       info.index = index;
       info.completer = new Completer();
       mWaitByBufferedItemList.add(info);
@@ -21,9 +21,9 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
   void updatedBytes() {
     var removeList = null;
     for (WaitByBufferedItem f in mWaitByBufferedItemList) {
-      if (true == cached(f.index, f.completerResultLength)) {
-        int len = f.completerResultLength;
-        if(this.loadCompleted==true && currentSize < f.index+f.completerResultLength){
+      if (true == cached(f.index, f.length)) {
+        int len = f.length;
+        if(this.loadCompleted==true && currentSize < f.index+f.length){
           len = currentSize -f.index;
         }
         f.completer.complete(len);
@@ -102,6 +102,11 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
     return out;
   }
 
+}
 
 
+class WaitByBufferedItem {
+  int length = 0;
+  int index = 0;
+  Completer<int> completer = null;
 }

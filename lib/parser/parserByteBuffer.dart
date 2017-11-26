@@ -105,9 +105,3 @@ class ParserByteBuffer extends ParserReaderBaseBase implements ParserAppender, P
 
   String toText() => convert.UTF8.decode(toList());
 }
-
-class WaitByBufferedItem {
-  int completerResultLength = 0;
-  int index = 0;
-  Completer<int> completer = null;
-}

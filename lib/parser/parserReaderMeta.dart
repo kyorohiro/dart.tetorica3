@@ -36,7 +36,6 @@ class ParserReaderWithIndex extends ParserReaderBase {
 
   List<int> getAndUnusedBuffer() {
     throw "unsupported";
-//    return _base.getAndUnusedBuffer();
   }
 
   FutureOr<List<int>> getBytes(int index, int length, {List<int> out: null}){
