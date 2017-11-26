@@ -48,6 +48,15 @@ class EasyParser {
     return index;
   }
 
+  FutureOr<int> waitByBuffered(int index, int length, {bool checkLength:false}) async {
+    int ret = await _buffer.waitByBuffered(index, length);
+    if(checkLength) {
+      if (index + length > _buffer.currentSize) {
+        throw (logon == false ? _myException : new Exception());
+      }
+    }
+    return ret;
+  }
 
   //
   // NEXT return length
@@ -195,7 +204,7 @@ class EasyParser {
   }
 
   //
-  // READ
+  // GET
   //
   FutureOr<List<int>> getBytes(int length) {
     if(_buffer.currentSize < index+length) {
@@ -215,15 +224,12 @@ class EasyParser {
   }
 
   Future<List<int>> getBytesAsync(int length, {bool checkLength:false}) async {
-    int newLength = await _buffer.waitByBuffered(index, length);
-    if (checkLength == true && index + length > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+    int newLength = await waitByBuffered(index, length, checkLength:checkLength);
     return getBytesSync(newLength);
   }
 
   //
-  //
+  // READ
   //
   FutureOr<String> readSign(int byteLength) {
     if(_buffer.currentSize < index+byteLength) {
@@ -234,9 +240,8 @@ class EasyParser {
   }
 
   Future<String> readSignAsync(int byteLength) async {
-    List<int> va = await getBytesAsync(byteLength, checkLength: true);
-    _index += byteLength;
-    return _utfDecoder.convert(va, 0, byteLength);
+    await waitByBuffered(index, byteLength, checkLength: true);
+    return readSignSync(byteLength);
   }
 
   String readSignSync(int byteLength) {
@@ -260,10 +265,7 @@ class EasyParser {
   }
 
   Future<int> readLongAsync(ByteOrderType byteorder) async {
-    await _buffer.waitByBuffered(index, 8);
-    if (index + 8 > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+    await waitByBuffered(index, 8, checkLength: true);
     return readLongSync(byteorder);
   }
 
@@ -283,10 +285,7 @@ class EasyParser {
   }
 
   Future<int> readIntAsync(ByteOrderType byteorder) async {
-    await _buffer.waitByBuffered(index, 4);
-    if (index + 4 > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+    await waitByBuffered(index, 4, checkLength: true);
     return readIntSync(byteorder);
   }
 
@@ -306,11 +305,7 @@ class EasyParser {
   }
 
   Future<int> readShortAsync(ByteOrderType byteorder) async {
-    await _buffer.waitByBuffered(index, 2);
-    if (index + 2 > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
-    _index += 2;
+    await waitByBuffered(index, 2, checkLength: true);
     return readShortSync(byteorder);
   }
 
@@ -329,10 +324,7 @@ class EasyParser {
   }
 
   Future<int> readByteAsync() async {
-    await _buffer.waitByBuffered(index, 1);
-    if (index + 1 > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
-    }
+    await waitByBuffered(index, 1,checkLength: true);
     return  readByteSync();
   }
 }
