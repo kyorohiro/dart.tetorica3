@@ -163,7 +163,10 @@ class EasyParser {
   //
   FutureOr<int> checkBytesFromMatcher(EasyParserMatchFunc matcher, {bool expectedMatcherResult:true}) {
     int r = checkBytesFromMatcherSync(matcher, expectedMatcherResult:expectedMatcherResult);
-    if(r > 0) {
+    if (r == 0 && _buffer.currentSize > index) {
+      return r;
+    }
+    else if(r > 0) {
       return r;
     } else {
       return checkBytesFromMatcherAsync(matcher, expectedMatcherResult:expectedMatcherResult, length: -1*r);
@@ -213,9 +216,9 @@ class EasyParser {
 
   FutureOr<int> checkBytesFromMatchBytes(List<int> encoded) => checkBytesFromBytes(encoded, expectedMatcherResult:true);
 
-  FutureOr<int> checkBytesFromUnmatchBytes(List<int> encoded) async => checkBytesFromBytes(encoded, expectedMatcherResult:false);
+  FutureOr<int> checkBytesFromUnmatchBytes(List<int> encoded) => checkBytesFromBytes(encoded, expectedMatcherResult:false);
 
-  FutureOr<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) async {
+  FutureOr<int> checkBytesFromBytes(List<int> encoded,{bool expectedMatcherResult:true}) {
     return checkBytesFromMatcher((int target){
       for (int i = 0; i < encoded.length; i++) {
         if (target == encoded[i]) {
@@ -223,7 +226,7 @@ class EasyParser {
         }
       }
       return false;
-    },expectedMatcherResult:expectedMatcherResult);
+    }, expectedMatcherResult:expectedMatcherResult);
   }
 
   //
