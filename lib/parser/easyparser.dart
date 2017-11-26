@@ -272,81 +272,94 @@ class EasyParser {
   }
 
   //
-  FutureOr<int> readLong(ByteOrderType byteorder) async {
+  FutureOr<int> readLong(ByteOrderType byteorder, {moveOffset:true}) async {
     if(_buffer.currentSize < index+8) {
-       return readLongAsync(byteorder);
+      return readLongAsync(byteorder, moveOffset: moveOffset);
     } else {
-      return readLongSync(byteorder);
+      return readLongSync(byteorder, moveOffset: moveOffset);
     }
   }
 
-  int readLongSync(ByteOrderType byteorder) {
-    _index += 8;
-    return ByteOrder.parseLong(_buffer, 0, byteorder);
+  int readLongSync(ByteOrderType byteorder, {moveOffset:true}) {
+    int ret = ByteOrder.parseLong(_buffer, 0, byteorder);
+    if(moveOffset) {
+      _index += 8;
+    }
+    return ret;
   }
 
-  Future<int> readLongAsync(ByteOrderType byteorder) async {
+  Future<int> readLongAsync(ByteOrderType byteorder, {moveOffset:true}) async {
     await waitByBuffered(index, 8, checkLength: true);
-    return readLongSync(byteorder);
+    return readLongSync(byteorder, moveOffset: moveOffset);
   }
 
   //
   //
-  FutureOr<int> readInt(ByteOrderType byteorder) {
+  FutureOr<int> readInt(ByteOrderType byteorder, {moveOffset:true}) {
     if(_buffer.currentSize < index+4) {
-      return readIntAsync(byteorder);
+      return readIntAsync(byteorder, moveOffset: moveOffset);
     } else {
-      return readIntSync(byteorder);
+      return readIntSync(byteorder, moveOffset: moveOffset);
     }
   }
 
-  int readIntSync(ByteOrderType byteorder) {
-    _index += 4;
-    return ByteOrder.parseInt(_buffer, 0, byteorder);
+  int readIntSync(ByteOrderType byteorder, {moveOffset:true}) {
+    int ret = ByteOrder.parseInt(_buffer, 0, byteorder);
+    if(moveOffset) {
+      _index += 4;
+    }
+    return ret;
   }
 
-  Future<int> readIntAsync(ByteOrderType byteorder) async {
+  Future<int> readIntAsync(ByteOrderType byteorder, {moveOffset:true}) async {
     await waitByBuffered(index, 4, checkLength: true);
-    return readIntSync(byteorder);
+    return readIntSync(byteorder, moveOffset: moveOffset);
   }
 
   //
   //
-  FutureOr<int> readShort(ByteOrderType byteorder) {
+  FutureOr<int> readShort(ByteOrderType byteorder, {moveOffset:true}) {
     if(_buffer.currentSize < index+2) {
-      return readShortAsync(byteorder);
+      return readShortAsync(byteorder, moveOffset: moveOffset);
     } else {
-      return readShortSync(byteorder);
+      return readShortSync(byteorder, moveOffset: moveOffset);
     }
   }
 
-  int readShortSync(ByteOrderType byteorder) {
-    _index += 2;
-    return ByteOrder.parseShort(_buffer, 0, byteorder);
+  int readShortSync(ByteOrderType byteorder, {moveOffset:true}) {
+    int ret = ByteOrder.parseShort(_buffer, 0, byteorder);
+    if(moveOffset) {
+      _index += 2;
+    }
+    return ret;
   }
 
-  Future<int> readShortAsync(ByteOrderType byteorder) async {
+  Future<int> readShortAsync(ByteOrderType byteorder, {moveOffset:true}) async {
     await waitByBuffered(index, 2, checkLength: true);
-    return readShortSync(byteorder);
+    return readShortSync(byteorder, moveOffset: moveOffset);
   }
 
   //
   //
-  FutureOr<int> readByte() {
+  FutureOr<int> readByte({moveOffset:true}) {
     if(_buffer.currentSize < index+1) {
-      return readByteAsync();
+      return readByteAsync(moveOffset: moveOffset);
     } else {
-      return readByteSync();
+      return readByteSync(moveOffset: moveOffset);
     }
   }
 
-  int readByteSync() {
-    return _buffer[_index++];
+  int readByteSync({moveOffset:true}) {
+    int ret = _buffer[_index];
+    if(moveOffset) {
+      _index++;
+    }
+    return ret;
   }
 
-  Future<int> readByteAsync() async {
+  Future<int> readByteAsync({moveOffset:true}) async {
     await waitByBuffered(index, 1,checkLength: true);
-    return  readByteSync();
+    return  readByteSync(moveOffset: moveOffset);
   }
 }
 
