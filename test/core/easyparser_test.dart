@@ -75,6 +75,23 @@ void main() {
     }
   });
 
+
+  unit.test("readBytes", () async {
+    {
+      ParserByteBuffer b = new ParserByteBuffer();
+      b.addBytes([1,2,3,4,5,6]);
+      EasyParser parser = new EasyParser(b);
+      List<int> out = [0,0,0,0,0,0,0,0,0,0,0];
+      int b1 = await parser.readBytes(3, out, offset: 1);
+      unit.expect(b1, 3);
+      unit.expect(out.sublist(1,1+3),[1,2,3]);
+      int b2 = await parser.readBytes(3, out, offset: 2);
+      unit.expect(b2, 3);
+      print("${out} ${parser.index}");
+      unit.expect(out.sublist(2,2+3),[4,5,6]);
+    }
+  });
+
   unit.test("nextBuffer", () async {
     {
       ParserByteBuffer b = new ParserByteBuffer();
