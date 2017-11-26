@@ -35,16 +35,14 @@ class EasyParser {
   int pop() => _stack.removeLast();
   int last()=>_stack.last;
 
-  FutureOr<List<int>> getPeek(int length) {
-    return _buffer.getBytes(index, length);
-  }
+  FutureOr<List<int>> peekBytes(int length) => _buffer.getBytes(index, length);
 
-  FutureOr<int> jumpBuffer(int length) async {
-    await _buffer.waitByBuffered(index, length);
-    if (index + length > _buffer.currentSize) {
+  FutureOr<int> moveOffset(int moveBytes) async {
+    await _buffer.waitByBuffered(index, moveBytes);
+    if (index + moveBytes > _buffer.currentSize) {
       throw (logon == false ? _myException : new Exception());
     }
-    _index += length;
+    _index += moveBytes;
     return index;
   }
 

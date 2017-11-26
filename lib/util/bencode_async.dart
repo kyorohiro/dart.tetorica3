@@ -19,7 +19,7 @@ class BdecoderAsync {
   }
 
   Future<Object> decodeBenObject(EasyParser parser) async {
-    List<int> v = await parser.getPeek(1);
+    List<int> v = await parser.peekBytes(1);
     if (0x69 == v[0]) {
       // i
       return decodeNumber(parser);
@@ -49,7 +49,7 @@ class BdecoderAsync {
     while (true) {
       String key = await decodeString(parser);
       ret[key] = await decodeBenObject(parser);
-      List<int> v = await parser.getPeek(1);
+      List<int> v = await parser.peekBytes(1);
       if (v[0] == 0x65) {
         //e
         return ret;
@@ -69,7 +69,7 @@ class BdecoderAsync {
     while (true) {
       Object v1 = await decodeBenObject(parser);
       ret.add(v1);
-      List<int> v = await parser.getPeek(1);
+      List<int> v = await parser.peekBytes(1);
       if (v.length == 0) {
         throw tmpError.update("list elm");
       } else if (v[0] == 0x65) {
