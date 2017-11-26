@@ -135,7 +135,7 @@ class EasyParser {
   // CHECK return length
   //
   FutureOr<int> checkBytes(List<int> encoded) {
-    if(_buffer.currentSize < index+encoded.length) {
+    if(_buffer.currentSize >= index+encoded.length) {
       return checkBytesSync(encoded);
     } else {
       return checkBytesAsync(encoded);
@@ -253,7 +253,7 @@ class EasyParser {
   // GET
   //
   FutureOr<List<int>> getBytes(int length, {moveOffset:true}) {
-    if(_buffer.currentSize < index+length) {
+    if(_buffer.currentSize >= index+length) {
       return getBytesSync(length, moveOffset:moveOffset);
     } else {
       return getBytesAsync(length, moveOffset:moveOffset);
@@ -280,7 +280,7 @@ class EasyParser {
   // READ
   //
   FutureOr<int> readBytes(int length, List<int> out, {int offset:0, bool checkLength:false, moveOffset:true}) {
-    if(_buffer.currentSize < index+length) {
+    if(_buffer.currentSize >= index+length) {
       return readBytesSync(length, out, offset:offset, moveOffset: moveOffset);
     } else {
       return readBytesAsync(length,out, offset:offset, checkLength: checkLength, moveOffset: moveOffset);
@@ -305,10 +305,10 @@ class EasyParser {
   //
   //
   FutureOr<String> readSign(int byteLength, {moveOffset:true}) {
-    if(_buffer.currentSize < index+byteLength) {
-      return readSignAsync(byteLength, moveOffset: moveOffset);
-    } else {
+    if(_buffer.currentSize >= index+byteLength) {
       return readSignSync(byteLength, moveOffset: moveOffset);
+    } else {
+      return readSignAsync(byteLength, moveOffset: moveOffset);
     }
   }
 
@@ -328,10 +328,10 @@ class EasyParser {
 
   //
   FutureOr<int> readLong(ByteOrderType byteorder, {moveOffset:true}) async {
-    if(_buffer.currentSize < index+8) {
-      return readLongAsync(byteorder, moveOffset: moveOffset);
-    } else {
+    if(_buffer.currentSize >= index+8) {
       return readLongSync(byteorder, moveOffset: moveOffset);
+    } else {
+      return readLongAsync(byteorder, moveOffset: moveOffset);
     }
   }
 
@@ -351,10 +351,10 @@ class EasyParser {
   //
   //
   FutureOr<int> readInt(ByteOrderType byteorder, {moveOffset:true}) {
-    if(_buffer.currentSize < index+4) {
-      return readIntAsync(byteorder, moveOffset: moveOffset);
-    } else {
+    if(_buffer.currentSize >= index+4) {
       return readIntSync(byteorder, moveOffset: moveOffset);
+    } else {
+      return readIntAsync(byteorder, moveOffset: moveOffset);
     }
   }
 
@@ -374,10 +374,10 @@ class EasyParser {
   //
   //
   FutureOr<int> readShort(ByteOrderType byteorder, {moveOffset:true}) {
-    if(_buffer.currentSize < index+2) {
-      return readShortAsync(byteorder, moveOffset: moveOffset);
-    } else {
+    if(_buffer.currentSize >= index+2) {
       return readShortSync(byteorder, moveOffset: moveOffset);
+    } else {
+      return readShortAsync(byteorder, moveOffset: moveOffset);
     }
   }
 
@@ -397,10 +397,10 @@ class EasyParser {
   //
   //
   FutureOr<int> readByte({moveOffset:true}) {
-    if(_buffer.currentSize < index+1) {
-      return readByteAsync(moveOffset: moveOffset);
-    } else {
+    if(_buffer.currentSize >= index+1) {
       return readByteSync(moveOffset: moveOffset);
+    } else {
+      return readByteAsync(moveOffset: moveOffset);
     }
   }
 
