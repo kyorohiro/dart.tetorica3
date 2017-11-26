@@ -40,6 +40,12 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
     }
   }
 
+  @override
+  void set loadCompleted(bool v) {
+    super.loadCompleted = true;
+    updatedBytes();
+    mWaitByBufferedItemList.clear();
+  }
 
   FutureOr<int> readBytes(int index, int length, List<int> buffer) {
     if(length == 0) {
@@ -95,4 +101,7 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
     }
     return out;
   }
+
+
+
 }

@@ -22,13 +22,10 @@ class ParserByteBuffer extends ParserReaderBaseBase implements ParserAppender, P
     _length = buffer.length;
     if (isFin == true) {
       loadCompleted = true;
-//      fin();
     }
   }
 
 
-  //
-  //
   int operator [](int index) => 0xFF & _buffer8[index];
 
   int get(int index) => 0xFF & _buffer8[index];
@@ -55,14 +52,6 @@ class ParserByteBuffer extends ParserReaderBaseBase implements ParserAppender, P
   int get currentSize => _length;
 
   Future<int> getLength() async => _length;
-
-  @override
-  void set loadCompleted(bool v) {
-    super.loadCompleted = true;
-    updatedBytes();
-    mWaitByBufferedItemList.clear();
-  }
-
 
   void update(int plusLength) {
     if (_length + plusLength < _max) {

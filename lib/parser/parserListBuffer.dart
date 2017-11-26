@@ -63,14 +63,6 @@ class ParserListBuffer extends ParserReaderBaseBase implements ParserAppender, P
 
   Future<int> getLength() async => _length;
 
-  @override
-  void set loadCompleted(bool v) {
-    super.loadCompleted = true;
-    updatedBytes();
-    mWaitByBufferedItemList.clear();
-  }
-  
-
   void addByte(int v, {bool autoUpdate = true}) {
     addBytes([v], autoUpdate: autoUpdate);
   }
@@ -93,9 +85,7 @@ class ParserListBuffer extends ParserReaderBaseBase implements ParserAppender, P
 
   void appendString(String text) => addBytes(convert.UTF8.encode(text));
 
-  List toList() {
-    return toUint8List();
-  }
+  List toList() => toUint8List();
 
   data.Uint8List toUint8List() {
     data.Uint8List ret = new data.Uint8List(_length);
