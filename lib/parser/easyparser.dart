@@ -232,14 +232,26 @@ class EasyParser {
   //
   // MATCH
   //
-  FutureOr<List<int>> matchBytesFromBytes(List<int> encoded, {bool expectedMatcherResult:true}) async {
-    int len = await checkBytesFromBytes(encoded, expectedMatcherResult:expectedMatcherResult);
-    data.Uint8List ret = new data.Uint8List(len);
-    for(int i=0;i<len;i++) {
-      ret[i] = _buffer[i+index];
+  FutureOr<List<int>> matchBytesFromBytes(List<int> encoded, {bool expectedMatcherResult:true}) {
+    FutureOr<int> lenFOr = checkBytesFromBytes(encoded, expectedMatcherResult:expectedMatcherResult);
+    if(lenFOr is Future<int>) {
+      return lenFOr.then((int len) {
+        data.Uint8List ret = new data.Uint8List(len);
+        for(int i=0;i<len;i++) {
+          ret[i] = _buffer[i+index];
+        }
+        _index += len;
+        return ret;
+      });
+    } else {
+      int len = lenFOr as int;
+      data.Uint8List ret = new data.Uint8List(len);
+      for(int i=0;i<len;i++) {
+        ret[i] = _buffer[i+index];
+      }
+      _index += len;
+      return ret;
     }
-    _index += len;
-    return ret;
   }
 
   FutureOr<List<int>> matchBytesFromMatche(EasyParserMatchFunc func, {bool expectedMatcherResult:true}) async {
