@@ -75,8 +75,24 @@ class EasyParser {
   //
   // NEXT return length
   //
-  FutureOr<List<int>> nextBytes(List<int> encoded) async {
-    if(0 == await checkBytes(encoded)){
+  FutureOr<List<int>> nextBytes(List<int> encoded) {
+    if(_buffer.currentSize >= index+encoded.length) {
+      return nextBytesSync(encoded);
+    } else {
+      return nextBytesAsync(encoded);
+    }
+  }
+
+  FutureOr<List<int>> nextBytesAsync(List<int> encoded) async {
+    if(0 == await checkBytesAsync(encoded)){
+      throw (logon == false ? _myException : new Exception());
+    }
+    _index +=encoded.length;
+    return encoded;
+  }
+
+  List<int> nextBytesSync(List<int> encoded) {
+    if(0 == checkBytesSync(encoded)){
       throw (logon == false ? _myException : new Exception());
     }
     _index +=encoded.length;
