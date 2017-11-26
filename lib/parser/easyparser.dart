@@ -231,6 +231,27 @@ class EasyParser {
   //
   // READ
   //
+  FutureOr<int> readBytes(int length, List<int> out, {int offset:0, bool checkLength:false}) {
+    if(_buffer.currentSize < index+length) {
+      return readBytesSync(length, out);
+    } else {
+      return readBytesAsync(length,out, checkLength: checkLength);
+    }
+  }
+
+  int readBytesSync(int length, List<int> out, {int offset:0}) {
+    for (int i = 0; i < length; i++) {
+      out[offset+i] = _buffer[index + i];
+    }
+    _index += out.length;
+    return out.length;
+  }
+
+  Future<int> readBytesAsync(int length, List<int> out,{int offset:0, bool checkLength:false}) async {
+    int newLength = await waitByBuffered(index, length, checkLength:checkLength);
+    return readBytesSync(newLength, out, offset: offset);
+  }
+
   FutureOr<String> readSign(int byteLength) {
     if(_buffer.currentSize < index+byteLength) {
       return readSignAsync(byteLength);
