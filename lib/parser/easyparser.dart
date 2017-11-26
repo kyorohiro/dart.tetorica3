@@ -38,10 +38,20 @@ class EasyParser {
   FutureOr<List<int>> peekBytes(int length) => _buffer.getBytes(index, length);
 
   FutureOr<int> moveOffset(int moveBytes) async {
-    await _buffer.waitByBuffered(index, moveBytes);
-    if (index + moveBytes > _buffer.currentSize) {
-      throw (logon == false ? _myException : new Exception());
+    if(_buffer.currentSize < index+moveBytes) {
+      return moveOffsetAsync(moveBytes);
+    } else {
+      return moveOffsetSync(moveBytes);
     }
+  }
+
+  Future<int> moveOffsetAsync(int moveBytes) async {
+    await waitByBuffered(index, moveBytes,checkLength: true);
+    _index += moveBytes;
+    return index;
+  }
+
+  int moveOffsetSync(int moveBytes) {
     _index += moveBytes;
     return index;
   }
