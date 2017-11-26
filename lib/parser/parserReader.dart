@@ -42,7 +42,7 @@ abstract class ParserAppender {
 abstract class ParserReaderBase extends ParserReader {
   //
   // need override
-  //FutureOr<int> waitByBuffered(int index, int length);
+  FutureOr<int> waitByBuffered(int index, int length);
   FutureOr<List<int>> getBytes(int index, int length);
   Future<int> getLength();
 
@@ -88,6 +88,10 @@ abstract class ParserReaderBase extends ParserReader {
   Completer<bool> _loadCompletedCompleter = new Completer();
   //
   //
+  //
+  List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
+}
+abstract class ParserReaderBaseBase extends ParserReaderBase {
   //
   List<WaitByBufferedItem> mWaitByBufferedItemList = new List();
   bool cached(int index, int length) => (this.loadCompleted == true || index + length <= currentSize);
