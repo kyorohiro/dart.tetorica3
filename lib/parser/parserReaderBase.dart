@@ -7,7 +7,11 @@ abstract class ParserReaderBaseBase extends ParserReaderBase {
 
   FutureOr<int> waitByBuffered(int index, int length) {
     if (true == cached(index, length)) {
-      return length;
+      if(index + length <= currentSize) {
+        return length;
+      } else {
+        return currentSize - index;
+      }
     } else {
       WaitByBufferedItem info = new WaitByBufferedItem();
       info.length = length;

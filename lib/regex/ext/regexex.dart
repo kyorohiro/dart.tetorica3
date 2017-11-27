@@ -4,7 +4,7 @@ class AllCharCommand extends RegexCommand {
   @override
   Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
     Completer<List<int>> c = new Completer();
-    parser.readByte().then((int v) {
+    parser.readByteAsync().then((int v) {
       vm._currentTask._nextCommandLocation += 1;
       c.complete([v]);
     }).catchError((e) {
@@ -39,7 +39,7 @@ class MatchByteCommand extends RegexCommand {
   @override
   Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
     Completer<List<int>> c = new Completer();
-    parser.readByte().then((int v) {
+    parser.readByteAsync().then((int v) {
       for(int d in target) {
         if(d == v) {
           vm._currentTask._nextCommandLocation += 1;
@@ -64,7 +64,7 @@ class UnmatchByteCommand extends RegexCommand {
   @override
   Future<List<int>> check(RegexVM vm, heti.EasyParser parser) {
     Completer<List<int>> c = new Completer();
-    parser.readByte().then((int v) {
+    parser.readByteAsync().then((int v) {
       for(int d in target) {
         if(d == v) {
           c.completeError(new Exception()); 
@@ -90,7 +90,7 @@ class UncharacterCommand extends RegexCommand {
     Completer<List<int>> c = new Completer();
     int length = without.length;
     parser.push();
-    parser.getBytes(length).then((List<int> v) {
+    parser.getBytesAsync(length).then((List<int> v) {
       parser.back();
       parser.pop();
       if (v.length == 0) {

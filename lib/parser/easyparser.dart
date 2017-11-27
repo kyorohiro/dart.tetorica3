@@ -340,6 +340,7 @@ class EasyParser {
   List<int> getBytesSync(int length, {moveOffset:true}) {
     List<int> out = new data.Uint8List(length >= 0 ? length : 0);
     for (int i = 0; i < length; i++) {
+      print("${i} ${out.length} ${_buffer.currentSize} ${index} ${length}");
       out[i] = _buffer[index + i];
     }
     if(moveOffset) {

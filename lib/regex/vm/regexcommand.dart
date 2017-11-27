@@ -126,7 +126,7 @@ class CharCommand extends RegexCommand {
     Completer<List<int>> c = new Completer();
     int length = _expect.length;
     parser.push();
-    parser.getBytes(length).then((List<int> v) {
+    parser.getBytesAsync(length).then((List<int> v) {
       if (v.length != length) {
         parser.back();
         parser.pop();
