@@ -28,7 +28,7 @@ void script00() {
         expect(true, false);
       });
     });
-/*
+
     test('char true a', () {
       regex.RegexBuilder builder = new regex.RegexBuilder();
       builder
@@ -46,6 +46,7 @@ void script00() {
         expect(true, false);
       });
     });
+
     regex.RegexBuilder number = new regex.RegexBuilder();
     number
     .push(true)
@@ -145,7 +146,7 @@ void script00() {
         expect(true, false);
       });
 
-    });*/
+    });
   });
 }
 
